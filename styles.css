@@ -110,28 +110,44 @@ body {
     background: linear-gradient(135deg, #ff6b6b, #ff8e53);
     font-size: 8em;
     cursor: pointer;
-    transition: all 0.1s ease;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
     position: relative;
     overflow: hidden;
+    animation: idle-pulse 3s ease-in-out infinite;
 }
 
 .main-clicker:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
     box-shadow: 0 15px 50px rgba(255, 107, 107, 0.6);
+    animation: none;
 }
 
 .main-clicker:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
 }
 
 .main-clicker.clicked {
-    animation: pulse 0.3s ease;
+    animation: clickBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
+@keyframes idle-pulse {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
+    }
+    50% { 
+        transform: scale(1.02);
+        box-shadow: 0 12px 45px rgba(255, 107, 107, 0.5);
+    }
+}
+
+@keyframes clickBounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(0.9); }
     50% { transform: scale(1.1); }
+    70% { transform: scale(0.98); }
+    100% { transform: scale(1); }
 }
 
 .click-stats {
@@ -312,8 +328,18 @@ body {
 .upgrade-item:hover:not(.disabled) {
     background: rgba(78, 205, 196, 0.2);
     border-color: rgba(78, 205, 196, 0.8);
-    transform: translateX(5px);
+    transform: translateX(5px) scale(1.02);
     box-shadow: 0 4px 20px rgba(78, 205, 196, 0.3);
+}
+
+.upgrade-item:active:not(.disabled) {
+    animation: purchaseBounce 0.3s ease-out;
+}
+
+@keyframes purchaseBounce {
+    0% { transform: translateX(5px) scale(1.02); }
+    50% { transform: translateX(5px) scale(0.95); }
+    100% { transform: translateX(5px) scale(1.02); }
 }
 
 .upgrade-item:not(.disabled) {
@@ -1163,5 +1189,171 @@ body.light-theme .floating-number {
         opacity: 0;
         transform: translate(var(--vx), var(--vy)) scale(0);
     }
+}
+
+/* Auto Clicker Section */
+.auto-clicker-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(78, 205, 196, 0.05);
+    border: 2px solid rgba(78, 205, 196, 0.3);
+    border-radius: 12px;
+}
+
+.auto-clicker-section h4 {
+    color: #4ecdc4;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+.auto-clicker-info {
+    text-align: center;
+    color: #eaeaea;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.auto-clicker-info span {
+    color: #4ecdc4;
+    font-weight: bold;
+}
+
+#buy-auto-clicker {
+    width: 100%;
+    background: rgba(78, 205, 196, 0.2);
+    border-color: rgba(78, 205, 196, 0.5);
+}
+
+#buy-auto-clicker:not(:disabled):hover {
+    background: rgba(78, 205, 196, 0.3);
+    border-color: rgba(78, 205, 196, 0.8);
+}
+
+#buy-auto-clicker:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Daily Reward Popup */
+.daily-reward-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.98), rgba(52, 152, 219, 0.98));
+    border: 3px solid rgba(255, 215, 0, 0.8);
+    border-radius: 20px;
+    padding: 40px;
+    min-width: 400px;
+    text-align: center;
+    z-index: 10002;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 60px rgba(255, 215, 0, 0.5);
+    animation: scaleIn 0.5s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+.daily-reward-popup.hidden {
+    display: none;
+}
+
+.daily-reward-popup h2 {
+    color: #ffd700;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+}
+
+.daily-streak-text {
+    color: #ffffff;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.daily-streak-text span {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.daily-reward-gems {
+    font-size: 3em;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 20px 0;
+    text-shadow: 0 0 20px rgba(78, 205, 196, 0.8);
+}
+
+.claim-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    border: none;
+    color: white;
+    padding: 15px 40px;
+    font-size: 1.3em;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+}
+
+.claim-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(46, 204, 113, 0.6);
+}
+
+@keyframes scaleIn {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Milestone Popup */
+.milestone-popup {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.98), rgba(243, 156, 18, 0.98));
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 20px 30px;
+    min-width: 350px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 40px rgba(241, 196, 15, 0.6);
+    z-index: 10001;
+    animation: achievementSlide 0.5s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+.milestone-popup.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+.milestone-popup-header {
+    color: #ffffff;
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.milestone-popup-name {
+    color: #ffffff;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.milestone-popup-desc {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 

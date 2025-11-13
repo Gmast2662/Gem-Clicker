@@ -18,6 +18,12 @@ class IdleClickerGame {
             clickUpgrades: {},
             clickMultipliers: {},
             generatorMultipliers: {},
+            autoClickerLevel: 0,
+            milestones: {},
+            dailyReward: {
+                lastClaim: 0,
+                streak: 0
+            },
             achievements: {},
             lastSave: Date.now(),
             startTime: Date.now()
@@ -169,6 +175,15 @@ class IdleClickerGame {
             }
         });
         
+        // Initialize milestones
+        if (this.config.milestones?.enabled) {
+            this.config.milestones.list.forEach(milestone => {
+                if (this.gameState.milestones[milestone.id] === undefined) {
+                    this.gameState.milestones[milestone.id] = false;
+                }
+            });
+        }
+        
         // Initialize achievements
         if (this.config.achievements.enabled) {
             this.config.achievements.list.forEach(achievement => {
@@ -176,6 +191,11 @@ class IdleClickerGame {
                     this.gameState.achievements[achievement.id] = false;
                 }
             });
+        }
+        
+        // Check for daily reward
+        if (this.config.dailyRewards?.enabled) {
+            this.checkDailyReward();
         }
         
         // Update click power
@@ -216,6 +236,11 @@ class IdleClickerGame {
         document.getElementById('export-button').addEventListener('click', () => this.exportSave());
         document.getElementById('import-button').addEventListener('click', () => this.showImportModal());
         
+        // Auto clicker
+        if (this.config.autoClicker.enabled) {
+            document.getElementById('buy-auto-clicker').addEventListener('click', () => this.buyAutoClicker());
+        }
+        
         // Prestige button
         if (this.config.prestige.enabled) {
             document.getElementById('prestige-button').addEventListener('click', () => this.handlePrestige());
@@ -224,6 +249,11 @@ class IdleClickerGame {
         // Import modal
         document.getElementById('import-confirm').addEventListener('click', () => this.importSave());
         document.getElementById('import-cancel').addEventListener('click', () => this.hideImportModal());
+        
+        // Daily reward
+        if (this.config.dailyRewards?.enabled) {
+            document.getElementById('claim-daily-reward').addEventListener('click', () => this.claimDailyReward());
+        }
         
         // Admin panel
         document.getElementById('admin-toggle').addEventListener('click', () => this.toggleAdminPanel());
@@ -457,6 +487,15 @@ class IdleClickerGame {
             }
         });
         
+        // Apply milestones
+        if (this.config.milestones?.enabled) {
+            this.config.milestones.list.forEach(milestone => {
+                if (this.gameState.milestones[milestone.id]) {
+                    totalMultiplier *= (1 + milestone.bonus);
+                }
+            });
+        }
+        
         // Apply prestige bonus
         if (this.config.prestige.enabled) {
             const prestigeBonus = 1 + (this.gameState.prestigePoints * this.config.prestige.bonusPerPoint);
@@ -464,6 +503,96 @@ class IdleClickerGame {
         }
         
         return totalMultiplier;
+    }
+    
+    checkMilestones() {
+        if (!this.config.milestones?.enabled) return;
+        
+        this.config.milestones.list.forEach(milestone => {
+            if (!this.gameState.milestones[milestone.id] && this.gameState.totalEarned >= milestone.threshold) {
+                this.gameState.milestones[milestone.id] = true;
+                this.showMilestoneNotification(milestone);
+            }
+        });
+    }
+    
+    showMilestoneNotification(milestone) {
+        this.playSound('achievement');
+        
+        const popup = document.createElement('div');
+        popup.className = 'milestone-popup';
+        popup.innerHTML = `
+            <div class="milestone-popup-header">🌟 Milestone Reached!</div>
+            <div class="milestone-popup-name">${milestone.name}</div>
+            <div class="milestone-popup-desc">${milestone.description}</div>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        setTimeout(() => {
+            popup.classList.add('fade-out');
+            setTimeout(() => popup.remove(), 500);
+        }, 4000);
+        
+        console.log(`🌟 Milestone: ${milestone.name}`);
+    }
+    
+    checkDailyReward() {
+        const now = Date.now();
+        const lastClaim = this.gameState.dailyReward.lastClaim;
+        const oneDayMs = 24 * 60 * 60 * 1000;
+        const twoDaysMs = 2 * oneDayMs;
+        
+        // Check if can claim
+        if (now - lastClaim >= oneDayMs) {
+            // Check if streak continues (within 2 days)
+            if (now - lastClaim < twoDaysMs && lastClaim > 0) {
+                // Continue streak
+                this.gameState.dailyReward.streak = Math.min(
+                    this.gameState.dailyReward.streak + 1,
+                    this.config.dailyRewards.maxStreak
+                );
+            } else if (lastClaim > 0) {
+                // Reset streak
+                this.gameState.dailyReward.streak = 1;
+            } else {
+                // First time
+                this.gameState.dailyReward.streak = 1;
+            }
+            
+            // Show daily reward popup
+            this.showDailyRewardPopup();
+        }
+    }
+    
+    claimDailyReward() {
+        const baseReward = this.config.dailyRewards.baseReward;
+        const streak = this.gameState.dailyReward.streak;
+        const reward = Math.floor(baseReward * Math.pow(this.config.dailyRewards.streakMultiplier, streak - 1));
+        
+        this.gameState.currency += reward;
+        this.gameState.totalEarned += reward;
+        this.gameState.dailyReward.lastClaim = Date.now();
+        
+        this.playSound('achievement');
+        this.updateUI();
+        this.saveGame();
+        
+        // Hide popup
+        document.getElementById('daily-reward-popup').classList.add('hidden');
+        
+        console.log(`✅ Claimed daily reward: ${this.formatNumber(reward)} gems! (Day ${streak})`);
+    }
+    
+    showDailyRewardPopup() {
+        const baseReward = this.config.dailyRewards.baseReward;
+        const streak = this.gameState.dailyReward.streak;
+        const reward = Math.floor(baseReward * Math.pow(this.config.dailyRewards.streakMultiplier, streak - 1));
+        
+        const popup = document.getElementById('daily-reward-popup');
+        document.getElementById('daily-streak').textContent = streak;
+        document.getElementById('daily-reward-amount').textContent = this.formatNumber(reward);
+        popup.classList.remove('hidden');
     }
     
     calculateProductionPerSecond() {
@@ -671,6 +800,9 @@ class IdleClickerGame {
             clickUpgrades: {},
             clickMultipliers: {},
             generatorMultipliers: {},
+            autoClickerLevel: 0,
+            milestones: this.gameState.milestones, // Keep milestones through prestige
+            dailyReward: this.gameState.dailyReward, // Keep daily reward data
             achievements: this.gameState.achievements,
             lastSave: Date.now(),
             startTime: Date.now()
@@ -1075,6 +1207,47 @@ class IdleClickerGame {
         
         document.getElementById('stat-prestige-count').textContent = this.gameState.prestigeCount;
         document.getElementById('stat-play-time').textContent = this.formatPlayTime(this.gameState.playTime);
+        
+        // Update auto clicker display
+        if (this.config.autoClicker.enabled) {
+            const cost = this.calculateCost(
+                this.config.autoClicker.baseCost,
+                this.config.autoClicker.costMultiplier,
+                this.gameState.autoClickerLevel
+            );
+            const clicksPerSec = this.gameState.autoClickerLevel > 0 ?
+                this.config.autoClicker.clicksPerSecond + 
+                (this.gameState.autoClickerLevel - 1) * this.config.autoClicker.clicksIncreasePerLevel : 0;
+            
+            document.getElementById('auto-clicker-level').textContent = this.gameState.autoClickerLevel;
+            document.getElementById('auto-clicker-speed').textContent = clicksPerSec;
+            document.getElementById('auto-clicker-cost').textContent = this.formatNumber(cost);
+            
+            const buyButton = document.getElementById('buy-auto-clicker');
+            if (this.gameState.currency >= cost) {
+                buyButton.disabled = false;
+                buyButton.classList.remove('disabled');
+            } else {
+                buyButton.disabled = true;
+                buyButton.classList.add('disabled');
+            }
+        }
+    }
+    
+    buyAutoClicker() {
+        const cost = this.calculateCost(
+            this.config.autoClicker.baseCost,
+            this.config.autoClicker.costMultiplier,
+            this.gameState.autoClickerLevel
+        );
+        
+        if (this.gameState.currency >= cost) {
+            this.gameState.currency -= cost;
+            this.gameState.autoClickerLevel++;
+            this.playSound('buy');
+            this.updateUI();
+            console.log(`✅ Auto Clicker upgraded to level ${this.gameState.autoClickerLevel}!`);
+        }
     }
 
     formatNumber(num) {
@@ -1142,6 +1315,19 @@ class IdleClickerGame {
             this.gameState.totalEarned += earned;
             this.gameState.generatorEarned += earned;
             
+            // Auto clicker
+            if (this.config.autoClicker.enabled && this.gameState.autoClickerLevel > 0) {
+                const clicksPerSec = this.config.autoClicker.clicksPerSecond + 
+                    (this.gameState.autoClickerLevel - 1) * this.config.autoClicker.clicksIncreasePerLevel;
+                const autoClicks = clicksPerSec * deltaTime;
+                const autoEarned = autoClicks * this.gameState.clickPower;
+                
+                this.gameState.currency += autoEarned;
+                this.gameState.totalEarned += autoEarned;
+                this.gameState.clickEarned += autoEarned;
+                this.gameState.totalClicks += autoClicks;
+            }
+            
             // Update UI
             this.updateUI();
             
@@ -1150,6 +1336,9 @@ class IdleClickerGame {
             
             // Check achievements
             this.checkAchievements();
+            
+            // Check milestones
+            this.checkMilestones();
         }, 100);
         
         // Auto-save loop

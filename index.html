@@ -40,6 +40,18 @@
                         <p>Click Power: <span id="click-power">1</span></p>
                         <p>Total Clicks: <span id="total-clicks">0</span></p>
                     </div>
+                    
+                    <!-- Auto Clicker -->
+                    <div class="auto-clicker-section" id="auto-clicker-section">
+                        <h4>🤖 Auto Clicker</h4>
+                        <p class="auto-clicker-info">
+                            Level: <span id="auto-clicker-level">0</span><br>
+                            Speed: <span id="auto-clicker-speed">0</span> clicks/sec
+                        </p>
+                        <button id="buy-auto-clicker" class="control-btn">
+                            Buy Auto Clicker (<span id="auto-clicker-cost">1000</span> 💎)
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Prestige Button -->
@@ -195,6 +207,18 @@
                 <button id="import-confirm" class="control-btn">Import</button>
                 <button id="import-cancel" class="control-btn">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Daily Reward Popup -->
+    <div id="daily-reward-popup" class="daily-reward-popup hidden">
+        <h2>🎁 Daily Reward!</h2>
+        <div class="daily-reward-content">
+            <p class="daily-streak-text">Day <span id="daily-streak">1</span> Streak!</p>
+            <div class="daily-reward-gems">
+                <span id="daily-reward-amount">100</span> 💎
+            </div>
+            <button id="claim-daily-reward" class="claim-btn">Claim Reward!</button>
         </div>
     </div>
 

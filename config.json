@@ -125,6 +125,52 @@
       "maxLevel": null
     }
   ],
+  "autoClicker": {
+    "enabled": true,
+    "baseCost": 1000,
+    "costMultiplier": 1.5,
+    "clicksPerSecond": 1,
+    "clicksIncreasePerLevel": 1
+  },
+  "dailyRewards": {
+    "enabled": true,
+    "baseReward": 100,
+    "streakMultiplier": 1.5,
+    "maxStreak": 7
+  },
+  "milestones": {
+    "enabled": true,
+    "list": [
+      {
+        "id": "milestone_1m",
+        "threshold": 1000000,
+        "bonus": 0.1,
+        "name": "First Million",
+        "description": "+10% to all production permanently"
+      },
+      {
+        "id": "milestone_100m",
+        "threshold": 100000000,
+        "bonus": 0.25,
+        "name": "Hundred Million Club",
+        "description": "+25% to all production permanently"
+      },
+      {
+        "id": "milestone_1b",
+        "threshold": 1000000000,
+        "bonus": 0.5,
+        "name": "Billionaire Status",
+        "description": "+50% to all production permanently"
+      },
+      {
+        "id": "milestone_1t",
+        "threshold": 1000000000000,
+        "bonus": 1.0,
+        "name": "Trillionaire Elite",
+        "description": "+100% to all production permanently"
+      }
+    ]
+  },
   "generators": [
     {
       "id": "miner",
