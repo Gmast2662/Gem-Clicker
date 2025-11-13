@@ -126,8 +126,8 @@ class IdleClickerGame {
 
     async init() {
         try {
-            // Load config
-            const response = await fetch('config.json');
+            // Load config with cache-busting to ensure latest version
+            const response = await fetch(`config.json?v=${Date.now()}`);
             this.config = await response.json();
             
             // Load save or initialize new game
