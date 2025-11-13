@@ -347,6 +347,56 @@
         "purchased": false,
         "effect": "cost_reduction",
         "value": 0.9
+      },
+      {
+        "id": "rainbow_particles",
+        "name": "Rainbow Particles",
+        "description": "Colorful rainbow particle effects on click",
+        "icon": "🌈",
+        "cost": 750000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "rainbow"
+      },
+      {
+        "id": "golden_particles",
+        "name": "Golden Particles",
+        "description": "Shimmering gold particle effects",
+        "icon": "✨",
+        "cost": 500000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "golden"
+      },
+      {
+        "id": "dark_theme",
+        "name": "Deep Purple Theme",
+        "description": "Unlock exclusive dark purple theme",
+        "icon": "🌙",
+        "cost": 1000000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "dark-purple"
+      },
+      {
+        "id": "notifications",
+        "name": "Smart Notifications",
+        "description": "Get notified when you can prestige or afford important upgrades",
+        "icon": "🔔",
+        "cost": 250000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "notifications"
+      },
+      {
+        "id": "gem_skin_ruby",
+        "name": "Ruby Gem Skin",
+        "description": "Change your gem to a beautiful ruby",
+        "icon": "💍",
+        "cost": 1250000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "ruby-skin"
       }
     ]
   },

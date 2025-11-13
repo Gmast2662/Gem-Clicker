@@ -498,7 +498,14 @@ class IdleClickerGame {
     }
     
     createParticles(x, y, count) {
-        const colors = ['#4ecdc4', '#9b59b6', '#3498db', '#f39c12', '#e74c3c'];
+        // Get particle colors based on purchased cosmetics
+        let colors = ['#4ecdc4', '#9b59b6', '#3498db', '#f39c12', '#e74c3c']; // Default
+        
+        if (this.gameState.shopPurchases['rainbow_particles']) {
+            colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+        } else if (this.gameState.shopPurchases['golden_particles']) {
+            colors = ['#FFD700', '#FFA500', '#FFFF00', '#FFE5B4', '#FFF8DC'];
+        }
         
         for (let i = 0; i < count; i++) {
             const particle = document.createElement('div');
@@ -519,6 +526,26 @@ class IdleClickerGame {
             
             setTimeout(() => particle.remove(), 1000);
         }
+    }
+    
+    showNotification(message, type = 'info') {
+        // Only show if notifications are enabled
+        if (!this.gameState.shopPurchases['notifications']) return;
+        
+        const notification = document.createElement('div');
+        notification.className = `toast-notification toast-${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => notification.classList.add('show'), 10);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
 
     createFloatingNumber(x, y, value) {
@@ -942,7 +969,7 @@ class IdleClickerGame {
         if (this.config.prestige.confirmationRequired) {
             const confirmed = confirm(
                 `Are you sure you want to prestige?\n\n` +
-                `You will gain ${gain} ${this.config.prestige.currencyName}.\n` +
+                `You will gain ${gain}⭐\n` +
                 `This will reset all your progress but give you a permanent +${(gain * this.config.prestige.bonusPerPoint * 100).toFixed(1)}% bonus!`
             );
             
