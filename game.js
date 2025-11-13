@@ -2005,7 +2005,6 @@ class IdleClickerGame {
         
         // Calculate average clicks per second (manual clicks only, excluding auto-clicker)
         // Use recent click history for more accurate average
-        const now = Date.now();
         this.recentClicks = this.recentClicks.filter(time => now - time < this.clickRateWindow);
         const avgClicksPerSecond = this.recentClicks.length / (this.clickRateWindow / 1000);
         document.getElementById('stat-avg-clicks').textContent = avgClicksPerSecond.toFixed(1);
