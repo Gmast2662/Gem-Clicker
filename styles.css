@@ -2518,48 +2518,64 @@ body.theme-sunset-orange .lucky-event-banner {
    COSMETIC CUSTOMIZATION - GEM SKINS
    ============================================ */
 
-/* Ruby Gem Skin - Faceted Diamond Shape */
+/* Ruby Gem Skin - Octagonal Diamond Shape */
 body.skin-ruby .main-clicker {
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     background: 
-        linear-gradient(135deg, transparent 25%, rgba(255, 107, 107, 0.9) 25%, rgba(255, 107, 107, 0.9) 50%, transparent 50%),
-        linear-gradient(45deg, transparent 25%, rgba(231, 76, 60, 0.8) 25%, rgba(231, 76, 60, 0.8) 50%, transparent 50%),
-        linear-gradient(-45deg, #c0392b 0%, #8b0000 100%);
-    background-size: 60px 60px, 60px 60px, 100% 100%;
-    background-position: 0 0, 30px 30px, center;
+        linear-gradient(135deg, #ff6b6b 0%, #e74c3c 25%, #c0392b 50%, #8b0000 100%),
+        radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+        linear-gradient(225deg, transparent 40%, rgba(139, 0, 0, 0.6) 70%);
+    background-blend-mode: normal, screen, multiply;
     box-shadow: 
-        0 10px 40px rgba(231, 76, 60, 0.8),
-        0 0 100px rgba(231, 76, 60, 0.5),
-        inset -10px -10px 30px rgba(139, 0, 0, 0.7),
-        inset 10px 10px 30px rgba(255, 107, 107, 0.4),
-        inset 0 0 60px rgba(231, 76, 60, 0.3);
-    border: 3px solid rgba(255, 70, 70, 0.7);
+        0 10px 40px rgba(231, 76, 60, 0.9),
+        0 0 100px rgba(231, 76, 60, 0.6),
+        inset -15px -15px 40px rgba(139, 0, 0, 0.8),
+        inset 15px 15px 40px rgba(255, 107, 107, 0.5),
+        inset 0 0 80px rgba(231, 76, 60, 0.4);
+    border: none;
     position: relative;
 }
 
+/* Multiple facets using pseudo-elements */
 body.skin-ruby .main-clicker::before {
     content: '';
     position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 30%;
-    height: 30%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 30%, rgba(255, 107, 107, 0.4) 50%, transparent 70%),
+        linear-gradient(-45deg, transparent 30%, rgba(231, 76, 60, 0.3) 50%, transparent 70%);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    pointer-events: none;
+}
+
+body.skin-ruby .main-clicker::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 25%;
+    height: 25%;
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%);
     border-radius: 50%;
+    filter: blur(3px);
     pointer-events: none;
 }
 
 body.skin-ruby .main-clicker:hover {
     box-shadow: 
         0 15px 50px rgba(231, 76, 60, 1),
-        0 0 120px rgba(231, 76, 60, 0.7),
-        inset -10px -10px 30px rgba(139, 0, 0, 0.8),
-        inset 10px 10px 30px rgba(255, 107, 107, 0.6),
-        inset 0 0 80px rgba(231, 76, 60, 0.5);
-    transform: scale(1.05) rotate(5deg);
+        0 0 120px rgba(231, 76, 60, 0.8),
+        inset -15px -15px 40px rgba(139, 0, 0, 0.9),
+        inset 15px 15px 40px rgba(255, 107, 107, 0.7),
+        inset 0 0 100px rgba(231, 76, 60, 0.6);
+    transform: scale(1.08) rotate(5deg);
 }
 
 body.skin-ruby .main-clicker:active {
-    transform: scale(0.95);
+    transform: scale(0.92) rotate(2deg);
     box-shadow: 0 8px 30px rgba(231, 76, 60, 0.9);
 }
 
@@ -2571,48 +2587,63 @@ body.skin-ruby .floating-number {
     font-weight: bold;
 }
 
-/* Sapphire Gem Skin - Faceted */
+/* Sapphire Gem Skin - Octagonal Diamond Shape */
 body.skin-sapphire .main-clicker {
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     background: 
-        linear-gradient(135deg, transparent 25%, rgba(93, 173, 226, 0.9) 25%, rgba(93, 173, 226, 0.9) 50%, transparent 50%),
-        linear-gradient(45deg, transparent 25%, rgba(52, 152, 219, 0.8) 25%, rgba(52, 152, 219, 0.8) 50%, transparent 50%),
-        linear-gradient(-45deg, #2874a6 0%, #1a5490 100%);
-    background-size: 60px 60px, 60px 60px, 100% 100%;
-    background-position: 0 0, 30px 30px, center;
+        linear-gradient(135deg, #5dade2 0%, #3498db 25%, #2874a6 50%, #1a5490 100%),
+        radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+        linear-gradient(225deg, transparent 40%, rgba(26, 84, 144, 0.6) 70%);
+    background-blend-mode: normal, screen, multiply;
     box-shadow: 
-        0 10px 40px rgba(52, 152, 219, 0.8),
-        0 0 100px rgba(52, 152, 219, 0.5),
-        inset -10px -10px 30px rgba(26, 84, 144, 0.7),
-        inset 10px 10px 30px rgba(93, 173, 226, 0.4),
-        inset 0 0 60px rgba(52, 152, 219, 0.3);
-    border: 3px solid rgba(93, 173, 226, 0.7);
+        0 10px 40px rgba(52, 152, 219, 0.9),
+        0 0 100px rgba(52, 152, 219, 0.6),
+        inset -15px -15px 40px rgba(26, 84, 144, 0.8),
+        inset 15px 15px 40px rgba(93, 173, 226, 0.5),
+        inset 0 0 80px rgba(52, 152, 219, 0.4);
+    border: none;
     position: relative;
 }
 
 body.skin-sapphire .main-clicker::before {
     content: '';
     position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 30%;
-    height: 30%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 30%, rgba(93, 173, 226, 0.4) 50%, transparent 70%),
+        linear-gradient(-45deg, transparent 30%, rgba(52, 152, 219, 0.3) 50%, transparent 70%);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    pointer-events: none;
+}
+
+body.skin-sapphire .main-clicker::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 25%;
+    height: 25%;
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%);
     border-radius: 50%;
+    filter: blur(3px);
     pointer-events: none;
 }
 
 body.skin-sapphire .main-clicker:hover {
     box-shadow: 
         0 15px 50px rgba(52, 152, 219, 1),
-        0 0 120px rgba(52, 152, 219, 0.7),
-        inset -10px -10px 30px rgba(26, 84, 144, 0.8),
-        inset 10px 10px 30px rgba(93, 173, 226, 0.6),
-        inset 0 0 80px rgba(52, 152, 219, 0.5);
-    transform: scale(1.05) rotate(5deg);
+        0 0 120px rgba(52, 152, 219, 0.8),
+        inset -15px -15px 40px rgba(26, 84, 144, 0.9),
+        inset 15px 15px 40px rgba(93, 173, 226, 0.7),
+        inset 0 0 100px rgba(52, 152, 219, 0.6);
+    transform: scale(1.08) rotate(5deg);
 }
 
 body.skin-sapphire .main-clicker:active {
-    transform: scale(0.95);
+    transform: scale(0.92) rotate(2deg);
 }
 
 body.skin-sapphire .floating-number {
@@ -2623,48 +2654,63 @@ body.skin-sapphire .floating-number {
     font-weight: bold;
 }
 
-/* Emerald Gem Skin - Faceted */
+/* Emerald Gem Skin - Octagonal Diamond Shape */
 body.skin-emerald .main-clicker {
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     background: 
-        linear-gradient(135deg, transparent 25%, rgba(88, 214, 141, 0.9) 25%, rgba(88, 214, 141, 0.9) 50%, transparent 50%),
-        linear-gradient(45deg, transparent 25%, rgba(40, 180, 99, 0.8) 25%, rgba(40, 180, 99, 0.8) 50%, transparent 50%),
-        linear-gradient(-45deg, #1e8449 0%, #145a32 100%);
-    background-size: 60px 60px, 60px 60px, 100% 100%;
-    background-position: 0 0, 30px 30px, center;
+        linear-gradient(135deg, #58d68d 0%, #28b463 25%, #1e8449 50%, #145a32 100%),
+        radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+        linear-gradient(225deg, transparent 40%, rgba(20, 90, 50, 0.6) 70%);
+    background-blend-mode: normal, screen, multiply;
     box-shadow: 
-        0 10px 40px rgba(40, 180, 99, 0.8),
-        0 0 100px rgba(40, 180, 99, 0.5),
-        inset -10px -10px 30px rgba(20, 90, 50, 0.7),
-        inset 10px 10px 30px rgba(88, 214, 141, 0.4),
-        inset 0 0 60px rgba(40, 180, 99, 0.3);
-    border: 3px solid rgba(88, 214, 141, 0.7);
+        0 10px 40px rgba(40, 180, 99, 0.9),
+        0 0 100px rgba(40, 180, 99, 0.6),
+        inset -15px -15px 40px rgba(20, 90, 50, 0.8),
+        inset 15px 15px 40px rgba(88, 214, 141, 0.5),
+        inset 0 0 80px rgba(40, 180, 99, 0.4);
+    border: none;
     position: relative;
 }
 
 body.skin-emerald .main-clicker::before {
     content: '';
     position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 30%;
-    height: 30%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 30%, rgba(88, 214, 141, 0.4) 50%, transparent 70%),
+        linear-gradient(-45deg, transparent 30%, rgba(40, 180, 99, 0.3) 50%, transparent 70%);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    pointer-events: none;
+}
+
+body.skin-emerald .main-clicker::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 25%;
+    height: 25%;
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%);
     border-radius: 50%;
+    filter: blur(3px);
     pointer-events: none;
 }
 
 body.skin-emerald .main-clicker:hover {
     box-shadow: 
         0 15px 50px rgba(40, 180, 99, 1),
-        0 0 120px rgba(40, 180, 99, 0.7),
-        inset -10px -10px 30px rgba(20, 90, 50, 0.8),
-        inset 10px 10px 30px rgba(88, 214, 141, 0.6),
-        inset 0 0 80px rgba(40, 180, 99, 0.5);
-    transform: scale(1.05) rotate(5deg);
+        0 0 120px rgba(40, 180, 99, 0.8),
+        inset -15px -15px 40px rgba(20, 90, 50, 0.9),
+        inset 15px 15px 40px rgba(88, 214, 141, 0.7),
+        inset 0 0 100px rgba(40, 180, 99, 0.6);
+    transform: scale(1.08) rotate(5deg);
 }
 
 body.skin-emerald .main-clicker:active {
-    transform: scale(0.95);
+    transform: scale(0.92) rotate(2deg);
 }
 
 body.skin-emerald .floating-number {
@@ -2675,48 +2721,63 @@ body.skin-emerald .floating-number {
     font-weight: bold;
 }
 
-/* Amethyst Gem Skin - Faceted */
+/* Amethyst Gem Skin - Octagonal Diamond Shape */
 body.skin-amethyst .main-clicker {
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     background: 
-        linear-gradient(135deg, transparent 25%, rgba(187, 143, 206, 0.9) 25%, rgba(187, 143, 206, 0.9) 50%, transparent 50%),
-        linear-gradient(45deg, transparent 25%, rgba(155, 89, 182, 0.8) 25%, rgba(155, 89, 182, 0.8) 50%, transparent 50%),
-        linear-gradient(-45deg, #7d3c98 0%, #5b2c6f 100%);
-    background-size: 60px 60px, 60px 60px, 100% 100%;
-    background-position: 0 0, 30px 30px, center;
+        linear-gradient(135deg, #bb8fce 0%, #9b59b6 25%, #7d3c98 50%, #5b2c6f 100%),
+        radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+        linear-gradient(225deg, transparent 40%, rgba(91, 44, 111, 0.6) 70%);
+    background-blend-mode: normal, screen, multiply;
     box-shadow: 
-        0 10px 40px rgba(155, 89, 182, 0.8),
-        0 0 100px rgba(155, 89, 182, 0.5),
-        inset -10px -10px 30px rgba(91, 44, 111, 0.7),
-        inset 10px 10px 30px rgba(187, 143, 206, 0.4),
-        inset 0 0 60px rgba(155, 89, 182, 0.3);
-    border: 3px solid rgba(187, 143, 206, 0.7);
+        0 10px 40px rgba(155, 89, 182, 0.9),
+        0 0 100px rgba(155, 89, 182, 0.6),
+        inset -15px -15px 40px rgba(91, 44, 111, 0.8),
+        inset 15px 15px 40px rgba(187, 143, 206, 0.5),
+        inset 0 0 80px rgba(155, 89, 182, 0.4);
+    border: none;
     position: relative;
 }
 
 body.skin-amethyst .main-clicker::before {
     content: '';
     position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 30%;
-    height: 30%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, transparent 30%, rgba(187, 143, 206, 0.4) 50%, transparent 70%),
+        linear-gradient(-45deg, transparent 30%, rgba(155, 89, 182, 0.3) 50%, transparent 70%);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    pointer-events: none;
+}
+
+body.skin-amethyst .main-clicker::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 25%;
+    height: 25%;
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%);
     border-radius: 50%;
+    filter: blur(3px);
     pointer-events: none;
 }
 
 body.skin-amethyst .main-clicker:hover {
     box-shadow: 
         0 15px 50px rgba(155, 89, 182, 1),
-        0 0 120px rgba(155, 89, 182, 0.7),
-        inset -10px -10px 30px rgba(91, 44, 111, 0.8),
-        inset 10px 10px 30px rgba(187, 143, 206, 0.6),
-        inset 0 0 80px rgba(155, 89, 182, 0.5);
-    transform: scale(1.05) rotate(5deg);
+        0 0 120px rgba(155, 89, 182, 0.8),
+        inset -15px -15px 40px rgba(91, 44, 111, 0.9),
+        inset 15px 15px 40px rgba(187, 143, 206, 0.7),
+        inset 0 0 100px rgba(155, 89, 182, 0.6);
+    transform: scale(1.08) rotate(5deg);
 }
 
 body.skin-amethyst .main-clicker:active {
-    transform: scale(0.95);
+    transform: scale(0.92) rotate(2deg);
 }
 
 body.skin-amethyst .floating-number {

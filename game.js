@@ -311,6 +311,8 @@ class IdleClickerGame {
         document.getElementById('admin-reset-achievements').addEventListener('click', () => this.adminResetAchievements());
         document.getElementById('admin-unlock-shop').addEventListener('click', () => this.adminUnlockAllShop());
         document.getElementById('admin-reset-shop').addEventListener('click', () => this.adminResetShop());
+        document.getElementById('admin-unlock-cosmetics').addEventListener('click', () => this.adminUnlockAllCosmetics());
+        document.getElementById('admin-reset-cosmetics').addEventListener('click', () => this.adminResetCosmetics());
         
         // Lucky event triggers (with null check for safety)
         const goldenBtn = document.getElementById('admin-trigger-golden');
@@ -2808,6 +2810,58 @@ class IdleClickerGame {
         this.updateUI();
         this.playSound('achievement');
         console.log('✅ Admin: Reset all shop purchases');
+    }
+    
+    adminUnlockAllCosmetics() {
+        if (!confirm('Unlock all cosmetics?')) return;
+        
+        // Get all cosmetic items
+        const allCosmetics = [
+            ...(this.config.cosmetics?.themes || []),
+            ...(this.config.cosmetics?.skins || []),
+            ...(this.config.cosmetics?.particles || [])
+        ];
+        
+        allCosmetics.forEach(item => {
+            this.gameState.shopPurchases[item.id] = true;
+        });
+        
+        // Update UI
+        this.renderCosmetics();
+        this.updateSettingsDropdowns();
+        this.applyCosmetics();
+        this.updateUI();
+        this.playSound('achievement');
+        console.log('✅ Admin: Unlocked all cosmetics');
+    }
+    
+    adminResetCosmetics() {
+        if (!confirm('Reset all cosmetic purchases?')) return;
+        
+        // Get all cosmetic items
+        const allCosmetics = [
+            ...(this.config.cosmetics?.themes || []),
+            ...(this.config.cosmetics?.skins || []),
+            ...(this.config.cosmetics?.particles || [])
+        ];
+        
+        allCosmetics.forEach(item => {
+            this.gameState.shopPurchases[item.id] = false;
+        });
+        
+        // Reset to defaults
+        this.settings.premiumTheme = 'none';
+        this.settings.gemSkin = 'default';
+        this.settings.particleEffect = 'default';
+        this.saveSettings();
+        
+        // Update UI
+        this.renderCosmetics();
+        this.updateSettingsDropdowns();
+        this.applyCosmetics();
+        this.updateUI();
+        this.playSound('achievement');
+        console.log('✅ Admin: Reset all cosmetics');
     }
     
     adminTriggerEvent(eventType) {
