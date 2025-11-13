@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Empire - Idle Clicker Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 id="game-title">Cookie Empire</h1>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span id="currency-icon">🍪</span>
+                    <span id="currency-amount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Per Second: </span>
+                    <span id="per-second">0</span>
+                </div>
+                <div class="stat-item prestige-stat" id="prestige-stat" style="display: none;">
+                    <span id="prestige-icon">⭐</span>
+                    <span id="prestige-amount">0</span>
+                    <span class="bonus-text">(+<span id="prestige-bonus">0</span>%)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <div class="game-container">
+            <!-- Left Panel - Click Area -->
+            <div class="left-panel">
+                <div class="click-section">
+                    <button id="main-clicker" class="main-clicker">
+                        <span id="clicker-icon">🍪</span>
+                    </button>
+                    <div class="click-stats">
+                        <p>Click Power: <span id="click-power">1</span></p>
+                        <p>Total Clicks: <span id="total-clicks">0</span></p>
+                    </div>
+                </div>
+
+                <!-- Prestige Button -->
+                <div class="prestige-section" id="prestige-section" style="display: none;">
+                    <button id="prestige-button" class="prestige-button" disabled>
+                        <span>Prestige</span>
+                        <span class="prestige-info">Reset for <span id="prestige-gain">0</span> <span id="prestige-currency-name">⭐</span></span>
+                    </button>
+                    <p class="prestige-description">Reset all progress for permanent bonuses!</p>
+                </div>
+
+                <!-- Game Controls -->
+                <div class="controls">
+                    <button id="save-button" class="control-btn">💾 Save</button>
+                    <button id="reset-button" class="control-btn danger">🔄 Reset</button>
+                    <button id="export-button" class="control-btn">📤 Export</button>
+                    <button id="import-button" class="control-btn">📥 Import</button>
+                </div>
+            </div>
+
+            <!-- Right Panel - Upgrades -->
+            <div class="right-panel">
+                <div class="tabs">
+                    <button class="tab-button active" data-tab="generators">🏭 Generators</button>
+                    <button class="tab-button" data-tab="upgrades">⬆️ Upgrades</button>
+                    <button class="tab-button" data-tab="achievements">🏆 Achievements</button>
+                    <button class="tab-button" data-tab="stats">📊 Stats</button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content active" id="generators-tab">
+                    <div id="generators-container" class="upgrades-container">
+                        <!-- Generators will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="upgrades-tab">
+                    <div id="upgrades-container" class="upgrades-container">
+                        <!-- Click upgrades will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="achievements-tab">
+                    <div id="achievements-container" class="achievements-container">
+                        <!-- Achievements will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="tab-content" id="stats-tab">
+                    <div class="stats-container">
+                        <h3>Game Statistics</h3>
+                        <div class="stat-row">
+                            <span>Total Earned:</span>
+                            <span id="stat-total-earned">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total Clicks:</span>
+                            <span id="stat-total-clicks">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total From Clicking:</span>
+                            <span id="stat-click-earned">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total From Generators:</span>
+                            <span id="stat-generator-earned">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Prestige Count:</span>
+                            <span id="stat-prestige-count">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Play Time:</span>
+                            <span id="stat-play-time">0s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating numbers container -->
+    <div id="floating-numbers"></div>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <h2>Import Save</h2>
+            <textarea id="import-textarea" placeholder="Paste your save data here..."></textarea>
+            <div class="modal-buttons">
+                <button id="import-confirm" class="control-btn">Import</button>
+                <button id="import-cancel" class="control-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+

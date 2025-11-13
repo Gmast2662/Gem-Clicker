@@ -1,0 +1,235 @@
+{
+  "game": {
+    "title": "Gem Clicker",
+    "currency": "Gems",
+    "currencyIcon": "💎",
+    "clickable": "Gem",
+    "clickableIcon": "💎",
+    "startingCurrency": 0,
+    "clickPower": 1,
+    "saveInterval": 5000
+  },
+  "clickUpgrades": [
+    {
+      "id": "pickaxe",
+      "name": "Iron Pickaxe",
+      "description": "Mine gems more efficiently",
+      "icon": "⛏️",
+      "baseCost": 10,
+      "costMultiplier": 1.15,
+      "powerIncrease": 1,
+      "maxLevel": null
+    },
+    {
+      "id": "drill",
+      "name": "Mining Drill",
+      "description": "Powered drilling for more gems",
+      "icon": "🔨",
+      "baseCost": 100,
+      "costMultiplier": 1.18,
+      "powerIncrease": 5,
+      "maxLevel": null
+    },
+    {
+      "id": "excavator",
+      "name": "Excavator",
+      "description": "Heavy machinery for deep mining",
+      "icon": "🚜",
+      "baseCost": 1000,
+      "costMultiplier": 1.22,
+      "powerIncrease": 25,
+      "maxLevel": null
+    },
+    {
+      "id": "laser",
+      "name": "Laser Drill",
+      "description": "Precision gem extraction technology",
+      "icon": "🔦",
+      "baseCost": 10000,
+      "costMultiplier": 1.25,
+      "powerIncrease": 100,
+      "maxLevel": null
+    }
+  ],
+  "generators": [
+    {
+      "id": "miner",
+      "name": "Miner",
+      "description": "A worker who mines gems manually",
+      "icon": "👷",
+      "baseCost": 15,
+      "costMultiplier": 1.15,
+      "baseProduction": 0.1,
+      "maxLevel": null
+    },
+    {
+      "id": "minecart",
+      "name": "Mine Cart",
+      "description": "Transports gems from the mine",
+      "icon": "🛤️",
+      "baseCost": 100,
+      "costMultiplier": 1.15,
+      "baseProduction": 1,
+      "maxLevel": null
+    },
+    {
+      "id": "gemmine",
+      "name": "Gem Mine",
+      "description": "A dedicated mining operation",
+      "icon": "🏔️",
+      "baseCost": 1100,
+      "costMultiplier": 1.15,
+      "baseProduction": 8,
+      "maxLevel": null
+    },
+    {
+      "id": "crystalcave",
+      "name": "Crystal Cave",
+      "description": "Natural gem formations",
+      "icon": "🔷",
+      "baseCost": 12000,
+      "costMultiplier": 1.15,
+      "baseProduction": 47,
+      "maxLevel": null
+    },
+    {
+      "id": "deepshaft",
+      "name": "Deep Shaft",
+      "description": "Mines deep underground for rare gems",
+      "icon": "🕳️",
+      "baseCost": 130000,
+      "costMultiplier": 1.15,
+      "baseProduction": 260,
+      "maxLevel": null
+    },
+    {
+      "id": "drillingrig",
+      "name": "Drilling Rig",
+      "description": "Industrial gem extraction",
+      "icon": "🏗️",
+      "baseCost": 1400000,
+      "costMultiplier": 1.15,
+      "baseProduction": 1400,
+      "maxLevel": null
+    },
+    {
+      "id": "gemportal",
+      "name": "Gem Portal",
+      "description": "Summons gems from another dimension",
+      "icon": "🌀",
+      "baseCost": 20000000,
+      "costMultiplier": 1.15,
+      "baseProduction": 7800,
+      "maxLevel": null
+    },
+    {
+      "id": "timerift",
+      "name": "Time Rift",
+      "description": "Brings ancient gems from the past",
+      "icon": "⏰",
+      "baseCost": 330000000,
+      "costMultiplier": 1.15,
+      "baseProduction": 44000,
+      "maxLevel": null
+    },
+    {
+      "id": "quantumexcavator",
+      "name": "Quantum Excavator",
+      "description": "Creates gems at the atomic level",
+      "icon": "⚛️",
+      "baseCost": 5100000000,
+      "costMultiplier": 1.15,
+      "baseProduction": 260000,
+      "maxLevel": null
+    },
+    {
+      "id": "stellarforge",
+      "name": "Stellar Forge",
+      "description": "Converts starlight into precious gems",
+      "icon": "✨",
+      "baseCost": 75000000000,
+      "costMultiplier": 1.15,
+      "baseProduction": 1600000,
+      "maxLevel": null
+    }
+  ],
+  "prestige": {
+    "enabled": true,
+    "currencyName": "Prestige Points",
+    "currencyIcon": "⭐",
+    "requirement": 1000000,
+    "formula": "sqrt",
+    "divisor": 1000000,
+    "bonusPerPoint": 0.01,
+    "confirmationRequired": true
+  },
+  "achievements": {
+    "enabled": true,
+    "list": [
+      {
+        "id": "first_click",
+        "name": "First Gem",
+        "description": "Mine your first gem",
+        "icon": "💎",
+        "requirement": {
+          "type": "total_clicks",
+          "value": 1
+        }
+      },
+      {
+        "id": "hundred_gems",
+        "name": "Gem Collector",
+        "description": "Mine 100 gems",
+        "icon": "📦",
+        "requirement": {
+          "type": "total_earned",
+          "value": 100
+        }
+      },
+      {
+        "id": "first_miner",
+        "name": "Mining Boss",
+        "description": "Hire your first Miner",
+        "icon": "👷",
+        "requirement": {
+          "type": "generator_owned",
+          "id": "miner",
+          "value": 1
+        }
+      },
+      {
+        "id": "millionaire",
+        "name": "Gem Millionaire",
+        "description": "Mine 1 million gems",
+        "icon": "💰",
+        "requirement": {
+          "type": "total_earned",
+          "value": 1000000
+        }
+      }
+    ]
+  },
+  "ui": {
+    "theme": {
+      "primary": "#9b59b6",
+      "secondary": "#3498db",
+      "background": "#1a1a2e",
+      "cardBackground": "#16213e",
+      "text": "#eaeaea",
+      "textSecondary": "#a0a0a0",
+      "success": "#2ecc71",
+      "warning": "#f39c12",
+      "danger": "#e74c3c"
+    },
+    "animations": {
+      "clickAnimation": true,
+      "floatingNumbers": true,
+      "particleEffects": true
+    },
+    "numberFormat": {
+      "useShortFormat": true,
+      "decimalPlaces": 2
+    }
+  }
+}
+
