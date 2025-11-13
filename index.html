@@ -46,10 +46,11 @@
                         <h4>🤖 Auto Clicker</h4>
                         <p class="auto-clicker-info">
                             Level: <span id="auto-clicker-level">0</span><br>
-                            Speed: <span id="auto-clicker-speed">0</span> clicks/sec
+                            Speed: <span id="auto-clicker-speed">0</span> clicks/sec<br>
+                            <small style="color: #ffd43b;">✨ Benefits from click power & multipliers!</small>
                         </p>
                         <button id="buy-auto-clicker" class="control-btn">
-                            Buy Auto Clicker (<span id="auto-clicker-cost">1000</span> 💎)
+                            Upgrade Auto Clicker (<span id="auto-clicker-cost">1000</span> 💎)
                         </button>
                     </div>
                 </div>
@@ -262,6 +263,23 @@
             <div class="admin-input-row">
                 <input type="number" id="admin-upgrade-level" placeholder="Level" value="10" min="0">
                 <button class="admin-btn" id="admin-set-upgrade">Set Level</button>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h4>🤖 Auto Clicker</h4>
+            <div class="admin-current">Current Level: <span id="admin-current-autoclicker">0</span></div>
+            <div class="admin-input-row">
+                <input type="number" id="admin-autoclicker-level" placeholder="Level" value="10" min="0">
+                <button class="admin-btn" id="admin-set-autoclicker">Set Level</button>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h4>🏆 Achievements</h4>
+            <div class="admin-buttons">
+                <button class="admin-btn" id="admin-unlock-all">Unlock All</button>
+                <button class="admin-btn" id="admin-reset-achievements">Reset All</button>
             </div>
         </div>
 

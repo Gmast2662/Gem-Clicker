@@ -261,6 +261,9 @@ class IdleClickerGame {
         document.getElementById('admin-add-gems').addEventListener('click', () => this.adminAddGems());
         document.getElementById('admin-set-generator').addEventListener('click', () => this.adminSetGenerator());
         document.getElementById('admin-set-upgrade').addEventListener('click', () => this.adminSetUpgrade());
+        document.getElementById('admin-set-autoclicker').addEventListener('click', () => this.adminSetAutoClicker());
+        document.getElementById('admin-unlock-all').addEventListener('click', () => this.adminUnlockAllAchievements());
+        document.getElementById('admin-reset-achievements').addEventListener('click', () => this.adminResetAchievements());
         
         // Quick gem buttons
         document.querySelectorAll('.admin-quick-btn').forEach(btn => {
@@ -299,6 +302,12 @@ class IdleClickerGame {
     handleKeyboard(e) {
         // Don't trigger if typing in input fields
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
+        // Prevent key repeat for space bar
+        if (e.key === ' ' && e.repeat) {
+            e.preventDefault();
+            return;
+        }
         
         switch(e.key) {
             case ' ':
@@ -1514,6 +1523,9 @@ class IdleClickerGame {
         
         // Update upgrade level
         this.updateAdminUpgradeLevel();
+        
+        // Update auto clicker level
+        document.getElementById('admin-current-autoclicker').textContent = this.gameState.autoClickerLevel;
     }
     
     updateAdminGeneratorLevel() {
@@ -1606,6 +1618,45 @@ class IdleClickerGame {
         
         const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
         console.log(`✅ Admin: Set ${upgrade.name} to level ${level}`);
+    }
+    
+    adminSetAutoClicker() {
+        const level = parseInt(document.getElementById('admin-autoclicker-level').value);
+        
+        if (isNaN(level) || level < 0) {
+            alert('Please enter a valid level!');
+            return;
+        }
+        
+        this.gameState.autoClickerLevel = level;
+        this.updateUI();
+        this.playSound('buy');
+        this.updateAdminDisplay();
+        
+        console.log(`✅ Admin: Set Auto Clicker to level ${level}`);
+    }
+    
+    adminUnlockAllAchievements() {
+        if (!confirm('Unlock all achievements?')) return;
+        
+        this.config.achievements.list.forEach(achievement => {
+            this.gameState.achievements[achievement.id] = true;
+        });
+        
+        this.renderAchievements();
+        this.playSound('achievement');
+        console.log('✅ Admin: Unlocked all achievements');
+    }
+    
+    adminResetAchievements() {
+        if (!confirm('Reset all achievements? This cannot be undone!')) return;
+        
+        this.config.achievements.list.forEach(achievement => {
+            this.gameState.achievements[achievement.id] = false;
+        });
+        
+        this.renderAchievements();
+        console.log('✅ Admin: Reset all achievements');
     }
 }
 

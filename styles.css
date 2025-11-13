@@ -1095,6 +1095,61 @@ body.light-theme .floating-number {
         2px 2px 6px rgba(0, 0, 0, 1);
 }
 
+body.light-theme .upgrade-level,
+body.light-theme .upgrade-production,
+body.light-theme .upgrade-cost,
+body.light-theme .stat-row,
+body.light-theme .click-stats,
+body.light-theme .click-stats p,
+body.light-theme .click-stats span,
+body.light-theme .auto-clicker-info,
+body.light-theme .auto-clicker-section h4,
+body.light-theme .prestige-description,
+body.light-theme .prestige-info,
+body.light-theme .multiplier-section-header,
+body.light-theme .shortcut-item,
+body.light-theme #volume-display,
+body.light-theme .daily-streak-text,
+body.light-theme .admin-current,
+body.light-theme .admin-input-group label {
+    color: #2c3e50 !important;
+}
+
+body.light-theme kbd {
+    background: rgba(52, 152, 219, 0.2);
+    border-color: rgba(52, 152, 219, 0.4);
+    color: #2c3e50;
+}
+
+body.light-theme .bonus-text {
+    color: #f39c12 !important;
+}
+
+body.light-theme .admin-panel,
+body.light-theme .modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(52, 152, 219, 0.5);
+}
+
+body.light-theme .admin-current span {
+    color: #3498db !important;
+}
+
+body.light-theme input[type="range"] {
+    background: rgba(52, 152, 219, 0.2);
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+body.light-theme input[type="range"]::-webkit-slider-thumb {
+    background: #3498db;
+    border-color: #f5f7fa;
+}
+
+body.light-theme input[type="range"]::-moz-range-thumb {
+    background: #3498db;
+    border-color: #f5f7fa;
+}
+
 /* Achievement Popup */
 .achievement-popup {
     position: fixed;
