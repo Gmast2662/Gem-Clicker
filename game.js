@@ -2003,9 +2003,12 @@ class IdleClickerGame {
         const perHour = this.calculateProductionPerSecond() * 3600;
         document.getElementById('stat-per-hour').textContent = this.formatNumber(perHour);
         
-        // Calculate average clicks per second
-        const avgClicksPerSecond = this.gameState.playTime > 0 ? this.gameState.totalClicks / this.gameState.playTime : 0;
-        document.getElementById('stat-avg-clicks').textContent = avgClicksPerSecond.toFixed(2);
+        // Calculate average clicks per second (manual clicks only, excluding auto-clicker)
+        // Use recent click history for more accurate average
+        const now = Date.now();
+        this.recentClicks = this.recentClicks.filter(time => now - time < this.clickRateWindow);
+        const avgClicksPerSecond = this.recentClicks.length / (this.clickRateWindow / 1000);
+        document.getElementById('stat-avg-clicks').textContent = avgClicksPerSecond.toFixed(1);
         
         document.getElementById('stat-prestige-count').textContent = this.gameState.prestigeCount;
         document.getElementById('stat-rebirth-count').textContent = this.gameState.rebirthCount;
