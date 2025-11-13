@@ -560,6 +560,12 @@ class IdleClickerGame {
             power *= bonus;
         }
         
+        // Apply rebirth bonus (multiplicative!)
+        if (this.config.rebirth?.enabled && this.gameState.rebirthPoints > 0) {
+            const rebirthBonus = Math.pow(this.config.rebirth.bonusPerPoint, this.gameState.rebirthPoints);
+            power *= rebirthBonus;
+        }
+        
         // Apply Golden Touch shop upgrade
         if (this.gameState.shopPurchases['golden_touch']) {
             power *= 2;
@@ -1359,6 +1365,10 @@ class IdleClickerGame {
             this.gameState.shopPurchases[itemId] = true;
             
             this.playSound('achievement');
+            
+            // Recalculate powers/multipliers after shop purchase
+            this.updateClickPower();
+            
             this.renderShop();
             this.updateUI();
             
@@ -2387,8 +2397,12 @@ class IdleClickerGame {
             this.gameState.shopPurchases[item.id] = true;
         });
         
+        // Recalculate all bonuses
+        this.updateClickPower();
+        
         this.renderShop();
         this.applyShopEffects();
+        this.updateUI();
         this.playSound('achievement');
         console.log('✅ Admin: Unlocked all shop items');
     }
@@ -2400,7 +2414,11 @@ class IdleClickerGame {
             this.gameState.shopPurchases[item.id] = false;
         });
         
+        // Recalculate all bonuses (remove shop effects)
+        this.updateClickPower();
+        
         this.renderShop();
+        this.updateUI();
         this.playSound('achievement');
         console.log('✅ Admin: Reset all shop purchases');
     }
