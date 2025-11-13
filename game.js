@@ -185,8 +185,6 @@ class IdleClickerGame {
         document.getElementById('admin-add-gems').addEventListener('click', () => this.adminAddGems());
         document.getElementById('admin-set-generator').addEventListener('click', () => this.adminSetGenerator());
         document.getElementById('admin-set-upgrade').addEventListener('click', () => this.adminSetUpgrade());
-        document.getElementById('admin-max-generator').addEventListener('click', () => this.adminMaxGenerator());
-        document.getElementById('admin-max-upgrade').addEventListener('click', () => this.adminMaxUpgrade());
         
         // Quick gem buttons
         document.querySelectorAll('.admin-quick-btn').forEach(btn => {
@@ -987,18 +985,6 @@ class IdleClickerGame {
         console.log(`✅ Admin: Set ${generator.name} to level ${level}`);
     }
     
-    adminMaxGenerator() {
-        const generatorId = document.getElementById('admin-generator-select').value;
-        this.gameState.generators[generatorId].level = 100;
-        this.renderGenerators();
-        this.updateUI();
-        this.playSound('buy');
-        this.updateAdminGeneratorLevel();
-        
-        const generator = this.config.generators.find(g => g.id === generatorId);
-        console.log(`✅ Admin: Set ${generator.name} to MAX (100)`);
-    }
-    
     adminSetUpgrade() {
         const upgradeId = document.getElementById('admin-upgrade-select').value;
         const level = parseInt(document.getElementById('admin-upgrade-level').value);
@@ -1017,19 +1003,6 @@ class IdleClickerGame {
         
         const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
         console.log(`✅ Admin: Set ${upgrade.name} to level ${level}`);
-    }
-    
-    adminMaxUpgrade() {
-        const upgradeId = document.getElementById('admin-upgrade-select').value;
-        this.gameState.clickUpgrades[upgradeId].level = 100;
-        this.updateClickPower();
-        this.renderClickUpgrades();
-        this.updateUI();
-        this.playSound('buy');
-        this.updateAdminUpgradeLevel();
-        
-        const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
-        console.log(`✅ Admin: Set ${upgrade.name} to MAX (100)`);
     }
 }
 

@@ -461,8 +461,11 @@ body {
     position: absolute;
     font-size: 2em;
     font-weight: bold;
-    color: #4ecdc4;
-    text-shadow: 0 0 10px rgba(78, 205, 196, 0.8);
+    color: #000000;
+    text-shadow: 
+        0 0 10px rgba(78, 205, 196, 1),
+        0 0 20px rgba(78, 205, 196, 0.8),
+        2px 2px 4px rgba(0, 0, 0, 0.8);
     animation: float-up 1s ease-out forwards;
     pointer-events: none;
 }
