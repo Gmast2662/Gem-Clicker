@@ -2190,6 +2190,12 @@ class IdleClickerGame {
             if (Math.random() < 0.01) { // ~1% chance per 100ms = once every ~10 seconds
                 this.checkSmartNotifications();
             }
+            
+            // Update admin panel if open
+            const adminPanel = document.getElementById('admin-panel');
+            if (adminPanel && !adminPanel.classList.contains('hidden')) {
+                this.updateAdminDisplay();
+            }
         }, 100);
         
         // Auto-save loop
