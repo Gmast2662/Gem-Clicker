@@ -37,6 +37,14 @@ class IdleClickerGame {
         // Admin panel
         this.adminUnlocked = false;
         this.adminPassword = 'Admin123'; // Change this to your own password
+        
+        // Settings
+        this.settings = {
+            soundVolume: 0.5,
+            soundEnabled: true,
+            theme: 'dark'
+        };
+        this.loadSettings();
     }
     
     initAudio() {
@@ -48,7 +56,7 @@ class IdleClickerGame {
     }
     
     playSound(type) {
-        if (!this.audioContext) return;
+        if (!this.audioContext || !this.settings.soundEnabled) return;
         
         const oscillator = this.audioContext.createOscillator();
         const gainNode = this.audioContext.createGain();
@@ -56,28 +64,49 @@ class IdleClickerGame {
         oscillator.connect(gainNode);
         gainNode.connect(this.audioContext.destination);
         
+        const volume = this.settings.soundVolume;
+        
         switch(type) {
             case 'click':
                 oscillator.frequency.value = 800;
-                gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1 * volume, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, this.audioContext.currentTime + 0.1);
                 oscillator.start(this.audioContext.currentTime);
                 oscillator.stop(this.audioContext.currentTime + 0.1);
                 break;
             case 'buy':
                 oscillator.frequency.value = 523.25; // C5
-                gainNode.gain.setValueAtTime(0.15, this.audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.15 * volume, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, this.audioContext.currentTime + 0.2);
                 oscillator.start(this.audioContext.currentTime);
                 oscillator.stop(this.audioContext.currentTime + 0.2);
                 break;
             case 'achievement':
                 oscillator.frequency.value = 880; // A5
-                gainNode.gain.setValueAtTime(0.2, this.audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
+                gainNode.gain.setValueAtTime(0.2 * volume, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, this.audioContext.currentTime + 0.5);
                 oscillator.start(this.audioContext.currentTime);
                 oscillator.stop(this.audioContext.currentTime + 0.5);
                 break;
+        }
+    }
+    
+    loadSettings() {
+        try {
+            const saved = localStorage.getItem('gemClickerSettings');
+            if (saved) {
+                this.settings = { ...this.settings, ...JSON.parse(saved) };
+            }
+        } catch (e) {
+            console.log('Could not load settings');
+        }
+    }
+    
+    saveSettings() {
+        try {
+            localStorage.setItem('gemClickerSettings', JSON.stringify(this.settings));
+        } catch (e) {
+            console.log('Could not save settings');
         }
     }
 
@@ -217,6 +246,97 @@ class IdleClickerGame {
         
         // Populate admin dropdowns
         this.populateAdminDropdowns();
+        
+        // Settings
+        document.getElementById('sound-toggle').addEventListener('change', (e) => this.toggleSound(e.target.checked));
+        document.getElementById('volume-slider').addEventListener('input', (e) => this.updateVolume(e.target.value));
+        
+        // Theme buttons
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.getAttribute('data-theme');
+                this.changeTheme(theme);
+            });
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+        
+        // Apply saved settings
+        this.applySettings();
+    }
+    
+    handleKeyboard(e) {
+        // Don't trigger if typing in input fields
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
+        switch(e.key) {
+            case ' ':
+                e.preventDefault();
+                document.getElementById('main-clicker').click();
+                break;
+            case '1':
+                this.switchTab('generators');
+                break;
+            case '2':
+                this.switchTab('upgrades');
+                break;
+            case '3':
+                this.switchTab('multipliers');
+                break;
+            case '4':
+                this.switchTab('achievements');
+                break;
+            case '5':
+                this.switchTab('stats');
+                break;
+            case '6':
+                this.switchTab('settings');
+                break;
+        }
+    }
+    
+    toggleSound(enabled) {
+        this.settings.soundEnabled = enabled;
+        this.saveSettings();
+    }
+    
+    updateVolume(value) {
+        this.settings.soundVolume = value / 100;
+        document.getElementById('volume-display').textContent = value + '%';
+        this.saveSettings();
+    }
+    
+    changeTheme(theme) {
+        this.settings.theme = theme;
+        this.saveSettings();
+        this.applySettings();
+        
+        // Update active button
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+    }
+    
+    applySettings() {
+        // Apply theme
+        if (this.settings.theme === 'light') {
+            document.body.classList.add('light-theme');
+        } else {
+            document.body.classList.remove('light-theme');
+        }
+        
+        // Apply sound settings
+        document.getElementById('sound-toggle').checked = this.settings.soundEnabled;
+        document.getElementById('volume-slider').value = this.settings.soundVolume * 100;
+        document.getElementById('volume-display').textContent = Math.round(this.settings.soundVolume * 100) + '%';
+        
+        // Update theme button
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-theme="${this.settings.theme}"]`)?.classList.add('active');
     }
 
     handleClick(e) {
@@ -251,8 +371,37 @@ class IdleClickerGame {
             this.createFloatingNumber(e.clientX, e.clientY, this.gameState.clickPower);
         }
         
+        // Particle effects
+        if (this.config.ui.animations.particleEffects) {
+            this.createParticles(e.clientX, e.clientY, 5);
+        }
+        
         this.updateUI();
         this.checkAchievements();
+    }
+    
+    createParticles(x, y, count) {
+        const colors = ['#4ecdc4', '#9b59b6', '#3498db', '#f39c12', '#e74c3c'];
+        
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            const angle = (Math.random() * Math.PI * 2);
+            const velocity = 50 + Math.random() * 100;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity - 50; // Bias upward
+            
+            particle.style.setProperty('--vx', vx + 'px');
+            particle.style.setProperty('--vy', vy + 'px');
+            
+            document.getElementById('floating-numbers').appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
     }
 
     createFloatingNumber(x, y, value) {
@@ -591,7 +740,24 @@ class IdleClickerGame {
         // Play achievement sound
         this.playSound('achievement');
         
-        // Simple notification - could be enhanced
+        // Create achievement popup
+        const popup = document.createElement('div');
+        popup.className = 'achievement-popup';
+        popup.innerHTML = `
+            <div class="achievement-popup-header">🏆 Achievement Unlocked!</div>
+            <div class="achievement-popup-icon">${achievement.icon}</div>
+            <div class="achievement-popup-name">${achievement.name}</div>
+            <div class="achievement-popup-desc">${achievement.description}</div>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        // Remove after animation
+        setTimeout(() => {
+            popup.classList.add('fade-out');
+            setTimeout(() => popup.remove(), 500);
+        }, 4000);
+        
         console.log(`🏆 Achievement Unlocked: ${achievement.name}`);
     }
 
@@ -898,6 +1064,15 @@ class IdleClickerGame {
         document.getElementById('stat-total-clicks').textContent = this.formatNumber(this.gameState.totalClicks);
         document.getElementById('stat-click-earned').textContent = this.formatNumber(this.gameState.clickEarned);
         document.getElementById('stat-generator-earned').textContent = this.formatNumber(this.gameState.generatorEarned);
+        
+        // Calculate gems per hour
+        const perHour = this.calculateProductionPerSecond() * 3600;
+        document.getElementById('stat-per-hour').textContent = this.formatNumber(perHour);
+        
+        // Calculate average clicks per second
+        const avgClicksPerSecond = this.gameState.playTime > 0 ? this.gameState.totalClicks / this.gameState.playTime : 0;
+        document.getElementById('stat-avg-clicks').textContent = avgClicksPerSecond.toFixed(2);
+        
         document.getElementById('stat-prestige-count').textContent = this.gameState.prestigeCount;
         document.getElementById('stat-play-time').textContent = this.formatPlayTime(this.gameState.playTime);
     }

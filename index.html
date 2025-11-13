@@ -68,6 +68,7 @@
                     <button class="tab-button" data-tab="multipliers">✨ Multipliers</button>
                     <button class="tab-button" data-tab="achievements">🏆 Achievements</button>
                     <button class="tab-button" data-tab="stats">📊 Stats</button>
+                    <button class="tab-button" data-tab="settings">⚙️ Settings</button>
                 </div>
 
                 <!-- Tab Contents -->
@@ -115,12 +116,66 @@
                             <span id="stat-generator-earned">0</span>
                         </div>
                         <div class="stat-row">
+                            <span>Gems Per Hour:</span>
+                            <span id="stat-per-hour">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Average Clicks/Second:</span>
+                            <span id="stat-avg-clicks">0</span>
+                        </div>
+                        <div class="stat-row">
                             <span>Prestige Count:</span>
                             <span id="stat-prestige-count">0</span>
                         </div>
                         <div class="stat-row">
                             <span>Play Time:</span>
                             <span id="stat-play-time">0s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="settings-tab">
+                    <div class="settings-container">
+                        <h3>⚙️ Game Settings</h3>
+                        
+                        <div class="settings-section">
+                            <h4>🔊 Sound</h4>
+                            <div class="setting-item">
+                                <label for="sound-toggle">Sound Effects:</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="sound-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label for="volume-slider">Volume:</label>
+                                <input type="range" id="volume-slider" min="0" max="100" value="50">
+                                <span id="volume-display">50%</span>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h4>🎨 Theme</h4>
+                            <div class="setting-item">
+                                <label>Color Theme:</label>
+                                <div class="theme-buttons">
+                                    <button class="theme-btn active" data-theme="dark">🌙 Dark</button>
+                                    <button class="theme-btn" data-theme="light">☀️ Light</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h4>⌨️ Keyboard Shortcuts</h4>
+                            <div class="shortcuts-list">
+                                <div class="shortcut-item"><kbd>Space</kbd> - Click the gem</div>
+                                <div class="shortcut-item"><kbd>1</kbd> - Generators tab</div>
+                                <div class="shortcut-item"><kbd>2</kbd> - Upgrades tab</div>
+                                <div class="shortcut-item"><kbd>3</kbd> - Multipliers tab</div>
+                                <div class="shortcut-item"><kbd>4</kbd> - Achievements tab</div>
+                                <div class="shortcut-item"><kbd>5</kbd> - Stats tab</div>
+                                <div class="shortcut-item"><kbd>6</kbd> - Settings tab</div>
+                            </div>
                         </div>
                     </div>
                 </div>
