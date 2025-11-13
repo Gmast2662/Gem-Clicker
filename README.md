@@ -1,409 +1,214 @@
-# 💎 Gem Clicker - Idle Mining Game
+# 💎 Gem Clicker
 
-A fully customizable idle/incremental clicker game built with vanilla JavaScript. Click to mine gems, upgrade your tools, and build an automated gem mining empire!
+**An addictive idle mining game where you click to mine gems, upgrade your tools, and build an automated gem empire!**
 
-## 🎮 Features
+🎮 **[Play Now!](https://gmast2662.github.io/Gem-Clicker/)**
 
-- **Addictive Mining Gameplay** - Click the gem to mine and earn currency
-- **Multiple Upgrade Types** - Mining tool upgrades and automatic generators
-- **Prestige System** - Reset for permanent bonuses and long-term progression
-- **Achievement System** - Unlock achievements as you progress
-- **Auto-Save** - Your progress is automatically saved
-- **Offline Progress** - Earn gems even when you're away
-- **Beautiful Modern UI** - Sleek gem-themed design with smooth animations
-- **Fully Customizable** - Every aspect configurable through JSON
+---
 
-## 🚀 Getting Started
+## 🌟 About
 
-### Quick Start
+Gem Clicker is an incremental idle game where your goal is to mine as many gems as possible! Start by clicking the gem to mine manually, then purchase upgrades and hire workers to automate your gem empire. With a prestige system, achievements, and offline progress, there's always something to strive for!
 
-1. Simply open `index.html` in your web browser
-2. Start clicking the gem to mine!
-3. Purchase tool upgrades to increase your mining power
-4. Buy generators to mine gems automatically
-5. Prestige when ready for permanent bonuses
+---
 
-### File Structure
+## ✨ Features
 
-```
-idle-clicker-game/
-├── index.html          # Main game file
-├── styles.css          # All styling
-├── game.js            # Game logic
-├── config.json        # Game configuration (customize here!)
-└── README.md          # This file
-```
+- 💎 **Click to Mine** - Every click mines precious gems
+- ⛏️ **Tool Upgrades** - Upgrade from pickaxes to laser drills
+- 👷 **Automated Mining** - Hire miners and build advanced facilities
+- ⭐ **Prestige System** - Reset for permanent bonuses
+- 🏆 **Achievements** - Unlock achievements as you progress
+- 💾 **Auto-Save** - Your progress is saved automatically
+- 🌙 **Offline Progress** - Earn gems even when you're away (up to 24 hours!)
+- 🎨 **Beautiful UI** - Smooth animations and modern design
 
-## ⚙️ Customization Guide
+---
 
-All game content is configured in `config.json`. You can easily customize every aspect of the game!
+## 🎮 How to Play
 
-### Game Settings
+### Getting Started
 
-```json
-"game": {
-  "title": "Your Game Title",
-  "currency": "Your Currency Name",
-  "currencyIcon": "🎮",
-  "clickable": "Thing to Click",
-  "clickableIcon": "🎯",
-  "startingCurrency": 0,
-  "clickPower": 1,
-  "saveInterval": 5000
-}
-```
+1. **Click the gem** in the center to mine gems manually
+2. **Purchase upgrades** in the "Click Upgrades" tab to mine more gems per click
+3. **Buy generators** in the "Generators" tab to mine gems automatically
+4. **Watch your gem count grow!**
 
-- `title`: The name displayed at the top of the game
-- `currency`: Name of your in-game currency
-- `currencyIcon`: Emoji/symbol for your currency
-- `clickable`: Name of the object players click
-- `clickableIcon`: Emoji/symbol for the clickable object
-- `startingCurrency`: Amount of currency new players start with
-- `clickPower`: Base clicking power (how much currency per click)
-- `saveInterval`: Auto-save frequency in milliseconds
+### Early Game Tips
 
-### Click Upgrades
+- Focus on **click upgrades** first to get more gems per click
+- Buy your first **Miner** (costs 15 gems) as soon as you can
+- Each generator produces gems automatically every second
+- Balance between click upgrades and generators for optimal growth
 
-Click upgrades increase the amount earned per click:
+### Mid Game Strategy
 
-```json
-{
-  "id": "unique_id",
-  "name": "Upgrade Name",
-  "description": "What this upgrade does",
-  "icon": "👆",
-  "baseCost": 10,
-  "costMultiplier": 1.15,
-  "powerIncrease": 1,
-  "maxLevel": null
-}
-```
+- Start diversifying your generators - each one is more powerful than the last
+- **Crystal Caves** and **Deep Shafts** provide massive production boosts
+- Keep upgrading your mining tools for better manual clicking
+- Watch for achievements to track your progress!
 
-- `id`: Unique identifier (must be unique!)
-- `name`: Display name
-- `description`: Short description
-- `icon`: Emoji/symbol to display
-- `baseCost`: Initial cost
-- `costMultiplier`: How much the cost increases per level (1.15 = 15% increase)
-- `powerIncrease`: How much clicking power each level adds
-- `maxLevel`: Maximum level (null = unlimited)
+### Late Game & Prestige
 
-### Generators
+- When progress slows down, consider **Prestiging**
+- Prestige requires 1 million total gems earned
+- You'll lose all gems and generators BUT gain **Prestige Points**
+- Each Prestige Point gives a permanent **+1% bonus** to ALL gem production
+- Your first prestige is the biggest boost - don't be afraid to reset!
 
-Generators automatically produce currency over time:
+---
 
-```json
-{
-  "id": "generator_id",
-  "name": "Generator Name",
-  "description": "What this generator does",
-  "icon": "🏭",
-  "baseCost": 100,
-  "costMultiplier": 1.15,
-  "baseProduction": 1,
-  "maxLevel": null
-}
-```
+## 🏗️ Generators (Buildings)
 
-- `baseProduction`: Currency generated per second per level
-- All other fields work the same as click upgrades
+Unlock increasingly powerful mining operations:
 
-**Balancing Tips:**
-- Each generator should be ~10x more expensive than the previous
-- Production should also scale significantly (5-10x increases)
-- Cost multiplier between 1.10-1.20 works well
+| Generator | Cost | Production/sec | Description |
+|-----------|------|----------------|-------------|
+| 👷 Miner | 15 gems | 0.1/sec | Manual worker |
+| 🛤️ Mine Cart | 100 gems | 1/sec | Transports gems |
+| 🏔️ Gem Mine | 1.1K gems | 8/sec | Dedicated operation |
+| 🔷 Crystal Cave | 12K gems | 47/sec | Natural formations |
+| 🕳️ Deep Shaft | 130K gems | 260/sec | Deep underground mining |
+| 🏗️ Drilling Rig | 1.4M gems | 1.4K/sec | Industrial extraction |
+| 🌀 Gem Portal | 20M gems | 7.8K/sec | Dimensional summoning |
+| ⏰ Time Rift | 330M gems | 44K/sec | Ancient gems |
+| ⚛️ Quantum Excavator | 5.1B gems | 260K/sec | Atomic creation |
+| ✨ Stellar Forge | 75B gems | 1.6M/sec | Starlight conversion |
 
-### Prestige System
+---
 
-Configure the prestige/rebirth system:
+## ⛏️ Click Upgrades (Tools)
 
-```json
-"prestige": {
-  "enabled": true,
-  "currencyName": "Prestige Points",
-  "currencyIcon": "⭐",
-  "requirement": 1000000,
-  "formula": "sqrt",
-  "divisor": 1000000,
-  "bonusPerPoint": 0.01,
-  "confirmationRequired": true
-}
-```
+Upgrade your mining power:
 
-- `enabled`: Turn prestige on/off
-- `currencyName`: Name of prestige currency
-- `currencyIcon`: Symbol for prestige currency
-- `requirement`: Minimum total earned to prestige
-- `formula`: "sqrt" or "log" - how prestige points are calculated
-- `divisor`: Value to divide total earned by before applying formula
-- `bonusPerPoint`: Multiplier bonus per prestige point (0.01 = 1% per point)
-- `confirmationRequired`: Ask for confirmation before prestiging
+| Upgrade | Cost | Power Boost | Description |
+|---------|------|-------------|-------------|
+| ⛏️ Iron Pickaxe | 10 gems | +1 per click | Basic mining tool |
+| 🔨 Mining Drill | 100 gems | +5 per click | Powered drilling |
+| 🚜 Excavator | 1K gems | +25 per click | Heavy machinery |
+| 🔦 Laser Drill | 10K gems | +100 per click | Precision technology |
 
-**Prestige Formula Examples:**
-- `sqrt` with divisor 1000000: √(1000000/1000000) = 1 point at 1M total earned
-- `sqrt` with divisor 100000: √(1000000/100000) = 3.16 → 3 points at 1M total earned
+---
 
-### Achievements
+## 🏆 Achievements
 
-Add achievements to reward players:
+Unlock achievements to show off your mining prowess:
 
-```json
-{
-  "id": "achievement_id",
-  "name": "Achievement Name",
-  "description": "How to unlock this",
-  "icon": "🏆",
-  "requirement": {
-    "type": "total_clicks",
-    "value": 100
-  }
-}
-```
+- 💎 **First Gem** - Mine your first gem
+- 📦 **Gem Collector** - Mine 100 gems
+- 👷 **Mining Boss** - Hire your first Miner
+- 💰 **Gem Millionaire** - Mine 1 million gems
+- *...and more to discover!*
 
-**Requirement Types:**
-- `total_clicks`: Total number of clicks
-- `total_earned`: Total currency earned (lifetime)
-- `currency`: Current currency amount
-- `generator_owned`: Specific generator level (needs `id` field)
+---
 
-### UI Customization
+## ⭐ Prestige System
 
-Change colors and visual settings:
+### When to Prestige?
 
-```json
-"ui": {
-  "theme": {
-    "primary": "#ff6b6b",
-    "secondary": "#4ecdc4",
-    "background": "#1a1a2e",
-    "cardBackground": "#16213e",
-    "text": "#eaeaea"
-  },
-  "animations": {
-    "clickAnimation": true,
-    "floatingNumbers": true,
-    "particleEffects": true
-  },
-  "numberFormat": {
-    "useShortFormat": true,
-    "decimalPlaces": 2
-  }
-}
-```
+- You can prestige after earning **1 million total gems** (all-time)
+- Each prestige grants **Prestige Points** based on your total gems earned
+- Formula: √(total earned / 1,000,000) = Prestige Points
+- Each point gives a **permanent +1% bonus** to all production
 
-- Change any hex color codes to customize the look
-- Toggle animations on/off
-- Configure number formatting
+### Prestige Examples:
 
-## 🎯 Game Mechanics
+- 1M gems earned → 1 Prestige Point → +1% bonus
+- 4M gems earned → 2 Prestige Points → +2% bonus
+- 9M gems earned → 3 Prestige Points → +3% bonus
+- 100M gems earned → 10 Prestige Points → +10% bonus
 
-### Currency Generation
+**Tip:** Your first prestige happens around 1M gems and gives you +1% forever. The bonus compounds with each prestige!
 
-- **Clicking**: Earn currency by clicking the main button
-- **Generators**: Purchase generators for passive income
-- **Prestige Bonus**: Multiplies both clicking and generation
-
-### Progression Tips
-
-1. **Early Game**: Focus on clicking upgrades
-2. **Mid Game**: Start buying generators for passive income
-3. **Late Game**: Balance generators and click upgrades
-4. **Prestige**: Reset when you can gain significant prestige points
-
-### Prestige Strategy
-
-- Your first prestige gives the biggest relative boost
-- Each prestige point gives a permanent +1% bonus (configurable)
-- Prestige when gains slow down significantly
+---
 
 ## 💾 Save System
 
-### Features
-- **Auto-Save**: Game saves automatically every 5 seconds (configurable)
-- **Manual Save**: Click the save button anytime
-- **Offline Progress**: Earn currency while away (up to 24 hours)
-- **Export/Import**: Transfer saves between devices
+### Auto-Save
+- Your game saves automatically every 5 seconds
+- Progress is stored in your browser's local storage
 
-### Using Export/Import
+### Export/Import
+- **Export**: Click "Export" to copy your save data
+- Save the text somewhere safe (notepad, etc.)
+- **Import**: Click "Import" and paste your save data
+- Great for transferring between devices or backing up!
 
-1. Click "Export" to copy save data to clipboard
-2. Paste and save the text somewhere safe
-3. Click "Import" on another device/browser
-4. Paste the save data and confirm
+### Reset
+- Completely wipe all progress (including prestige)
+- Cannot be undone - use with caution!
 
-### Reset Progress
+---
 
-Click the "Reset" button to completely wipe all progress. This cannot be undone!
+## 🌙 Offline Progress
 
-## 🎨 Creating Your Own Theme
+- The game calculates earnings while you're away
+- Offline earnings are calculated for up to **24 hours**
+- Only generators (not clicks) count toward offline progress
+- When you return, you'll see how many gems you earned!
 
-Want to make a completely different game? Just edit `config.json`!
+---
 
-### Example Themes
+## 🎯 Pro Tips
 
-**Gem Clicker (Current):**
-```json
-"game": {
-  "title": "Gem Clicker",
-  "currency": "Gems",
-  "currencyIcon": "💎",
-  "clickable": "Gem",
-  "clickableIcon": "💎"
-}
-```
+1. **Early game**: Focus on getting your first few generators
+2. **Don't hoard gems**: Spend them on upgrades to earn more!
+3. **Balance is key**: Mix click upgrades with generators
+4. **Prestige early**: Your first prestige gives a huge relative boost
+5. **Check achievements**: They guide your progression
+6. **Let it idle**: This is an idle game - let it run in the background!
 
-**Space Empire:**
-```json
-"game": {
-  "title": "Space Empire",
-  "currency": "Stars",
-  "currencyIcon": "⭐",
-  "clickable": "Planet",
-  "clickableIcon": "🪐"
-}
-```
+---
 
-**Money Clicker:**
-```json
-"game": {
-  "title": "Money Empire",
-  "currency": "Dollars",
-  "currencyIcon": "💵",
-  "clickable": "Money",
-  "clickableIcon": "💰"
-}
-```
+## 🖥️ Browser Compatibility
 
-## 🔧 Advanced Customization
-
-### Adding More Generators
-
-To add new generators, simply add objects to the `generators` array:
-
-```json
-{
-  "id": "custom_generator",
-  "name": "Custom Generator",
-  "description": "Your description",
-  "icon": "🎯",
-  "baseCost": 50000,
-  "costMultiplier": 1.15,
-  "baseProduction": 200,
-  "maxLevel": null
-}
-```
-
-### Balancing Your Game
-
-**Cost Progression:**
-- Starter items: 10-100
-- Early game: 100-10,000
-- Mid game: 10,000-1,000,000
-- Late game: 1,000,000+
-
-**Production Scaling:**
-- Each tier should produce 5-10x more than previous
-- Balance production with cost increases
-
-**Prestige Timing:**
-- Set requirement so prestige happens after 30-60 minutes
-- Adjust divisor to control prestige point gain rate
-
-### Number Formatting
-
-Numbers automatically format with suffixes:
-- 1,000 → 1K
-- 1,000,000 → 1M
-- 1,000,000,000 → 1B
-
-Supports: K, M, B, T, Qa, Qi, Sx, Sp, Oc, No, Dc
-
-## 🐛 Troubleshooting
-
-**Game won't load:**
-- Make sure all files are in the same folder
-- Check browser console for errors
-- Ensure `config.json` is valid JSON (use a JSON validator)
-
-**Save not working:**
-- Check if browser allows localStorage
-- Try a different browser
-- Check if in private/incognito mode
-
-**Numbers showing as NaN:**
-- Check that all numeric values in config.json are numbers, not strings
-- Ensure no division by zero
-
-**Config changes not appearing:**
-- Hard refresh the page (Ctrl+F5 or Cmd+Shift+R)
-- Clear browser cache
-- Make sure config.json is saved properly
-
-## 📱 Browser Compatibility
-
-Works in all modern browsers:
-- Chrome/Edge (recommended)
-- Firefox
-- Safari
-- Opera
+Gem Clicker works on all modern browsers:
+- ✅ Chrome / Edge (recommended)
+- ✅ Firefox
+- ✅ Safari
+- ✅ Opera
 
 **Requirements:**
 - JavaScript enabled
 - LocalStorage enabled
 - Modern browser (2020+)
 
-## 🎓 Learning Resources
+---
 
-Want to modify the code further?
+## 🛠️ For Developers
 
-**Files to edit:**
-- `config.json` - All game content (easiest!)
-- `styles.css` - Visual appearance
-- `game.js` - Game mechanics (advanced)
-- `index.html` - Page structure (advanced)
+Want to customize the game or understand how it works?
 
-**Tips:**
-- Start by only editing `config.json`
-- Test changes frequently
-- Keep backups of working versions
-- Use browser dev tools (F12) to debug
-
-## 📝 License
-
-This is a free, open-source game template. Feel free to:
-- Modify it however you want
-- Use it for personal or commercial projects
-- Share it with others
-- Create your own versions
-
-No attribution required, but always appreciated!
-
-## 🎉 Credits
-
-Created as a fully customizable idle clicker game template.
-
-**Built with:**
-- Vanilla JavaScript
-- CSS3
-- HTML5
-- Pure awesomeness
+Check out **[SETUP.md](SETUP.md)** for:
+- Complete customization guide
+- Configuration options
+- Balancing tips
+- How to modify the code
+- Creating your own theme
 
 ---
 
-## 🚀 Quick Customization Checklist
+## 📝 Credits
 
-Ready to make it yours? Follow these steps:
+Created by **[Gmast2662](https://github.com/Gmast2662)**
 
-- [ ] Change game title in `config.json`
-- [ ] Update currency name and icon
-- [ ] Modify clickable object name and icon
-- [ ] Customize generator names and descriptions
-- [ ] Adjust upgrade names and descriptions
-- [ ] Set your preferred color scheme
-- [ ] Balance costs and production rates
-- [ ] Add custom achievements
-- [ ] Configure prestige settings
-- [ ] Test and enjoy!
+Built with:
+- Vanilla JavaScript
+- CSS3
+- HTML5
+- Lots of coffee ☕
 
-**Have fun creating your incremental game!** 🎮✨
+---
+
+## 📜 License
+
+Free to play, free to modify, free to share!
+
+---
+
+## 🎮 Ready to Mine?
+
+**[Start Playing Now!](https://gmast2662.github.io/Gem-Clicker/)**
+
+Happy mining! 💎⛏️✨
 
