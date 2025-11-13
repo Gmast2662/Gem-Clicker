@@ -560,6 +560,11 @@ class IdleClickerGame {
             power *= bonus;
         }
         
+        // Apply Golden Touch shop upgrade
+        if (this.gameState.shopPurchases['golden_touch']) {
+            power *= 2;
+        }
+        
         this.gameState.clickPower = Math.floor(power);
     }
 
@@ -598,6 +603,11 @@ class IdleClickerGame {
         // Apply lucky event bonus
         if (this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'gem_rush') {
             totalMultiplier *= this.config.luckyEvents.gemRushMultiplier;
+        }
+        
+        // Apply Overdrive shop upgrade (production boost)
+        if (this.gameState.shopPurchases['production_boost']) {
+            totalMultiplier *= 1.5;
         }
         
         return totalMultiplier;
@@ -876,7 +886,14 @@ class IdleClickerGame {
     }
 
     calculateCost(baseCost, multiplier, currentLevel) {
-        return Math.floor(baseCost * Math.pow(multiplier, currentLevel));
+        let cost = Math.floor(baseCost * Math.pow(multiplier, currentLevel));
+        
+        // Apply Bulk Discount shop upgrade (10% cost reduction)
+        if (this.gameState.shopPurchases['discount_master']) {
+            cost = Math.floor(cost * 0.9);
+        }
+        
+        return cost;
     }
 
     calculatePrestigeGain() {
@@ -890,6 +907,11 @@ class IdleClickerGame {
             gain = Math.floor(Math.sqrt(totalEarned / this.config.prestige.divisor));
         } else if (this.config.prestige.formula === 'log') {
             gain = Math.floor(Math.log10(totalEarned / this.config.prestige.divisor));
+        }
+        
+        // Apply Prestige Master shop upgrade (double prestige)
+        if (this.gameState.shopPurchases['double_prestige']) {
+            gain *= 2;
         }
         
         return Math.max(0, gain);
@@ -1363,14 +1385,9 @@ class IdleClickerGame {
     }
     
     applyShopEffects() {
-        // Apply shop item effects
-        if (this.gameState.shopPurchases['autosave_boost']) {
-            // Restart save interval with faster rate
-            clearInterval(this.saveInterval);
-            this.saveInterval = setInterval(() => {
-                this.saveGame();
-            }, 2000); // 2 seconds instead of 5
-        }
+        // Shop effects are now applied directly in calculation methods
+        // (updateClickPower, calculateGeneratorMultiplier, calculatePrestigeGain, etc.)
+        // This function is kept for future shop items that need immediate application
     }
     
     renderAchievements() {

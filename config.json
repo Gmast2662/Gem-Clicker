@@ -303,28 +303,52 @@
         "purchased": false
       },
       {
-        "id": "autosave_boost",
-        "name": "Faster Auto-Save",
-        "description": "Save every 2 seconds instead of 5",
-        "icon": "💾",
-        "cost": 25000,
-        "purchased": false
-      },
-      {
         "id": "lucky_events",
         "name": "Unlock Lucky Events",
-        "description": "Enable random golden gem events",
+        "description": "Enable random golden gem & rush events",
         "icon": "🎰",
         "cost": 100000,
         "purchased": false
       },
       {
-        "id": "particle_boost",
-        "name": "Particle Explosion",
-        "description": "2x more particles on click",
-        "icon": "✨",
-        "cost": 30000,
-        "purchased": false
+        "id": "double_prestige",
+        "name": "Prestige Master",
+        "description": "Gain 2x more prestige points",
+        "icon": "⭐",
+        "cost": 500000,
+        "purchased": false,
+        "effect": "prestige_multiplier",
+        "value": 2
+      },
+      {
+        "id": "golden_touch",
+        "name": "Golden Touch",
+        "description": "Permanent 2x click power",
+        "icon": "👆",
+        "cost": 250000,
+        "purchased": false,
+        "effect": "click_multiplier",
+        "value": 2
+      },
+      {
+        "id": "production_boost",
+        "name": "Overdrive",
+        "description": "Permanent 1.5x production for all generators",
+        "icon": "⚡",
+        "cost": 300000,
+        "purchased": false,
+        "effect": "production_multiplier",
+        "value": 1.5
+      },
+      {
+        "id": "discount_master",
+        "name": "Bulk Discount",
+        "description": "All upgrades & generators cost 10% less",
+        "icon": "💰",
+        "cost": 200000,
+        "purchased": false,
+        "effect": "cost_reduction",
+        "value": 0.9
       }
     ]
   },
