@@ -219,6 +219,32 @@ body {
     color: #ffd43b;
 }
 
+.prestige-bonus-text {
+    margin-top: 5px;
+    color: #4ecdc4;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.section-header {
+    color: #4ecdc4;
+    font-size: 1.4em;
+    margin: 20px 0 15px 0;
+    padding: 10px;
+    text-align: center;
+    background: rgba(78, 205, 196, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(78, 205, 196, 0.3);
+}
+
+.milestone-item {
+    border-left: 4px solid #f39c12;
+}
+
+.milestone-item.unlocked {
+    border-left-color: #2ecc71;
+}
+
 /* Controls */
 .controls {
     display: grid;
@@ -1210,19 +1236,26 @@ body.light-theme .upgrade-level,
 body.light-theme .upgrade-production,
 body.light-theme .upgrade-cost,
 body.light-theme .stat-row,
+body.light-theme .stat-row span,
 body.light-theme .click-stats,
 body.light-theme .click-stats p,
 body.light-theme .click-stats span,
 body.light-theme .auto-clicker-info,
+body.light-theme .auto-clicker-info span,
 body.light-theme .auto-clicker-section h4,
 body.light-theme .prestige-description,
 body.light-theme .prestige-info,
+body.light-theme .rebirth-description,
+body.light-theme .rebirth-info,
+body.light-theme .rebirth-bonus,
 body.light-theme .multiplier-section-header,
 body.light-theme .shortcut-item,
 body.light-theme #volume-display,
 body.light-theme .daily-streak-text,
 body.light-theme .admin-current,
-body.light-theme .admin-input-group label {
+body.light-theme .admin-input-group label,
+body.light-theme .progress-label,
+body.light-theme .progress-label span {
     color: #2c3e50 !important;
 }
 
@@ -1285,6 +1318,17 @@ body.light-theme .changelog-date {
 
 body.light-theme .changelog-entry p {
     color: #3498db;
+}
+
+body.light-theme .section-header {
+    color: #2c3e50;
+    background: rgba(52, 152, 219, 0.15);
+    border-color: rgba(52, 152, 219, 0.4);
+}
+
+body.light-theme .prestige-bonus-text,
+body.light-theme #prestige-requirement-text {
+    color: #2c3e50 !important;
 }
 
 /* Achievement Popup */

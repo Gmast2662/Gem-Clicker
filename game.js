@@ -224,6 +224,7 @@ class IdleClickerGame {
         this.renderMultiplierUpgrades();
         this.renderShop();
         this.renderAchievements();
+        this.renderMilestones();
         this.updateUI();
         
         // Show prestige UI if enabled
@@ -1366,6 +1367,32 @@ class IdleClickerGame {
             container.appendChild(item);
         });
     }
+    
+    renderMilestones() {
+        if (!this.config.milestones?.enabled) return;
+        
+        const container = document.getElementById('milestones-container');
+        container.innerHTML = '';
+        
+        this.config.milestones.list.forEach(milestone => {
+            const unlocked = this.gameState.milestones[milestone.id];
+            
+            const item = document.createElement('div');
+            item.className = `achievement-item milestone-item ${unlocked ? 'unlocked' : 'locked'}`;
+            item.innerHTML = `
+                <div class="achievement-icon">${unlocked ? '🌟' : '🔒'}</div>
+                <div class="achievement-name">${milestone.name}</div>
+                <div class="achievement-description">
+                    ${milestone.description}<br>
+                    <small style="color: ${unlocked ? '#2ecc71' : '#ffd43b'};">
+                        ${unlocked ? '✓ UNLOCKED' : `Requires: ${this.formatNumber(milestone.threshold)} total gems`}
+                    </small>
+                </div>
+            `;
+            
+            container.appendChild(item);
+        });
+    }
 
     updateAffordability() {
         // Update generator affordability without full re-render
@@ -1506,6 +1533,16 @@ class IdleClickerGame {
             
             const prestigeGain = this.calculatePrestigeGain();
             document.getElementById('prestige-gain').textContent = this.formatNumber(prestigeGain);
+            
+            // Update requirement text
+            const remaining = Math.max(0, this.config.prestige.requirement - this.gameState.totalEarned);
+            if (remaining > 0) {
+                document.getElementById('prestige-requirement-text').textContent = 
+                    `Need ${this.formatNumber(remaining)} more gems (${this.formatNumber(this.gameState.totalEarned)} / ${this.formatNumber(this.config.prestige.requirement)})`;
+            } else {
+                document.getElementById('prestige-requirement-text').textContent = 
+                    `Ready to prestige! (${this.formatNumber(this.gameState.totalEarned)} total earned)`;
+            }
             
             const prestigeButton = document.getElementById('prestige-button');
             if (prestigeGain > 0) {
