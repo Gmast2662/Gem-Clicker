@@ -177,6 +177,11 @@ class IdleClickerGame {
     }
 
     handleClick(e) {
+        // Resume audio context on first interaction (browser requirement)
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+        
         // Add currency
         this.gameState.currency += this.gameState.clickPower;
         this.gameState.totalClicks++;
@@ -258,15 +263,26 @@ class IdleClickerGame {
 
     buyGenerator(generatorId) {
         const generator = this.config.generators.find(g => g.id === generatorId);
-        if (!generator) return;
+        if (!generator) {
+            console.log('Generator not found:', generatorId);
+            return;
+        }
         
         const currentLevel = this.gameState.generators[generatorId].level;
         const cost = this.calculateCost(generator.baseCost, generator.costMultiplier, currentLevel);
+        
+        console.log(`Attempting to buy ${generator.name}:`, {
+            currentCurrency: this.gameState.currency,
+            cost: cost,
+            canAfford: this.gameState.currency >= cost
+        });
         
         if (this.gameState.currency >= cost) {
             if (generator.maxLevel === null || currentLevel < generator.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.generators[generatorId].level++;
+                
+                console.log(`✅ Purchased ${generator.name}! New level: ${this.gameState.generators[generatorId].level}`);
                 
                 // Play buy sound
                 this.playSound('buy');
@@ -276,20 +292,33 @@ class IdleClickerGame {
                 this.updateUI();
                 this.checkAchievements();
             }
+        } else {
+            console.log(`❌ Cannot afford ${generator.name}. Need ${cost - this.gameState.currency} more gems.`);
         }
     }
 
     buyClickUpgrade(upgradeId) {
         const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
-        if (!upgrade) return;
+        if (!upgrade) {
+            console.log('Upgrade not found:', upgradeId);
+            return;
+        }
         
         const currentLevel = this.gameState.clickUpgrades[upgradeId].level;
         const cost = this.calculateCost(upgrade.baseCost, upgrade.costMultiplier, currentLevel);
+        
+        console.log(`Attempting to buy ${upgrade.name}:`, {
+            currentCurrency: this.gameState.currency,
+            cost: cost,
+            canAfford: this.gameState.currency >= cost
+        });
         
         if (this.gameState.currency >= cost) {
             if (upgrade.maxLevel === null || currentLevel < upgrade.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.clickUpgrades[upgradeId].level++;
+                
+                console.log(`✅ Purchased ${upgrade.name}! New level: ${this.gameState.clickUpgrades[upgradeId].level}`);
                 
                 // Play buy sound
                 this.playSound('buy');
@@ -300,6 +329,8 @@ class IdleClickerGame {
                 this.updateUI();
                 this.checkAchievements();
             }
+        } else {
+            console.log(`❌ Cannot afford ${upgrade.name}. Need ${cost - this.gameState.currency} more gems.`);
         }
     }
 
@@ -434,6 +465,7 @@ class IdleClickerGame {
             
             const item = document.createElement('div');
             item.className = `upgrade-item ${!canAfford ? 'disabled' : ''}`;
+            item.style.cursor = 'pointer'; // Ensure cursor shows clickable
             item.innerHTML = `
                 <div class="upgrade-icon">${generator.icon}</div>
                 <div class="upgrade-info">
@@ -444,11 +476,15 @@ class IdleClickerGame {
                         ${level > 0 ? `<span class="upgrade-production">+${this.formatNumber(actualProduction)}/s</span>` : ''}
                     </div>
                 </div>
-                <div class="upgrade-cost">${this.formatNumber(cost)}</div>
+                <div class="upgrade-cost">${this.formatNumber(cost)} ${this.config.game.currencyIcon}</div>
             `;
             
             // Always add event listener - the buy function will check if affordable
-            item.addEventListener('click', () => this.buyGenerator(generator.id));
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.buyGenerator(generator.id);
+            });
             
             container.appendChild(item);
         });
@@ -465,6 +501,7 @@ class IdleClickerGame {
             
             const item = document.createElement('div');
             item.className = `upgrade-item ${!canAfford ? 'disabled' : ''}`;
+            item.style.cursor = 'pointer'; // Ensure cursor shows clickable
             item.innerHTML = `
                 <div class="upgrade-icon">${upgrade.icon}</div>
                 <div class="upgrade-info">
@@ -475,11 +512,15 @@ class IdleClickerGame {
                         <span class="upgrade-production">+${this.formatNumber(upgrade.powerIncrease)} per click</span>
                     </div>
                 </div>
-                <div class="upgrade-cost">${this.formatNumber(cost)}</div>
+                <div class="upgrade-cost">${this.formatNumber(cost)} ${this.config.game.currencyIcon}</div>
             `;
             
             // Always add event listener - the buy function will check if affordable
-            item.addEventListener('click', () => this.buyClickUpgrade(upgrade.id));
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.buyClickUpgrade(upgrade.id);
+            });
             
             container.appendChild(item);
         });
@@ -516,13 +557,14 @@ class IdleClickerGame {
         // Calculate per second from clicking
         const now = Date.now();
         this.recentClicks = this.recentClicks.filter(time => now - time < this.clickRateWindow);
-        const clicksPerSecond = (this.recentClicks.length / (this.clickRateWindow / 1000)) * this.gameState.clickPower;
+        const clickRate = this.recentClicks.length / (this.clickRateWindow / 1000);
+        const clicksPerSecond = clickRate * this.gameState.clickPower;
         
         // Combine both rates
         const totalPerSecond = generatorPerSecond + clicksPerSecond;
         
         // Show combined rate, with breakdown if actively clicking
-        if (clicksPerSecond > 0) {
+        if (clicksPerSecond > 0.1) {
             document.getElementById('per-second').textContent = 
                 `${this.formatNumber(totalPerSecond)} (${this.formatNumber(generatorPerSecond)} + ${this.formatNumber(clicksPerSecond)})`;
         } else {
