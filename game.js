@@ -60,7 +60,10 @@ class IdleClickerGame {
         this.settings = {
             soundVolume: 0.5,
             soundEnabled: true,
-            theme: 'dark'
+            theme: 'dark',
+            premiumTheme: 'none',
+            gemSkin: 'default',
+            particleEffect: 'default'
         };
         this.loadSettings();
     }
@@ -230,8 +233,10 @@ class IdleClickerGame {
         this.renderClickUpgrades();
         this.renderMultiplierUpgrades();
         this.renderShop();
+        this.renderCosmetics();
         this.renderAchievements();
         this.renderMilestones();
+        this.updateSettingsDropdowns();
         this.updateUI();
         
         // Show prestige UI if enabled
@@ -339,6 +344,34 @@ class IdleClickerGame {
                 this.changeTheme(theme);
             });
         });
+        
+        // Cosmetic dropdowns
+        const premiumThemeSelect = document.getElementById('premium-theme-select');
+        if (premiumThemeSelect) {
+            premiumThemeSelect.addEventListener('change', (e) => {
+                this.settings.premiumTheme = e.target.value;
+                this.saveSettings();
+                this.applyCosmetics();
+            });
+        }
+        
+        const gemSkinSelect = document.getElementById('gem-skin-select');
+        if (gemSkinSelect) {
+            gemSkinSelect.addEventListener('change', (e) => {
+                this.settings.gemSkin = e.target.value;
+                this.saveSettings();
+                this.applyCosmetics();
+            });
+        }
+        
+        const particleEffectSelect = document.getElementById('particle-effect-select');
+        if (particleEffectSelect) {
+            particleEffectSelect.addEventListener('change', (e) => {
+                this.settings.particleEffect = e.target.value;
+                this.saveSettings();
+                // No need to call applyCosmetics here - particle effects apply on next click
+            });
+        }
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
@@ -505,12 +538,12 @@ class IdleClickerGame {
     }
     
     createParticles(x, y, count) {
-        // Get particle colors based on purchased cosmetics
+        // Get particle colors based on selected particle effect in settings
         let colors = ['#4ecdc4', '#9b59b6', '#3498db', '#f39c12', '#e74c3c']; // Default
         
-        if (this.gameState.shopPurchases['rainbow_particles']) {
+        if (this.settings.particleEffect === 'rainbow') {
             colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
-        } else if (this.gameState.shopPurchases['golden_particles']) {
+        } else if (this.settings.particleEffect === 'golden') {
             colors = ['#FFD700', '#FFA500', '#FFFF00', '#FFE5B4', '#FFF8DC'];
         }
         
@@ -1371,7 +1404,12 @@ class IdleClickerGame {
         const container = document.getElementById('shop-container');
         container.innerHTML = '';
         
-        this.config.shop.items.forEach(item => {
+        // Filter for gameplay and feature items only
+        const shopItems = this.config.shop.items.filter(item => 
+            item.type === 'gameplay' || item.type === 'feature'
+        );
+        
+        shopItems.forEach(item => {
             const purchased = this.gameState.shopPurchases[item.id];
             const canAfford = this.gameState.currency >= item.cost;
             
@@ -1399,6 +1437,48 @@ class IdleClickerGame {
         });
     }
     
+    renderCosmetics() {
+        if (!this.config.shop?.enabled) return;
+        
+        const container = document.getElementById('cosmetics-container');
+        container.innerHTML = '';
+        
+        // Filter for cosmetic items only
+        const cosmeticItems = this.config.shop.items.filter(item => 
+            item.type && item.type.startsWith('cosmetic_')
+        );
+        
+        cosmeticItems.forEach(item => {
+            const purchased = this.gameState.shopPurchases[item.id];
+            const canAfford = this.gameState.currency >= item.cost;
+            
+            const cosmeticItem = document.createElement('div');
+            cosmeticItem.className = `upgrade-item ${purchased ? 'purchased' : (!canAfford ? 'disabled' : '')}`;
+            cosmeticItem.style.cursor = purchased ? 'default' : 'pointer';
+            cosmeticItem.innerHTML = `
+                <div class="upgrade-icon">${item.icon}</div>
+                <div class="upgrade-info">
+                    <div class="upgrade-name">${item.name}${purchased ? ' ✓' : ''}</div>
+                    <div class="upgrade-description">${item.description}</div>
+                    <div style="font-size: 0.85em; color: #4ecdc4; margin-top: 5px;">
+                        💡 Equip in Settings after purchase
+                    </div>
+                </div>
+                <div class="upgrade-cost">${purchased ? 'OWNED' : this.formatNumber(item.cost) + ' ' + this.config.game.currencyIcon}</div>
+            `;
+            
+            if (!purchased) {
+                cosmeticItem.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.buyShopItem(item.id);
+                });
+            }
+            
+            container.appendChild(cosmeticItem);
+        });
+    }
+    
     buyShopItem(itemId) {
         const item = this.config.shop.items.find(i => i.id === itemId);
         if (!item || this.gameState.shopPurchases[itemId]) return;
@@ -1412,10 +1492,16 @@ class IdleClickerGame {
             // Recalculate powers/multipliers after shop purchase
             this.updateClickPower();
             
-            // Apply cosmetics immediately
+            // Render both shop and cosmetics
+            this.renderShop();
+            this.renderCosmetics();
+            
+            // Update settings dropdowns with newly purchased item
+            this.updateSettingsDropdowns();
+            
+            // Apply cosmetics based on settings
             this.applyCosmetics();
             
-            this.renderShop();
             this.updateUI();
             
             // Show purchase notification
@@ -1447,25 +1533,87 @@ class IdleClickerGame {
     }
     
     applyCosmetics() {
-        // Apply purchased cosmetic items
+        // Apply selected cosmetic items from settings
         
-        // Deep Purple Theme
-        if (this.gameState.shopPurchases['dark_theme']) {
+        // Premium Theme (overrides base theme if selected)
+        document.body.classList.remove('theme-deep-purple'); // Clear all themes first
+        
+        if (this.settings.premiumTheme === 'dark-purple') {
             document.body.classList.add('theme-deep-purple');
-        } else {
-            document.body.classList.remove('theme-deep-purple');
+        }
+        // More themes can be added here
+        
+        // Gem Skin
+        const clickerIcon = document.getElementById('clicker-icon');
+        if (clickerIcon) {
+            if (this.settings.gemSkin === 'ruby') {
+                document.body.classList.add('skin-ruby');
+                clickerIcon.textContent = '🔴';
+            } else {
+                document.body.classList.remove('skin-ruby');
+                clickerIcon.textContent = this.config.game.clickableIcon;
+            }
         }
         
-        // Ruby Gem Skin
-        if (this.gameState.shopPurchases['gem_skin_ruby']) {
-            document.body.classList.add('skin-ruby');
-            // Change main gem icon to ruby
-            const clickerIcon = document.getElementById('clicker-icon');
-            if (clickerIcon) clickerIcon.textContent = '🔴';
-        } else {
-            document.body.classList.remove('skin-ruby');
-            const clickerIcon = document.getElementById('clicker-icon');
-            if (clickerIcon) clickerIcon.textContent = this.config.game.clickableIcon;
+        // Particle effects are applied in createParticles() based on this.settings.particleEffect
+    }
+    
+    updateSettingsDropdowns() {
+        // Update premium theme dropdown
+        const premiumThemeSelect = document.getElementById('premium-theme-select');
+        if (premiumThemeSelect) {
+            premiumThemeSelect.innerHTML = '<option value="none">None (use base theme)</option>';
+            
+            const themeItems = this.config.shop.items.filter(item => 
+                item.type === 'cosmetic_theme' && this.gameState.shopPurchases[item.id]
+            );
+            
+            themeItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = `${item.icon} ${item.name}`;
+                premiumThemeSelect.appendChild(option);
+            });
+            
+            premiumThemeSelect.value = this.settings.premiumTheme;
+        }
+        
+        // Update gem skin dropdown
+        const gemSkinSelect = document.getElementById('gem-skin-select');
+        if (gemSkinSelect) {
+            gemSkinSelect.innerHTML = '<option value="default">💎 Default Diamond</option>';
+            
+            const skinItems = this.config.shop.items.filter(item => 
+                item.type === 'cosmetic_skin' && this.gameState.shopPurchases[item.id]
+            );
+            
+            skinItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value.replace('-skin', ''); // "ruby-skin" -> "ruby"
+                option.textContent = `${item.icon} ${item.name}`;
+                gemSkinSelect.appendChild(option);
+            });
+            
+            gemSkinSelect.value = this.settings.gemSkin;
+        }
+        
+        // Update particle effect dropdown
+        const particleEffectSelect = document.getElementById('particle-effect-select');
+        if (particleEffectSelect) {
+            particleEffectSelect.innerHTML = '<option value="default">✨ Default Blue</option>';
+            
+            const particleItems = this.config.shop.items.filter(item => 
+                item.type === 'cosmetic_particle' && this.gameState.shopPurchases[item.id]
+            );
+            
+            particleItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = `${item.icon} ${item.name}`;
+                particleEffectSelect.appendChild(option);
+            });
+            
+            particleEffectSelect.value = this.settings.particleEffect;
         }
     }
     

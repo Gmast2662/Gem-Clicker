@@ -298,7 +298,8 @@
         "description": "Increase offline earnings cap from 24h to 48h",
         "icon": "🌙",
         "cost": 100000,
-        "purchased": false
+        "purchased": false,
+        "type": "feature"
       },
       {
         "id": "lucky_events",
@@ -306,77 +307,8 @@
         "description": "Enable random golden gem & rush events",
         "icon": "🎰",
         "cost": 500000,
-        "purchased": false
-      },
-      {
-        "id": "double_prestige",
-        "name": "Prestige Master",
-        "description": "Gain 2x more prestige points",
-        "icon": "⭐",
-        "cost": 5000000,
         "purchased": false,
-        "effect": "prestige_multiplier",
-        "value": 2
-      },
-      {
-        "id": "golden_touch",
-        "name": "Golden Touch",
-        "description": "Permanent 2x click power",
-        "icon": "👆",
-        "cost": 2500000,
-        "purchased": false,
-        "effect": "click_multiplier",
-        "value": 2
-      },
-      {
-        "id": "production_boost",
-        "name": "Overdrive",
-        "description": "Permanent 1.5x production for all generators",
-        "icon": "⚡",
-        "cost": 3500000,
-        "purchased": false,
-        "effect": "production_multiplier",
-        "value": 1.5
-      },
-      {
-        "id": "discount_master",
-        "name": "Bulk Discount",
-        "description": "All upgrades & generators cost 10% less",
-        "icon": "💰",
-        "cost": 1500000,
-        "purchased": false,
-        "effect": "cost_reduction",
-        "value": 0.9
-      },
-      {
-        "id": "rainbow_particles",
-        "name": "Rainbow Particles",
-        "description": "Colorful rainbow particle effects on click",
-        "icon": "🌈",
-        "cost": 750000,
-        "purchased": false,
-        "effect": "cosmetic",
-        "value": "rainbow"
-      },
-      {
-        "id": "golden_particles",
-        "name": "Golden Particles",
-        "description": "Shimmering gold particle effects",
-        "icon": "✨",
-        "cost": 500000,
-        "purchased": false,
-        "effect": "cosmetic",
-        "value": "golden"
-      },
-      {
-        "id": "dark_theme",
-        "name": "Deep Purple Theme",
-        "description": "Unlock exclusive dark purple theme",
-        "icon": "🌙",
-        "cost": 1000000,
-        "purchased": false,
-        "effect": "cosmetic",
-        "value": "dark-purple"
+        "type": "feature"
       },
       {
         "id": "notifications",
@@ -386,7 +318,85 @@
         "cost": 250000,
         "purchased": false,
         "effect": "feature",
-        "value": "notifications"
+        "value": "notifications",
+        "type": "feature"
+      },
+      {
+        "id": "double_prestige",
+        "name": "Prestige Master",
+        "description": "Gain 2x more prestige points",
+        "icon": "⭐",
+        "cost": 5000000,
+        "purchased": false,
+        "effect": "prestige_multiplier",
+        "value": 2,
+        "type": "gameplay"
+      },
+      {
+        "id": "golden_touch",
+        "name": "Golden Touch",
+        "description": "Permanent 2x click power",
+        "icon": "👆",
+        "cost": 2500000,
+        "purchased": false,
+        "effect": "click_multiplier",
+        "value": 2,
+        "type": "gameplay"
+      },
+      {
+        "id": "production_boost",
+        "name": "Overdrive",
+        "description": "Permanent 1.5x production for all generators",
+        "icon": "⚡",
+        "cost": 3500000,
+        "purchased": false,
+        "effect": "production_multiplier",
+        "value": 1.5,
+        "type": "gameplay"
+      },
+      {
+        "id": "discount_master",
+        "name": "Bulk Discount",
+        "description": "All upgrades & generators cost 10% less",
+        "icon": "💰",
+        "cost": 1500000,
+        "purchased": false,
+        "effect": "cost_reduction",
+        "value": 0.9,
+        "type": "gameplay"
+      },
+      {
+        "id": "rainbow_particles",
+        "name": "Rainbow Particles",
+        "description": "Colorful rainbow particle effects on click",
+        "icon": "🌈",
+        "cost": 750000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "rainbow",
+        "type": "cosmetic_particle"
+      },
+      {
+        "id": "golden_particles",
+        "name": "Golden Particles",
+        "description": "Shimmering gold particle effects",
+        "icon": "✨",
+        "cost": 500000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "golden",
+        "type": "cosmetic_particle"
+      },
+      {
+        "id": "dark_theme",
+        "name": "Deep Purple Theme",
+        "description": "Unlock exclusive dark purple theme",
+        "icon": "🌙",
+        "cost": 1000000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "dark-purple",
+        "type": "cosmetic_theme"
       },
       {
         "id": "gem_skin_ruby",
@@ -396,7 +406,8 @@
         "cost": 1250000,
         "purchased": false,
         "effect": "cosmetic",
-        "value": "ruby-skin"
+        "value": "ruby-skin",
+        "type": "cosmetic_skin"
       }
     ]
   },
