@@ -34,7 +34,11 @@ class IdleClickerGame {
             },
             achievements: {},
             lastSave: Date.now(),
-            startTime: Date.now()
+            startTime: Date.now(),
+            notifiedAbout: {
+                prestigeReady: false,
+                canAffordImportant: false
+            }
         };
         this.lastUpdate = Date.now();
         this.updateInterval = null;
@@ -135,6 +139,9 @@ class IdleClickerGame {
             
             // Initialize UI
             this.initUI();
+            
+            // Apply cosmetics from shop purchases
+            this.applyCosmetics();
             
             // Start game loop
             this.startGameLoop();
@@ -1405,6 +1412,9 @@ class IdleClickerGame {
             // Recalculate powers/multipliers after shop purchase
             this.updateClickPower();
             
+            // Apply cosmetics immediately
+            this.applyCosmetics();
+            
             this.renderShop();
             this.updateUI();
             
@@ -1434,6 +1444,70 @@ class IdleClickerGame {
         // Shop effects are now applied directly in calculation methods
         // (updateClickPower, calculateGeneratorMultiplier, calculatePrestigeGain, etc.)
         // This function is kept for future shop items that need immediate application
+    }
+    
+    applyCosmetics() {
+        // Apply purchased cosmetic items
+        
+        // Deep Purple Theme
+        if (this.gameState.shopPurchases['dark_theme']) {
+            document.body.classList.add('theme-deep-purple');
+        } else {
+            document.body.classList.remove('theme-deep-purple');
+        }
+        
+        // Ruby Gem Skin
+        if (this.gameState.shopPurchases['gem_skin_ruby']) {
+            document.body.classList.add('skin-ruby');
+            // Change main gem icon to ruby
+            const clickerIcon = document.getElementById('clicker-icon');
+            if (clickerIcon) clickerIcon.textContent = '🔴';
+        } else {
+            document.body.classList.remove('skin-ruby');
+            const clickerIcon = document.getElementById('clicker-icon');
+            if (clickerIcon) clickerIcon.textContent = this.config.game.clickableIcon;
+        }
+    }
+    
+    checkSmartNotifications() {
+        // Only run if notifications are purchased
+        if (!this.gameState.shopPurchases['notifications']) return;
+        
+        // Check if can prestige
+        const prestigeGain = this.calculatePrestigeGain();
+        if (prestigeGain > 0 && !this.gameState.notifiedAbout.prestigeReady) {
+            this.showNotification(`⭐ You can prestige for +${this.formatNumber(prestigeGain)}⭐!`, 'success');
+            this.gameState.notifiedAbout.prestigeReady = true;
+        }
+        
+        // Reset notification flag when no longer can prestige
+        if (prestigeGain === 0) {
+            this.gameState.notifiedAbout.prestigeReady = false;
+        }
+        
+        // Check for expensive multipliers affordable
+        const expensiveThreshold = this.gameState.currency * 0.5; // If it costs less than half current gems
+        let foundAffordable = false;
+        
+        // Check generator multipliers
+        this.config.generatorMultipliers.forEach(multiplier => {
+            const level = this.gameState.generatorMultipliers[multiplier.id]?.level || 0;
+            if (multiplier.maxLevel && level >= multiplier.maxLevel) return;
+            
+            const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, level);
+            if (this.gameState.currency >= cost && cost >= 100000 && !foundAffordable) {
+                foundAffordable = true;
+                if (!this.gameState.notifiedAbout.canAffordImportant) {
+                    this.showNotification(`💪 You can afford ${multiplier.name}!`, 'info');
+                    this.gameState.notifiedAbout.canAffordImportant = true;
+                }
+            }
+        });
+        
+        // Reset notification flag when can't afford anymore
+        if (!foundAffordable) {
+            this.gameState.notifiedAbout.canAffordImportant = false;
+        }
     }
     
     renderAchievements() {
@@ -1850,6 +1924,11 @@ class IdleClickerGame {
             
             // Update progress bars
             this.updateProgressBars();
+            
+            // Check smart notifications (every 10 seconds to avoid spam)
+            if (Math.random() < 0.01) { // ~1% chance per 100ms = once every ~10 seconds
+                this.checkSmartNotifications();
+            }
         }, 100);
         
         // Auto-save loop
@@ -2445,6 +2524,9 @@ class IdleClickerGame {
         // Recalculate all bonuses
         this.updateClickPower();
         
+        // Apply cosmetics
+        this.applyCosmetics();
+        
         this.renderShop();
         this.applyShopEffects();
         this.updateUI();
@@ -2461,6 +2543,9 @@ class IdleClickerGame {
         
         // Recalculate all bonuses (remove shop effects)
         this.updateClickPower();
+        
+        // Remove cosmetics
+        this.applyCosmetics();
         
         this.renderShop();
         this.updateUI();

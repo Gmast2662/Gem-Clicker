@@ -1883,3 +1883,588 @@ body.light-theme #prestige-requirement-text {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+/* Toast Notifications */
+.toast-notification {
+    position: fixed;
+    top: 80px;
+    right: -400px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    z-index: 10002;
+    font-size: 1em;
+    font-weight: 500;
+    transition: right 0.3s ease;
+    min-width: 250px;
+    max-width: 350px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toast-notification.show {
+    right: 20px;
+}
+
+.toast-notification.toast-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.toast-notification.toast-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.toast-notification.toast-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Deep Purple Theme */
+body.theme-deep-purple {
+    background: linear-gradient(135deg, #2d1b4e 0%, #1a0933 100%);
+}
+
+body.theme-deep-purple .header,
+body.theme-deep-purple .stats-grid,
+body.theme-deep-purple .game-section,
+body.theme-deep-purple .tab-btn,
+body.theme-deep-purple .upgrade-item,
+body.theme-deep-purple .admin-panel {
+    background: rgba(45, 27, 78, 0.8);
+    border-color: rgba(138, 43, 226, 0.3);
+}
+
+body.theme-deep-purple .main-clicker {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6b21a8 100%);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4),
+                0 0 100px rgba(139, 92, 246, 0.3);
+}
+
+body.theme-deep-purple .tab-btn.active {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6b21a8 100%);
+}
+
+/* Ruby Gem Skin */
+body.gem-skin-ruby .main-clicker {
+    background: linear-gradient(135deg, #e63946 0%, #a4133c 100%);
+    box-shadow: 0 8px 32px rgba(230, 57, 70, 0.5),
+                0 0 100px rgba(230, 57, 70, 0.4);
+}
+
+body.gem-skin-ruby #clicker-icon::before {
+    content: '💍';
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 15px 20px;
+        margin-bottom: 15px;
+    }
+    
+    .game-title {
+        font-size: 1.8em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .stat-item {
+        padding: 10px;
+    }
+    
+    .stat-label {
+        font-size: 0.85em;
+    }
+    
+    .stat-value {
+        font-size: 1.2em;
+    }
+    
+    .game-content {
+        flex-direction: column;
+    }
+    
+    .clicker-area {
+        width: 100%;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .main-clicker {
+        width: 200px;
+        height: 200px;
+        font-size: 6em;
+    }
+    
+    #click-power-display {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+    
+    .upgrades-area {
+        width: 100%;
+    }
+    
+    .tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        gap: 5px;
+        padding-bottom: 5px;
+    }
+    
+    .tab-btn {
+        padding: 10px 15px;
+        font-size: 0.9em;
+        min-width: auto;
+    }
+    
+    .tab-content {
+        padding: 15px;
+        max-height: 500px;
+    }
+    
+    .upgrades-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .upgrade-item {
+        padding: 12px;
+    }
+    
+    .upgrade-name {
+        font-size: 1em;
+    }
+    
+    .upgrade-description {
+        font-size: 0.85em;
+    }
+    
+    .upgrade-cost {
+        font-size: 0.9em;
+    }
+    
+    .prestige-section,
+    .rebirth-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .prestige-button,
+    .rebirth-button {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+    
+    .admin-panel {
+        padding: 15px;
+    }
+    
+    .admin-input-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .admin-input-group input,
+    .admin-input-group select {
+        width: 100%;
+    }
+    
+    .admin-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .admin-btn {
+        width: 100%;
+    }
+    
+    .achievement-item {
+        padding: 12px;
+    }
+    
+    .achievement-icon {
+        font-size: 2em;
+    }
+    
+    .lucky-event-banner {
+        padding: 12px 15px;
+        min-height: auto;
+    }
+    
+    .event-icon {
+        font-size: 2em;
+    }
+    
+    .event-name {
+        font-size: 1em;
+    }
+    
+    .event-timer {
+        font-size: 0.85em;
+    }
+    
+    .toast-notification {
+        right: -350px;
+        min-width: 200px;
+        max-width: 300px;
+        top: 70px;
+        padding: 12px 20px;
+        font-size: 0.9em;
+    }
+    
+    .toast-notification.show {
+        right: 10px;
+    }
+    
+    .achievement-popup,
+    .milestone-popup,
+    .daily-reward-popup,
+    .offline-earnings-popup {
+        min-width: 280px;
+        max-width: 90%;
+        padding: 20px;
+    }
+    
+    .achievement-popup-icon {
+        font-size: 3em;
+    }
+    
+    .achievement-popup-name {
+        font-size: 1.3em;
+    }
+    
+    .settings-section {
+        padding: 15px;
+    }
+    
+    .theme-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .theme-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 1.5em;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-clicker {
+        width: 150px;
+        height: 150px;
+        font-size: 5em;
+    }
+    
+    .tab-btn {
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+    
+    .upgrade-item {
+        padding: 10px;
+    }
+    
+    .prestige-button,
+    .rebirth-button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+}
+
+/* ============================================
+   COSMETIC CUSTOMIZATION - DEEP PURPLE THEME
+   ============================================ */
+
+body.theme-deep-purple {
+    background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 100%);
+}
+
+body.theme-deep-purple .header {
+    background: rgba(45, 27, 78, 0.8);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+body.theme-deep-purple .header h1 {
+    background: linear-gradient(135deg, #9b59b6, #e056fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.theme-deep-purple .stat-item {
+    background: rgba(155, 89, 182, 0.2);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+body.theme-deep-purple .main-clicker {
+    background: radial-gradient(circle, #9b59b6, #7d3c98);
+    box-shadow: 0 10px 40px rgba(155, 89, 182, 0.6),
+                0 0 100px rgba(155, 89, 182, 0.3);
+    border: 3px solid rgba(224, 86, 253, 0.5);
+}
+
+body.theme-deep-purple .main-clicker:hover {
+    box-shadow: 0 15px 50px rgba(155, 89, 182, 0.8),
+                0 0 120px rgba(155, 89, 182, 0.5);
+}
+
+body.theme-deep-purple .upgrade-item {
+    background: rgba(45, 27, 78, 0.6);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+body.theme-deep-purple .upgrade-item:hover:not(.disabled) {
+    background: rgba(155, 89, 182, 0.3);
+    border-color: #9b59b6;
+    box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
+}
+
+body.theme-deep-purple .prestige-button,
+body.theme-deep-purple .rebirth-button {
+    background: linear-gradient(135deg, #9b59b6, #7d3c98);
+    border: 2px solid #e056fd;
+}
+
+body.theme-deep-purple .prestige-button:hover,
+body.theme-deep-purple .rebirth-button:hover {
+    background: linear-gradient(135deg, #a569bd, #8e44ad);
+    box-shadow: 0 8px 25px rgba(155, 89, 182, 0.5);
+}
+
+body.theme-deep-purple .tab-btn.active {
+    background: rgba(155, 89, 182, 0.4);
+    border-bottom: 3px solid #9b59b6;
+}
+
+body.theme-deep-purple .lucky-event-banner {
+    background: linear-gradient(135deg, #9b59b6, #7d3c98);
+    border: 2px solid #e056fd;
+}
+
+/* ============================================
+   COSMETIC CUSTOMIZATION - RUBY GEM SKIN
+   ============================================ */
+
+body.skin-ruby .main-clicker {
+    background: radial-gradient(circle, #e74c3c, #c0392b);
+    box-shadow: 0 10px 40px rgba(231, 76, 60, 0.6),
+                0 0 100px rgba(231, 76, 60, 0.3);
+    border: 3px solid rgba(255, 100, 100, 0.5);
+}
+
+body.skin-ruby .main-clicker:hover {
+    box-shadow: 0 15px 50px rgba(231, 76, 60, 0.8),
+                0 0 120px rgba(231, 76, 60, 0.5);
+    transform: scale(1.05);
+}
+
+body.skin-ruby .main-clicker:active {
+    transform: scale(0.95);
+    box-shadow: 0 8px 30px rgba(231, 76, 60, 0.7);
+}
+
+body.skin-ruby .floating-number {
+    color: #e74c3c;
+    text-shadow: 0 0 10px rgba(231, 76, 60, 0.8),
+                 0 0 20px rgba(231, 76, 60, 0.5);
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+
+.toast-notification {
+    position: fixed;
+    top: 80px;
+    right: -400px;
+    min-width: 300px;
+    max-width: 400px;
+    background: rgba(22, 33, 62, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    transition: right 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast-notification.show {
+    right: 20px;
+}
+
+.toast-notification.toast-success {
+    border-color: #4ecdc4;
+    background: rgba(78, 205, 196, 0.2);
+}
+
+.toast-notification.toast-warning {
+    border-color: #f39c12;
+    background: rgba(243, 156, 18, 0.2);
+}
+
+.toast-notification.toast-info {
+    border-color: #3498db;
+    background: rgba(52, 152, 219, 0.2);
+}
+
+.toast-notification::before {
+    content: '🔔';
+    font-size: 1.5em;
+    flex-shrink: 0;
+}
+
+.toast-notification.toast-success::before {
+    content: '✅';
+}
+
+.toast-notification.toast-warning::before {
+    content: '⚠️';
+}
+
+/* ============================================
+   MOBILE ENHANCEMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+    /* Larger touch targets for mobile */
+    .main-clicker {
+        width: 180px;
+        height: 180px;
+        font-size: 6em;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .tab-btn {
+        min-height: 44px; /* iOS recommended touch target */
+        touch-action: manipulation;
+    }
+    
+    .upgrade-item button,
+    .control-btn {
+        min-height: 44px;
+        font-size: 1em;
+        touch-action: manipulation;
+    }
+    
+    /* Prevent zoom on double tap */
+    button,
+    .main-clicker,
+    .tab-btn {
+        touch-action: manipulation;
+    }
+    
+    /* Better spacing for mobile */
+    .upgrade-list {
+        gap: 12px;
+    }
+    
+    .upgrade-item {
+        padding: 15px;
+    }
+    
+    /* Optimize settings for mobile */
+    .settings-section {
+        padding: 20px 15px;
+    }
+    
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    /* Larger admin panel inputs on mobile */
+    .admin-input-group input,
+    .admin-input-group select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px;
+    }
+    
+    /* Better popup sizing */
+    .achievement-popup,
+    .milestone-popup {
+        width: 90%;
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Even larger touch targets on small phones */
+    .main-clicker {
+        width: 160px;
+        height: 160px;
+        font-size: 5em;
+    }
+    
+    /* Stack stats vertically */
+    .header-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .stat-item {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Optimize tab navigation */
+    .tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .tab-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+/* Landscape orientation optimizations */
+@media (max-height: 600px) and (orientation: landscape) {
+    .header h1 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+    
+    .main-clicker {
+        width: 120px;
+        height: 120px;
+        font-size: 4em;
+    }
+    
+    .game-content {
+        flex-direction: row;
+        gap: 20px;
+    }
+    
+    .clicker-section {
+        flex: 0 0 auto;
+    }
+}
+
