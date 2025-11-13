@@ -17,11 +17,21 @@ Gem Clicker is an incremental idle game where your goal is to mine as many gems 
 - 💎 **Click to Mine** - Every click mines precious gems
 - ⛏️ **Tool Upgrades** - Upgrade from pickaxes to laser drills
 - 👷 **Automated Mining** - Hire miners and build advanced facilities
-- ⭐ **Prestige System** - Reset for permanent bonuses
-- 🏆 **Achievements** - Unlock achievements as you progress
-- 💾 **Auto-Save** - Your progress is saved automatically
-- 🌙 **Offline Progress** - Earn gems even when you're away (up to 24 hours!)
-- 🎨 **Beautiful UI** - Smooth animations and modern design
+- ✨ **Multiplier System** - Powerful click & generator multipliers
+- ⭐ **Prestige System** - Reset for permanent bonuses (scaling difficulty)
+- 🔮 **Rebirth System** - Ultimate prestige for massive multipliers
+- 🏆 **Achievements** - 16+ achievements to unlock
+- 🌟 **Milestones** - Permanent bonuses at major thresholds
+- 🎰 **Lucky Events** - Random golden gems & gem rush events
+- 🏪 **Shop System** - Permanent one-time power-ups
+- 🎨 **Cosmetics** - 4 themes, 4 gem skins, 6 particle effects
+- 🤖 **Auto-Clicker** - Automated clicking system
+- 💾 **Auto-Save** - Progress saved every 5 seconds
+- 🌙 **Offline Progress** - Earn gems while away (up to 48 hours!)
+- 📱 **Mobile Optimized** - Full touch support
+- ⌨️ **Keyboard Shortcuts** - Quick navigation (0-9 keys)
+- 🔔 **Smart Notifications** - Get notified of important events
+- 🎵 **Sound Effects** - Satisfying audio feedback
 
 ---
 
@@ -151,7 +161,25 @@ Unlock achievements to show off your mining prowess:
 
 ## 📋 Changelog
 
-### Version 1.2.0 (Latest)
+### Version 1.5.0 (Latest) - November 13, 2024
+- 🎨 **NEW: Cosmetics System** - Separate tab for themes, skins, and particle effects
+- 💎 **Animated Gem Skins** - 4 octagonal diamond-shaped gems with shimmering effects
+- ✦ **Sparkle Effects** - Pulsing star animations on all gem skins
+- 🌊 **4 Premium Themes** - Deep Purple, Ocean Blue, Emerald Forest, Sunset Orange
+- ❄️ **6 Particle Effects** - Rainbow, Golden, Ice, Fire, Nature, Default
+- ⚙️ **Settings Integration** - Mix and match cosmetics via dropdowns
+- 🔧 **Admin Panel** - New cosmetics unlock/reset buttons
+- ⚖️ **Economy Rebalance #2** - Major changes:
+  - Multipliers nerfed: 2x → 1.2x, 2.5x → 1.3x (additive instead of multiplicative growth)
+  - All multiplier costs increased 5-10x
+  - Auto-clicker cost increased 10x
+  - Prestige requirement: 1M → 2.5M
+  - Max levels reduced further (15 → 8, 10 → 6)
+- 📊 **Fixed Average Clicks** - Now shows actual clicks/sec instead of total
+- ⌨️ **Updated Shortcuts** - Cosmetics on '5', Settings on '0'
+- 📖 **New Documentation** - COSMETICS_GUIDE.md for adding custom items
+
+### Version 1.2.0
 - 🔢 **Better Number Formatting**: Large numbers now show as K/M/B/T (e.g., 1.5M instead of 1500000)
 - ⭐ **Prestige Scaling**: Each prestige is now 1.5x harder than the last (prevents prestige spam)
 - ⚖️ **Major Economy Rebalance**: Slowed progression significantly for better gameplay
