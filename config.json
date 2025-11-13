@@ -315,7 +315,7 @@
         "name": "Prestige Master",
         "description": "Gain 2x more prestige points",
         "icon": "⭐",
-        "cost": 500000,
+        "cost": 2500000,
         "purchased": false,
         "effect": "prestige_multiplier",
         "value": 2
@@ -325,7 +325,7 @@
         "name": "Golden Touch",
         "description": "Permanent 2x click power",
         "icon": "👆",
-        "cost": 250000,
+        "cost": 400000,
         "purchased": false,
         "effect": "click_multiplier",
         "value": 2
@@ -335,7 +335,7 @@
         "name": "Overdrive",
         "description": "Permanent 1.5x production for all generators",
         "icon": "⚡",
-        "cost": 300000,
+        "cost": 350000,
         "purchased": false,
         "effect": "production_multiplier",
         "value": 1.5
@@ -345,7 +345,7 @@
         "name": "Bulk Discount",
         "description": "All upgrades & generators cost 10% less",
         "icon": "💰",
-        "cost": 200000,
+        "cost": 300000,
         "purchased": false,
         "effect": "cost_reduction",
         "value": 0.9
