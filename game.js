@@ -299,8 +299,12 @@ class IdleClickerGame {
         document.getElementById('admin-reset-achievements').addEventListener('click', () => this.adminResetAchievements());
         document.getElementById('admin-unlock-shop').addEventListener('click', () => this.adminUnlockAllShop());
         document.getElementById('admin-reset-shop').addEventListener('click', () => this.adminResetShop());
-        document.getElementById('admin-trigger-golden').addEventListener('click', () => this.adminTriggerEvent('golden_gem'));
-        document.getElementById('admin-trigger-rush').addEventListener('click', () => this.adminTriggerEvent('gem_rush'));
+        
+        // Lucky event triggers (with null check for safety)
+        const goldenBtn = document.getElementById('admin-trigger-golden');
+        const rushBtn = document.getElementById('admin-trigger-rush');
+        if (goldenBtn) goldenBtn.addEventListener('click', () => this.adminTriggerEvent('golden_gem'));
+        if (rushBtn) rushBtn.addEventListener('click', () => this.adminTriggerEvent('gem_rush'));
         
         // Quick gem buttons
         document.querySelectorAll('.admin-quick-btn').forEach(btn => {
