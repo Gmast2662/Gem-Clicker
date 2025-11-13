@@ -1892,17 +1892,17 @@ class IdleClickerGame {
         // Update event timer and info display
         if (this.gameState.luckyEvent.active) {
             const remaining = Math.ceil((this.gameState.luckyEvent.endTime - now) / 1000);
-            const eventName = document.getElementById('event-name');
+            const eventTextContainer = document.getElementById('event-text-container');
             
             if (this.gameState.luckyEvent.type === 'golden_gem') {
-                eventName.innerHTML = `
-                    🌟 Golden Gem Active!<br>
-                    <small style="font-size: 0.8em;">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! (${remaining}s remaining)</small>
+                eventTextContainer.innerHTML = `
+                    <div class="event-name">🌟 Golden Gem Active!</div>
+                    <div class="event-timer">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! ${remaining}s remaining</div>
                 `;
             } else if (this.gameState.luckyEvent.type === 'gem_rush') {
-                eventName.innerHTML = `
-                    🎊 Gem Rush Active!<br>
-                    <small style="font-size: 0.8em;">${this.config.luckyEvents.gemRushMultiplier}x production! (${remaining}s remaining)</small>
+                eventTextContainer.innerHTML = `
+                    <div class="event-name">🎊 Gem Rush Active!</div>
+                    <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${remaining}s remaining</div>
                 `;
             }
         }
@@ -1922,23 +1922,21 @@ class IdleClickerGame {
         
         const banner = document.getElementById('lucky-event-banner');
         const eventIcon = document.getElementById('event-icon');
-        const eventName = document.getElementById('event-name');
+        const eventTextContainer = document.getElementById('event-text-container');
         
         if (eventType === 'golden_gem') {
             this.gameState.luckyEvent.endTime = Date.now() + 15000; // 15 seconds
             eventIcon.textContent = '🌟';
-            const duration = 15;
-            eventName.innerHTML = `
-                🌟 Golden Gem Active!<br>
-                <small style="font-size: 0.8em;">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! (${duration}s remaining)</small>
+            eventTextContainer.innerHTML = `
+                <div class="event-name">🌟 Golden Gem Active!</div>
+                <div class="event-timer">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! 15s remaining</div>
             `;
         } else {
             this.gameState.luckyEvent.endTime = Date.now() + (this.config.luckyEvents.gemRushDuration * 1000);
             eventIcon.textContent = '🎊';
-            const duration = this.config.luckyEvents.gemRushDuration;
-            eventName.innerHTML = `
-                🎊 Gem Rush Active!<br>
-                <small style="font-size: 0.8em;">${this.config.luckyEvents.gemRushMultiplier}x production! (${duration}s remaining)</small>
+            eventTextContainer.innerHTML = `
+                <div class="event-name">🎊 Gem Rush Active!</div>
+                <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${this.config.luckyEvents.gemRushDuration}s remaining</div>
             `;
         }
         
@@ -1972,10 +1970,20 @@ class IdleClickerGame {
     }
     
     confirmReset() {
-        const confirmed = confirm('Are you sure you want to reset ALL progress? This cannot be undone!');
+        const confirmed = confirm('Are you sure you want to reset ALL progress?\n\nThis will:\n- Delete all game data\n- Reset to brand new game\n- Cannot be undone!\n\nAre you absolutely sure?');
         if (confirmed) {
-            localStorage.removeItem('idleClickerSave');
-            location.reload();
+            try {
+                // Clear all game data
+                localStorage.removeItem('idleClickerSave');
+                localStorage.removeItem('gemClickerSettings');
+                console.log('✅ All data cleared');
+                
+                // Force reload to start fresh
+                window.location.reload(true);
+            } catch (e) {
+                console.error('Error resetting:', e);
+                alert('Error resetting game. Please clear browser data manually.');
+            }
         }
     }
 
@@ -2320,23 +2328,21 @@ class IdleClickerGame {
         
         const banner = document.getElementById('lucky-event-banner');
         const eventIcon = document.getElementById('event-icon');
-        const eventName = document.getElementById('event-name');
+        const eventTextContainer = document.getElementById('event-text-container');
         
         if (eventType === 'golden_gem') {
             this.gameState.luckyEvent.endTime = Date.now() + 15000; // 15 seconds
             eventIcon.textContent = '🌟';
-            const duration = 15;
-            eventName.innerHTML = `
-                🌟 Golden Gem Active!<br>
-                <small style="font-size: 0.8em;">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! (${duration}s remaining)</small>
+            eventTextContainer.innerHTML = `
+                <div class="event-name">🌟 Golden Gem Active!</div>
+                <div class="event-timer">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! 15s remaining</div>
             `;
         } else {
             this.gameState.luckyEvent.endTime = Date.now() + (this.config.luckyEvents.gemRushDuration * 1000);
             eventIcon.textContent = '🎊';
-            const duration = this.config.luckyEvents.gemRushDuration;
-            eventName.innerHTML = `
-                🎊 Gem Rush Active!<br>
-                <small style="font-size: 0.8em;">${this.config.luckyEvents.gemRushMultiplier}x production! (${duration}s remaining)</small>
+            eventTextContainer.innerHTML = `
+                <div class="event-name">🎊 Gem Rush Active!</div>
+                <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${this.config.luckyEvents.gemRushDuration}s remaining</div>
             `;
         }
         
