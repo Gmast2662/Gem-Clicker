@@ -149,6 +149,43 @@ Unlock achievements to show off your mining prowess:
 
 ---
 
+## 📋 Changelog
+
+### Version 1.2.0 (Latest)
+- 🔢 **Better Number Formatting**: Large numbers now show as K/M/B/T (e.g., 1.5M instead of 1500000)
+- ⭐ **Prestige Scaling**: Each prestige is now 1.5x harder than the last (prevents prestige spam)
+- ⚖️ **Major Economy Rebalance**: Slowed progression significantly for better gameplay
+  - Generator costs increased 2-5x with higher multipliers (1.15 → 1.8)
+  - Multiplier costs increased 5-50x
+  - Shop items 2-10x more expensive
+  - Prestige requirement increased from 100K to 1M
+- 🔧 **Bug Fixes**: Fixed multipliers causing infinity, shop upgrades not applying, offline earnings, countdown timers
+- 🎨 **UI Improvements**: Fixed prestige icon display, better dark mode text visibility
+- 🏪 **New Shop Items**: Golden Touch (2x clicks), Overdrive (1.5x production), Prestige Master (2x prestige), Bulk Discount (10% cheaper)
+- 🛡️ **Safety Features**: Added max levels to multipliers, infinity prevention
+
+### Version 1.1.0
+- ⏱️ **Lucky Events**: Random golden gem (10x clicks) and gem rush (2x production) events
+- 🎯 **Milestones**: Permanent production bonuses at gem milestones
+- 🤖 **Auto-Clicker**: Automated clicking system
+- 🎁 **Daily Rewards**: Streak-based reward system
+- 🔮 **Rebirth System**: Ultimate prestige for massive multipliers
+- 🏪 **Shop System**: One-time permanent upgrades
+- ⌨️ **Keyboard Shortcuts**: Quick navigation with number keys
+- 🌓 **Theme Switcher**: Light/Dark mode options
+
+### Version 1.0.0
+- 🎮 Initial Release
+- 💎 Click to mine gems
+- ⛏️ 4 click upgrade tiers
+- 👷 10 generator types
+- ⭐ Prestige system
+- 🏆 16 achievements
+- 💾 Auto-save system
+- 🌙 Offline earnings
+
+---
+
 ## 🎯 Pro Tips
 
 1. **Early game**: Focus on getting your first few generators

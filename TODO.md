@@ -4,53 +4,86 @@ This document tracks planned features, improvements, and ideas for future update
 
 ---
 
+## ✅ Recently Completed (v1.2.0)
+
+### **🔢 Number Formatting**
+- [x] Implemented K/M/B/T suffixes for large numbers
+- [x] 2 decimal places for readability
+- [x] Scientific notation for very large numbers
+
+### **⚖️ Game Balance Overhaul**
+- [x] Nerfed multipliers (2-10x → 1.5-3x)
+- [x] Added max levels to all multipliers
+- [x] Increased generator costs and cost multipliers (1.15 → 1.8)
+- [x] Prestige now scales with each prestige (1.5x harder each time)
+- [x] Rebalanced ALL costs for slower progression
+
+### **🛡️ Bug Fixes & Safety**
+- [x] Fixed infinity bug with multipliers
+- [x] Added safety checks to prevent NaN/Infinity
+- [x] Fixed shop upgrades not applying immediately
+- [x] Fixed offline earnings when switching tabs
+- [x] Fixed lucky event countdown display
+- [x] Fixed prestige icon showing wrong text
+
+### **🏪 New Shop Items**
+- [x] Golden Touch: 2x click power permanently
+- [x] Overdrive: 1.5x production permanently
+- [x] Prestige Master: 2x prestige points
+- [x] Bulk Discount: 10% cheaper everything
+
+---
+
 ## 🎯 High Priority Features
 
-### **🎰 Lucky Events System**
-- [ ] Random "Golden Gem" appears (click for 10x bonus)
-- [ ] "Gem Rush" event (5 minutes of 2x production)
-- [ ] "Meteor Shower" event (gems rain from sky)
-- [ ] Event notification system
-- [ ] Configurable event frequency
+### **🎰 Lucky Events System** ✅ COMPLETED
+- [x] Random "Golden Gem" appears (click for 10x bonus)
+- [x] "Gem Rush" event (2x production for 30s)
+- [x] Event notification banners with countdown
+- [x] Configurable event frequency
+- [ ] Additional event types (Meteor Shower, etc.)
 
-**Benefit:** Adds excitement and keeps players engaged
-
----
-
-### **🔄 Rebirth System**
-- [ ] Unlock after first prestige
-- [ ] Even bigger bonuses than prestige
-- [ ] Rebirth points give multiplicative bonuses (not just additive)
-- [ ] Multiple layers: Prestige → Rebirth → Transcendence
-- [ ] Each layer requires exponentially more progress
-
-**How it differs from Prestige:**
-- **Prestige:** Resets for +1% per point (additive bonus)
-- **Rebirth:** Resets everything including prestige for 2x multiplier per point
-- **Example:** 5 rebirth points = 2^5 = 32x multiplier!
+**Status:** Basic system implemented! Can add more event types.
 
 ---
 
-### **🏪 Special Shop System**
-- [ ] One-time permanent purchases (not level-based)
-- [ ] Examples:
-  - "Offline Earnings Cap +12 hours" (48hr instead of 24hr)
-  - "Auto-Save Frequency +50%" (save every 2.5s instead of 5s)
-  - "Unlock Secret Generator"
-  - "Golden Gem Skin"
-  - "Background Music Pack"
-- [ ] Uses special currency (or regular gems)
-- [ ] Unlocks don't reset on prestige
+### **🔄 Rebirth System** ✅ COMPLETED
+- [x] Unlock after 10 prestiges
+- [x] Even bigger bonuses than prestige
+- [x] Rebirth points give multiplicative bonuses (2^n)
+- [x] Resets everything including prestige
+- [ ] Multiple layers (Transcendence, Ascension, etc.)
+
+**Status:** Fully implemented! Could add more layers in future.
+
+---
+
+### **🏪 Special Shop System** ✅ COMPLETED
+- [x] One-time permanent purchases
+- [x] Examples implemented:
+  - Extended Offline Earnings (24h → 48h)
+  - Golden Touch (2x click power)
+  - Overdrive (1.5x production)
+  - Prestige Master (2x prestige points)
+  - Bulk Discount (10% cheaper)
+  - Lucky Events unlock
+- [x] Uses regular gems
+- [x] Unlocks persist through prestige
+- [ ] More shop items (skins, music, etc.)
+
+**Status:** Core system complete! Can expand with more items.
 
 ---
 
 ## 🎮 Medium Priority Features
 
-### **📈 Progress Bars**
-- [ ] Visual bar showing progress to next milestone
-- [ ] Progress to next achievement
-- [ ] "Almost there!" indicators
-- [ ] Percentage display
+### **📈 Progress Bars** ✅ COMPLETED
+- [x] Visual bar showing progress to next prestige
+- [x] Progress to next milestone
+- [x] Percentage display
+- [ ] Progress to next achievement (future enhancement)
+
+**Status:** Implemented for prestige and milestones!
 
 ### **🌈 Multiple Gem Types**
 - [ ] Ruby, Emerald, Diamond, Sapphire currencies
