@@ -23,6 +23,56 @@ class IdleClickerGame {
         this.lastUpdate = Date.now();
         this.updateInterval = null;
         this.saveInterval = null;
+        
+        // Click rate tracking
+        this.recentClicks = [];
+        this.clickRateWindow = 2000; // 2 second window
+        
+        // Sound system
+        this.audioContext = null;
+        this.initAudio();
+    }
+    
+    initAudio() {
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.log('Web Audio API not supported');
+        }
+    }
+    
+    playSound(type) {
+        if (!this.audioContext) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        switch(type) {
+            case 'click':
+                oscillator.frequency.value = 800;
+                gainNode.gain.setValueAtTime(0.1, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + 0.1);
+                break;
+            case 'buy':
+                oscillator.frequency.value = 523.25; // C5
+                gainNode.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + 0.2);
+                break;
+            case 'achievement':
+                oscillator.frequency.value = 880; // A5
+                gainNode.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + 0.5);
+                break;
+        }
     }
 
     async init() {
@@ -133,6 +183,16 @@ class IdleClickerGame {
         this.gameState.totalEarned += this.gameState.clickPower;
         this.gameState.clickEarned += this.gameState.clickPower;
         
+        // Track click for rate calculation
+        const now = Date.now();
+        this.recentClicks.push(now);
+        
+        // Remove old clicks outside the window
+        this.recentClicks = this.recentClicks.filter(time => now - time < this.clickRateWindow);
+        
+        // Play click sound
+        this.playSound('click');
+        
         // Visual feedback
         const button = e.currentTarget;
         button.classList.add('clicked');
@@ -207,6 +267,11 @@ class IdleClickerGame {
             if (generator.maxLevel === null || currentLevel < generator.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.generators[generatorId].level++;
+                
+                // Play buy sound
+                this.playSound('buy');
+                
+                // Update everything
                 this.renderGenerators();
                 this.updateUI();
                 this.checkAchievements();
@@ -225,6 +290,11 @@ class IdleClickerGame {
             if (upgrade.maxLevel === null || currentLevel < upgrade.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.clickUpgrades[upgradeId].level++;
+                
+                // Play buy sound
+                this.playSound('buy');
+                
+                // Update everything
                 this.updateClickPower();
                 this.renderClickUpgrades();
                 this.updateUI();
@@ -341,8 +411,11 @@ class IdleClickerGame {
     }
 
     showAchievementNotification(achievement) {
+        // Play achievement sound
+        this.playSound('achievement');
+        
         // Simple notification - could be enhanced
-        console.log(`Achievement Unlocked: ${achievement.name}`);
+        console.log(`🏆 Achievement Unlocked: ${achievement.name}`);
     }
 
     renderGenerators() {
@@ -374,9 +447,8 @@ class IdleClickerGame {
                 <div class="upgrade-cost">${this.formatNumber(cost)}</div>
             `;
             
-            if (canAfford) {
-                item.addEventListener('click', () => this.buyGenerator(generator.id));
-            }
+            // Always add event listener - the buy function will check if affordable
+            item.addEventListener('click', () => this.buyGenerator(generator.id));
             
             container.appendChild(item);
         });
@@ -406,9 +478,8 @@ class IdleClickerGame {
                 <div class="upgrade-cost">${this.formatNumber(cost)}</div>
             `;
             
-            if (canAfford) {
-                item.addEventListener('click', () => this.buyClickUpgrade(upgrade.id));
-            }
+            // Always add event listener - the buy function will check if affordable
+            item.addEventListener('click', () => this.buyClickUpgrade(upgrade.id));
             
             container.appendChild(item);
         });
@@ -439,9 +510,24 @@ class IdleClickerGame {
         // Update currency display
         document.getElementById('currency-amount').textContent = this.formatNumber(this.gameState.currency);
         
-        // Update per second
-        const perSecond = this.calculateProductionPerSecond();
-        document.getElementById('per-second').textContent = this.formatNumber(perSecond);
+        // Calculate per second from generators
+        const generatorPerSecond = this.calculateProductionPerSecond();
+        
+        // Calculate per second from clicking
+        const now = Date.now();
+        this.recentClicks = this.recentClicks.filter(time => now - time < this.clickRateWindow);
+        const clicksPerSecond = (this.recentClicks.length / (this.clickRateWindow / 1000)) * this.gameState.clickPower;
+        
+        // Combine both rates
+        const totalPerSecond = generatorPerSecond + clicksPerSecond;
+        
+        // Show combined rate, with breakdown if actively clicking
+        if (clicksPerSecond > 0) {
+            document.getElementById('per-second').textContent = 
+                `${this.formatNumber(totalPerSecond)} (${this.formatNumber(generatorPerSecond)} + ${this.formatNumber(clicksPerSecond)})`;
+        } else {
+            document.getElementById('per-second').textContent = this.formatNumber(generatorPerSecond);
+        }
         
         // Update click power
         document.getElementById('click-power').textContent = this.formatNumber(this.gameState.clickPower);
