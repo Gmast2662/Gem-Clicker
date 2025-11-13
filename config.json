@@ -402,12 +402,111 @@
         "id": "gem_skin_ruby",
         "name": "Ruby Gem Skin",
         "description": "Change your gem to a beautiful ruby",
-        "icon": "💍",
+        "icon": "💎",
         "cost": 1250000,
         "purchased": false,
         "effect": "cosmetic",
         "value": "ruby-skin",
         "type": "cosmetic_skin"
+      },
+      {
+        "id": "gem_skin_sapphire",
+        "name": "Sapphire Gem Skin",
+        "description": "Transform into a brilliant blue sapphire",
+        "icon": "💠",
+        "cost": 1500000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "sapphire-skin",
+        "type": "cosmetic_skin"
+      },
+      {
+        "id": "gem_skin_emerald",
+        "name": "Emerald Gem Skin",
+        "description": "Become a stunning green emerald",
+        "icon": "💚",
+        "cost": 1750000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "emerald-skin",
+        "type": "cosmetic_skin"
+      },
+      {
+        "id": "gem_skin_amethyst",
+        "name": "Amethyst Gem Skin",
+        "description": "Radiate with purple amethyst energy",
+        "icon": "🔮",
+        "cost": 2000000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "amethyst-skin",
+        "type": "cosmetic_skin"
+      },
+      {
+        "id": "theme_ocean_blue",
+        "name": "Ocean Blue Theme",
+        "description": "Deep ocean waters theme",
+        "icon": "🌊",
+        "cost": 1200000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "ocean-blue",
+        "type": "cosmetic_theme"
+      },
+      {
+        "id": "theme_emerald_green",
+        "name": "Emerald Forest Theme",
+        "description": "Lush green forest theme",
+        "icon": "🌲",
+        "cost": 1400000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "emerald-green",
+        "type": "cosmetic_theme"
+      },
+      {
+        "id": "theme_sunset_orange",
+        "name": "Sunset Orange Theme",
+        "description": "Warm sunset glow theme",
+        "icon": "🌅",
+        "cost": 1600000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "sunset-orange",
+        "type": "cosmetic_theme"
+      },
+      {
+        "id": "ice_particles",
+        "name": "Ice Particles",
+        "description": "Frosty blue ice crystal effects",
+        "icon": "❄️",
+        "cost": 600000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "ice",
+        "type": "cosmetic_particle"
+      },
+      {
+        "id": "fire_particles",
+        "name": "Fire Particles",
+        "description": "Blazing fire and ember effects",
+        "icon": "🔥",
+        "cost": 800000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "fire",
+        "type": "cosmetic_particle"
+      },
+      {
+        "id": "nature_particles",
+        "name": "Nature Particles",
+        "description": "Earthy green nature effects",
+        "icon": "🍃",
+        "cost": 700000,
+        "purchased": false,
+        "effect": "cosmetic",
+        "value": "nature",
+        "type": "cosmetic_particle"
       }
     ]
   },

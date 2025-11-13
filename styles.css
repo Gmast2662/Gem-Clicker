@@ -2305,31 +2305,342 @@ body.theme-deep-purple .lucky-event-banner {
 }
 
 /* ============================================
-   COSMETIC CUSTOMIZATION - RUBY GEM SKIN
+   COSMETIC CUSTOMIZATION - OCEAN BLUE THEME
    ============================================ */
 
+body.theme-ocean-blue {
+    background: linear-gradient(135deg, #0a2342 0%, #1a4d7a 100%);
+}
+
+body.theme-ocean-blue .header {
+    background: rgba(26, 77, 122, 0.8);
+    border: 1px solid rgba(93, 173, 226, 0.3);
+}
+
+body.theme-ocean-blue .header h1 {
+    background: linear-gradient(135deg, #3498db, #5dade2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.theme-ocean-blue .stat-item {
+    background: rgba(52, 152, 219, 0.2);
+    border: 1px solid rgba(93, 173, 226, 0.3);
+}
+
+body.theme-ocean-blue .main-clicker {
+    background: radial-gradient(circle, #3498db, #2874a6);
+    box-shadow: 0 10px 40px rgba(52, 152, 219, 0.6),
+                0 0 100px rgba(52, 152, 219, 0.3);
+    border: 3px solid rgba(93, 173, 226, 0.5);
+}
+
+body.theme-ocean-blue .main-clicker:hover {
+    box-shadow: 0 15px 50px rgba(52, 152, 219, 0.8),
+                0 0 120px rgba(52, 152, 219, 0.5);
+}
+
+body.theme-ocean-blue .upgrade-item {
+    background: rgba(26, 77, 122, 0.6);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+body.theme-ocean-blue .upgrade-item:hover:not(.disabled) {
+    background: rgba(52, 152, 219, 0.3);
+    border-color: #3498db;
+    box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+}
+
+body.theme-ocean-blue .prestige-button,
+body.theme-ocean-blue .rebirth-button {
+    background: linear-gradient(135deg, #3498db, #2874a6);
+    border: 2px solid #5dade2;
+}
+
+body.theme-ocean-blue .prestige-button:hover,
+body.theme-ocean-blue .rebirth-button:hover {
+    background: linear-gradient(135deg, #4aa8dc, #3384b8);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.5);
+}
+
+body.theme-ocean-blue .tab-btn.active {
+    background: rgba(52, 152, 219, 0.4);
+    border-bottom: 3px solid #3498db;
+}
+
+body.theme-ocean-blue .lucky-event-banner {
+    background: linear-gradient(135deg, #3498db, #2874a6);
+    border: 2px solid #5dade2;
+}
+
+/* ============================================
+   COSMETIC CUSTOMIZATION - EMERALD GREEN THEME
+   ============================================ */
+
+body.theme-emerald-green {
+    background: linear-gradient(135deg, #0a2f1f 0%, #145a32 100%);
+}
+
+body.theme-emerald-green .header {
+    background: rgba(20, 90, 50, 0.8);
+    border: 1px solid rgba(88, 214, 141, 0.3);
+}
+
+body.theme-emerald-green .header h1 {
+    background: linear-gradient(135deg, #28b463, #58d68d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.theme-emerald-green .stat-item {
+    background: rgba(40, 180, 99, 0.2);
+    border: 1px solid rgba(88, 214, 141, 0.3);
+}
+
+body.theme-emerald-green .main-clicker {
+    background: radial-gradient(circle, #28b463, #1e8449);
+    box-shadow: 0 10px 40px rgba(40, 180, 99, 0.6),
+                0 0 100px rgba(40, 180, 99, 0.3);
+    border: 3px solid rgba(88, 214, 141, 0.5);
+}
+
+body.theme-emerald-green .main-clicker:hover {
+    box-shadow: 0 15px 50px rgba(40, 180, 99, 0.8),
+                0 0 120px rgba(40, 180, 99, 0.5);
+}
+
+body.theme-emerald-green .upgrade-item {
+    background: rgba(20, 90, 50, 0.6);
+    border: 1px solid rgba(40, 180, 99, 0.3);
+}
+
+body.theme-emerald-green .upgrade-item:hover:not(.disabled) {
+    background: rgba(40, 180, 99, 0.3);
+    border-color: #28b463;
+    box-shadow: 0 5px 20px rgba(40, 180, 99, 0.4);
+}
+
+body.theme-emerald-green .prestige-button,
+body.theme-emerald-green .rebirth-button {
+    background: linear-gradient(135deg, #28b463, #1e8449);
+    border: 2px solid #58d68d;
+}
+
+body.theme-emerald-green .prestige-button:hover,
+body.theme-emerald-green .rebirth-button:hover {
+    background: linear-gradient(135deg, #3ac475, #29965b);
+    box-shadow: 0 8px 25px rgba(40, 180, 99, 0.5);
+}
+
+body.theme-emerald-green .tab-btn.active {
+    background: rgba(40, 180, 99, 0.4);
+    border-bottom: 3px solid #28b463;
+}
+
+body.theme-emerald-green .lucky-event-banner {
+    background: linear-gradient(135deg, #28b463, #1e8449);
+    border: 2px solid #58d68d;
+}
+
+/* ============================================
+   COSMETIC CUSTOMIZATION - SUNSET ORANGE THEME
+   ============================================ */
+
+body.theme-sunset-orange {
+    background: linear-gradient(135deg, #3d1a0f 0%, #7e3517 100%);
+}
+
+body.theme-sunset-orange .header {
+    background: rgba(126, 53, 23, 0.8);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+body.theme-sunset-orange .header h1 {
+    background: linear-gradient(135deg, #ff9800, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.theme-sunset-orange .stat-item {
+    background: rgba(255, 152, 0, 0.2);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+body.theme-sunset-orange .main-clicker {
+    background: radial-gradient(circle, #ff9800, #f57c00);
+    box-shadow: 0 10px 40px rgba(255, 152, 0, 0.6),
+                0 0 100px rgba(255, 152, 0, 0.3);
+    border: 3px solid rgba(255, 183, 77, 0.5);
+}
+
+body.theme-sunset-orange .main-clicker:hover {
+    box-shadow: 0 15px 50px rgba(255, 152, 0, 0.8),
+                0 0 120px rgba(255, 152, 0, 0.5);
+}
+
+body.theme-sunset-orange .upgrade-item {
+    background: rgba(126, 53, 23, 0.6);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+body.theme-sunset-orange .upgrade-item:hover:not(.disabled) {
+    background: rgba(255, 152, 0, 0.3);
+    border-color: #ff9800;
+    box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+}
+
+body.theme-sunset-orange .prestige-button,
+body.theme-sunset-orange .rebirth-button {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    border: 2px solid #ffb74d;
+}
+
+body.theme-sunset-orange .prestige-button:hover,
+body.theme-sunset-orange .rebirth-button:hover {
+    background: linear-gradient(135deg, #ffa726, #fb8c00);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+}
+
+body.theme-sunset-orange .tab-btn.active {
+    background: rgba(255, 152, 0, 0.4);
+    border-bottom: 3px solid #ff9800;
+}
+
+body.theme-sunset-orange .lucky-event-banner {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    border: 2px solid #ffb74d;
+}
+
+/* ============================================
+   COSMETIC CUSTOMIZATION - GEM SKINS
+   ============================================ */
+
+/* Ruby Gem Skin - Improved */
 body.skin-ruby .main-clicker {
-    background: radial-gradient(circle, #e74c3c, #c0392b);
-    box-shadow: 0 10px 40px rgba(231, 76, 60, 0.6),
-                0 0 100px rgba(231, 76, 60, 0.3);
-    border: 3px solid rgba(255, 100, 100, 0.5);
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #e74c3c 40%, #c0392b 70%, #8b0000);
+    box-shadow: 0 10px 40px rgba(231, 76, 60, 0.8),
+                0 0 100px rgba(231, 76, 60, 0.5),
+                inset 0 -5px 20px rgba(139, 0, 0, 0.8),
+                inset 5px 5px 30px rgba(255, 107, 107, 0.4);
+    border: 3px solid rgba(255, 70, 70, 0.7);
 }
 
 body.skin-ruby .main-clicker:hover {
-    box-shadow: 0 15px 50px rgba(231, 76, 60, 0.8),
-                0 0 120px rgba(231, 76, 60, 0.5);
+    background: radial-gradient(circle at 30% 30%, #ff7979, #e85d5d 40%, #c94949 70%, #9b0000);
+    box-shadow: 0 15px 50px rgba(231, 76, 60, 1),
+                0 0 120px rgba(231, 76, 60, 0.7),
+                inset 0 -5px 20px rgba(139, 0, 0, 0.9),
+                inset 5px 5px 30px rgba(255, 107, 107, 0.6);
     transform: scale(1.05);
 }
 
 body.skin-ruby .main-clicker:active {
     transform: scale(0.95);
-    box-shadow: 0 8px 30px rgba(231, 76, 60, 0.7);
+    box-shadow: 0 8px 30px rgba(231, 76, 60, 0.9);
 }
 
 body.skin-ruby .floating-number {
-    color: #e74c3c;
-    text-shadow: 0 0 10px rgba(231, 76, 60, 0.8),
-                 0 0 20px rgba(231, 76, 60, 0.5);
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(231, 76, 60, 1),
+                 0 0 20px rgba(231, 76, 60, 0.7),
+                 0 0 30px rgba(139, 0, 0, 0.5);
+    font-weight: bold;
+}
+
+/* Sapphire Gem Skin */
+body.skin-sapphire .main-clicker {
+    background: radial-gradient(circle at 30% 30%, #5dade2, #3498db 40%, #2874a6 70%, #1a5490);
+    box-shadow: 0 10px 40px rgba(52, 152, 219, 0.8),
+                0 0 100px rgba(52, 152, 219, 0.5),
+                inset 0 -5px 20px rgba(26, 84, 144, 0.8),
+                inset 5px 5px 30px rgba(93, 173, 226, 0.4);
+    border: 3px solid rgba(93, 173, 226, 0.7);
+}
+
+body.skin-sapphire .main-clicker:hover {
+    background: radial-gradient(circle at 30% 30%, #6fc5f5, #4aa8dc 40%, #3384b8 70%, #1f60a2);
+    box-shadow: 0 15px 50px rgba(52, 152, 219, 1),
+                0 0 120px rgba(52, 152, 219, 0.7),
+                inset 0 -5px 20px rgba(26, 84, 144, 0.9),
+                inset 5px 5px 30px rgba(93, 173, 226, 0.6);
+    transform: scale(1.05);
+}
+
+body.skin-sapphire .main-clicker:active {
+    transform: scale(0.95);
+}
+
+body.skin-sapphire .floating-number {
+    color: #5dade2;
+    text-shadow: 0 0 10px rgba(52, 152, 219, 1),
+                 0 0 20px rgba(52, 152, 219, 0.7),
+                 0 0 30px rgba(26, 84, 144, 0.5);
+    font-weight: bold;
+}
+
+/* Emerald Gem Skin */
+body.skin-emerald .main-clicker {
+    background: radial-gradient(circle at 30% 30%, #58d68d, #28b463 40%, #1e8449 70%, #145a32);
+    box-shadow: 0 10px 40px rgba(40, 180, 99, 0.8),
+                0 0 100px rgba(40, 180, 99, 0.5),
+                inset 0 -5px 20px rgba(20, 90, 50, 0.8),
+                inset 5px 5px 30px rgba(88, 214, 141, 0.4);
+    border: 3px solid rgba(88, 214, 141, 0.7);
+}
+
+body.skin-emerald .main-clicker:hover {
+    background: radial-gradient(circle at 30% 30%, #6ae89b, #3ac475 40%, #29965b 70%, #196c42);
+    box-shadow: 0 15px 50px rgba(40, 180, 99, 1),
+                0 0 120px rgba(40, 180, 99, 0.7),
+                inset 0 -5px 20px rgba(20, 90, 50, 0.9),
+                inset 5px 5px 30px rgba(88, 214, 141, 0.6);
+    transform: scale(1.05);
+}
+
+body.skin-emerald .main-clicker:active {
+    transform: scale(0.95);
+}
+
+body.skin-emerald .floating-number {
+    color: #58d68d;
+    text-shadow: 0 0 10px rgba(40, 180, 99, 1),
+                 0 0 20px rgba(40, 180, 99, 0.7),
+                 0 0 30px rgba(20, 90, 50, 0.5);
+    font-weight: bold;
+}
+
+/* Amethyst Gem Skin */
+body.skin-amethyst .main-clicker {
+    background: radial-gradient(circle at 30% 30%, #bb8fce, #9b59b6 40%, #7d3c98 70%, #5b2c6f);
+    box-shadow: 0 10px 40px rgba(155, 89, 182, 0.8),
+                0 0 100px rgba(155, 89, 182, 0.5),
+                inset 0 -5px 20px rgba(91, 44, 111, 0.8),
+                inset 5px 5px 30px rgba(187, 143, 206, 0.4);
+    border: 3px solid rgba(187, 143, 206, 0.7);
+}
+
+body.skin-amethyst .main-clicker:hover {
+    background: radial-gradient(circle at 30% 30%, #c9a0dc, #a569bd 40%, #8e44ad 70%, #6c3483);
+    box-shadow: 0 15px 50px rgba(155, 89, 182, 1),
+                0 0 120px rgba(155, 89, 182, 0.7),
+                inset 0 -5px 20px rgba(91, 44, 111, 0.9),
+                inset 5px 5px 30px rgba(187, 143, 206, 0.6);
+    transform: scale(1.05);
+}
+
+body.skin-amethyst .main-clicker:active {
+    transform: scale(0.95);
+}
+
+body.skin-amethyst .floating-number {
+    color: #bb8fce;
+    text-shadow: 0 0 10px rgba(155, 89, 182, 1),
+                 0 0 20px rgba(155, 89, 182, 0.7),
+                 0 0 30px rgba(91, 44, 111, 0.5);
+    font-weight: bold;
 }
 
 /* ============================================

@@ -544,10 +544,22 @@ class IdleClickerGame {
         // Get particle colors based on selected particle effect in settings
         let colors = ['#4ecdc4', '#9b59b6', '#3498db', '#f39c12', '#e74c3c']; // Default
         
-        if (this.settings.particleEffect === 'rainbow') {
-            colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
-        } else if (this.settings.particleEffect === 'golden') {
-            colors = ['#FFD700', '#FFA500', '#FFFF00', '#FFE5B4', '#FFF8DC'];
+        switch (this.settings.particleEffect) {
+            case 'rainbow':
+                colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+                break;
+            case 'golden':
+                colors = ['#FFD700', '#FFA500', '#FFFF00', '#FFE5B4', '#FFF8DC'];
+                break;
+            case 'ice':
+                colors = ['#B0E0E6', '#87CEEB', '#00BFFF', '#1E90FF', '#4682B4', '#E0FFFF'];
+                break;
+            case 'fire':
+                colors = ['#FF4500', '#FF6347', '#FF7F00', '#FFA500', '#FFD700', '#FF0000'];
+                break;
+            case 'nature':
+                colors = ['#228B22', '#32CD32', '#90EE90', '#00FF00', '#ADFF2F', '#7FFF00'];
+                break;
         }
         
         for (let i = 0; i < count; i++) {
@@ -1545,23 +1557,33 @@ class IdleClickerGame {
     applyCosmetics() {
         // Apply selected cosmetic items from settings
         
-        // Premium Theme (overrides base theme if selected)
-        document.body.classList.remove('theme-deep-purple'); // Clear all themes first
+        // Clear all premium themes first
+        document.body.classList.remove('theme-deep-purple', 'theme-ocean-blue', 'theme-emerald-green', 'theme-sunset-orange');
         
-        if (this.settings.premiumTheme === 'dark-purple') {
-            document.body.classList.add('theme-deep-purple');
+        // Apply selected premium theme
+        if (this.settings.premiumTheme !== 'none') {
+            document.body.classList.add(`theme-${this.settings.premiumTheme}`);
         }
-        // More themes can be added here
         
-        // Gem Skin
+        // Clear all gem skins first
+        document.body.classList.remove('skin-ruby', 'skin-sapphire', 'skin-emerald', 'skin-amethyst');
+        
+        // Apply selected gem skin
         const clickerIcon = document.getElementById('clicker-icon');
         if (clickerIcon) {
-            if (this.settings.gemSkin === 'ruby') {
-                document.body.classList.add('skin-ruby');
-                clickerIcon.textContent = '🔴';
+            const skinIcons = {
+                'default': this.config.game.clickableIcon,
+                'ruby': '🔴',
+                'sapphire': '🔵',
+                'emerald': '🟢',
+                'amethyst': '🟣'
+            };
+            
+            if (this.settings.gemSkin !== 'default') {
+                document.body.classList.add(`skin-${this.settings.gemSkin}`);
+                clickerIcon.textContent = skinIcons[this.settings.gemSkin] || skinIcons['default'];
             } else {
-                document.body.classList.remove('skin-ruby');
-                clickerIcon.textContent = this.config.game.clickableIcon;
+                clickerIcon.textContent = skinIcons['default'];
             }
         }
         
