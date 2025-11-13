@@ -337,8 +337,38 @@ class IdleClickerGame {
             this.saveGame();
         });
         
+        // Handle tab visibility changes (pause when tab hidden)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Save when tab becomes hidden
+                this.saveGame();
+                this.pauseGame();
+            } else {
+                // Resume when tab becomes visible
+                this.resumeGame();
+            }
+        });
+        
         // Apply saved settings
         this.applySettings();
+    }
+    
+    pauseGame() {
+        // Pause game loop when tab is hidden
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
+        console.log('Game paused (tab hidden)');
+    }
+    
+    resumeGame() {
+        // Resume game loop and calculate offline progress
+        if (!this.updateInterval) {
+            this.lastUpdate = Date.now();
+            this.startGameLoop();
+        }
+        console.log('Game resumed (tab visible)');
     }
     
     handleKeyboard(e) {
@@ -1510,22 +1540,32 @@ class IdleClickerGame {
         // Combine all rates
         const totalPerSecond = generatorPerSecond + autoClickerPerSecond + manualClicksPerSecond;
         
-        // Show breakdown
+        // Show breakdown with gem rush indicator
+        const gemRushActive = this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'gem_rush';
+        const rushEmoji = gemRushActive ? ' 🎊' : '';
+        
         if (manualClicksPerSecond > 0.1 && autoClickerPerSecond > 0) {
             document.getElementById('per-second').textContent = 
-                `${this.formatNumber(totalPerSecond)} (Gen: ${this.formatNumber(generatorPerSecond)} + Auto: ${this.formatNumber(autoClickerPerSecond)} + Click: ${this.formatNumber(manualClicksPerSecond)})`;
+                `${this.formatNumber(totalPerSecond)}${rushEmoji} (Gen: ${this.formatNumber(generatorPerSecond)} + Auto: ${this.formatNumber(autoClickerPerSecond)} + Click: ${this.formatNumber(manualClicksPerSecond)})`;
         } else if (manualClicksPerSecond > 0.1) {
             document.getElementById('per-second').textContent = 
-                `${this.formatNumber(totalPerSecond)} (Gen: ${this.formatNumber(generatorPerSecond)} + Click: ${this.formatNumber(manualClicksPerSecond)})`;
+                `${this.formatNumber(totalPerSecond)}${rushEmoji} (Gen: ${this.formatNumber(generatorPerSecond)} + Click: ${this.formatNumber(manualClicksPerSecond)})`;
         } else if (autoClickerPerSecond > 0) {
             document.getElementById('per-second').textContent = 
-                `${this.formatNumber(totalPerSecond)} (Gen: ${this.formatNumber(generatorPerSecond)} + Auto: ${this.formatNumber(autoClickerPerSecond)})`;
+                `${this.formatNumber(totalPerSecond)}${rushEmoji} (Gen: ${this.formatNumber(generatorPerSecond)} + Auto: ${this.formatNumber(autoClickerPerSecond)})`;
         } else {
-            document.getElementById('per-second').textContent = this.formatNumber(generatorPerSecond);
+            document.getElementById('per-second').textContent = this.formatNumber(generatorPerSecond) + rushEmoji;
         }
         
-        // Update click power
-        document.getElementById('click-power').textContent = this.formatNumber(this.gameState.clickPower);
+        // Update click power with golden gem indicator
+        const goldenGemActive = this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'golden_gem';
+        if (goldenGemActive) {
+            const boostedPower = this.gameState.clickPower * this.config.luckyEvents.goldenGemMultiplier;
+            document.getElementById('click-power').textContent = 
+                `${this.formatNumber(boostedPower)} 🌟 (${this.config.luckyEvents.goldenGemMultiplier}x!)`;
+        } else {
+            document.getElementById('click-power').textContent = this.formatNumber(this.gameState.clickPower);
+        }
         
         // Update total clicks
         document.getElementById('total-clicks').textContent = this.formatNumber(this.gameState.totalClicks);
@@ -1849,10 +1889,22 @@ class IdleClickerGame {
             console.log('Lucky event ended!');
         }
         
-        // Update event timer display
+        // Update event timer and info display
         if (this.gameState.luckyEvent.active) {
             const remaining = Math.ceil((this.gameState.luckyEvent.endTime - now) / 1000);
-            document.getElementById('event-timer').textContent = `${remaining}s remaining`;
+            const eventName = document.getElementById('event-name');
+            
+            if (this.gameState.luckyEvent.type === 'golden_gem') {
+                eventName.innerHTML = `
+                    🌟 Golden Gem Active!<br>
+                    <small style="font-size: 0.8em;">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! (${remaining}s remaining)</small>
+                `;
+            } else if (this.gameState.luckyEvent.type === 'gem_rush') {
+                eventName.innerHTML = `
+                    🎊 Gem Rush Active!<br>
+                    <small style="font-size: 0.8em;">${this.config.luckyEvents.gemRushMultiplier}x production! (${remaining}s remaining)</small>
+                `;
+            }
         }
         
         // Chance to trigger new event (only if no event active)
@@ -1875,11 +1927,19 @@ class IdleClickerGame {
         if (eventType === 'golden_gem') {
             this.gameState.luckyEvent.endTime = Date.now() + 15000; // 15 seconds
             eventIcon.textContent = '🌟';
-            eventName.textContent = `Golden Gem! (${this.config.luckyEvents.goldenGemMultiplier}x clicks!)`;
+            const duration = 15;
+            eventName.innerHTML = `
+                🌟 Golden Gem Active!<br>
+                <small style="font-size: 0.8em;">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! (${duration}s remaining)</small>
+            `;
         } else {
             this.gameState.luckyEvent.endTime = Date.now() + (this.config.luckyEvents.gemRushDuration * 1000);
             eventIcon.textContent = '🎊';
-            eventName.textContent = `Gem Rush! (${this.config.luckyEvents.gemRushMultiplier}x production!)`;
+            const duration = this.config.luckyEvents.gemRushDuration;
+            eventName.innerHTML = `
+                🎊 Gem Rush Active!<br>
+                <small style="font-size: 0.8em;">${this.config.luckyEvents.gemRushMultiplier}x production! (${duration}s remaining)</small>
+            `;
         }
         
         banner.style.display = 'flex';
@@ -2263,13 +2323,21 @@ class IdleClickerGame {
         const eventName = document.getElementById('event-name');
         
         if (eventType === 'golden_gem') {
-            this.gameState.luckyEvent.endTime = Date.now() + 15000;
+            this.gameState.luckyEvent.endTime = Date.now() + 15000; // 15 seconds
             eventIcon.textContent = '🌟';
-            eventName.textContent = `Golden Gem! (${this.config.luckyEvents.goldenGemMultiplier}x clicks!)`;
+            const duration = 15;
+            eventName.innerHTML = `
+                🌟 Golden Gem Active!<br>
+                <small style="font-size: 0.8em;">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! (${duration}s remaining)</small>
+            `;
         } else {
             this.gameState.luckyEvent.endTime = Date.now() + (this.config.luckyEvents.gemRushDuration * 1000);
             eventIcon.textContent = '🎊';
-            eventName.textContent = `Gem Rush! (${this.config.luckyEvents.gemRushMultiplier}x production!)`;
+            const duration = this.config.luckyEvents.gemRushDuration;
+            eventName.innerHTML = `
+                🎊 Gem Rush Active!<br>
+                <small style="font-size: 0.8em;">${this.config.luckyEvents.gemRushMultiplier}x production! (${duration}s remaining)</small>
+            `;
         }
         
         banner.style.display = 'flex';
