@@ -232,7 +232,7 @@ class IdleClickerGame {
             document.getElementById('prestige-section').style.display = 'block';
             document.getElementById('prestige-stat').style.display = 'flex';
             document.getElementById('prestige-icon').textContent = this.config.prestige.currencyIcon;
-            document.getElementById('prestige-currency-name').textContent = this.config.prestige.currencyIcon;
+            // Don't set prestige-currency-name here - it's already in HTML
         }
         
         // Show rebirth UI if enabled and unlocked
@@ -906,7 +906,11 @@ class IdleClickerGame {
         if (!this.config.prestige.enabled) return 0;
         
         const totalEarned = this.gameState.totalEarned;
-        if (totalEarned < this.config.prestige.requirement) return 0;
+        
+        // Scale requirement with prestige count (gets harder each time)
+        const scaledRequirement = this.config.prestige.requirement * Math.pow(1.5, this.gameState.prestigeCount);
+        
+        if (totalEarned < scaledRequirement) return 0;
         
         let gain = 0;
         if (this.config.prestige.formula === 'sqrt') {
@@ -921,6 +925,11 @@ class IdleClickerGame {
         }
         
         return Math.max(0, gain);
+    }
+    
+    getPrestigeRequirement() {
+        // Calculate current prestige requirement based on prestige count
+        return this.config.prestige.requirement * Math.pow(1.5, this.gameState.prestigeCount);
     }
 
     handlePrestige() {
@@ -1597,11 +1606,12 @@ class IdleClickerGame {
             const prestigeGain = this.calculatePrestigeGain();
             document.getElementById('prestige-gain').textContent = this.formatNumber(prestigeGain);
             
-            // Update requirement text
-            const remaining = Math.max(0, this.config.prestige.requirement - this.gameState.totalEarned);
+            // Update requirement text with scaled requirement
+            const requirement = this.getPrestigeRequirement();
+            const remaining = Math.max(0, requirement - this.gameState.totalEarned);
             if (remaining > 0) {
                 document.getElementById('prestige-requirement-text').textContent = 
-                    `Need ${this.formatNumber(remaining)} more gems (${this.formatNumber(this.gameState.totalEarned)} / ${this.formatNumber(this.config.prestige.requirement)})`;
+                    `Need ${this.formatNumber(remaining)} more gems (${this.formatNumber(this.gameState.totalEarned)} / ${this.formatNumber(requirement)})`;
             } else {
                 document.getElementById('prestige-requirement-text').textContent = 
                     `Ready to prestige! (${this.formatNumber(this.gameState.totalEarned)} total earned)`;
