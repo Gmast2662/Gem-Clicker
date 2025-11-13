@@ -31,6 +31,10 @@ class IdleClickerGame {
         // Sound system
         this.audioContext = null;
         this.initAudio();
+        
+        // Admin panel
+        this.adminUnlocked = false;
+        this.adminPassword = 'GemMaster2024'; // Change this to your own password
     }
     
     initAudio() {
@@ -174,6 +178,16 @@ class IdleClickerGame {
         // Import modal
         document.getElementById('import-confirm').addEventListener('click', () => this.importSave());
         document.getElementById('import-cancel').addEventListener('click', () => this.hideImportModal());
+        
+        // Admin panel
+        document.getElementById('admin-toggle').addEventListener('click', () => this.toggleAdminPanel());
+        document.getElementById('admin-close').addEventListener('click', () => this.closeAdminPanel());
+        document.getElementById('admin-add-gems').addEventListener('click', () => this.adminAddGems());
+        document.getElementById('admin-set-generator').addEventListener('click', () => this.adminSetGenerator());
+        document.getElementById('admin-set-upgrade').addEventListener('click', () => this.adminSetUpgrade());
+        
+        // Populate admin dropdowns
+        this.populateAdminDropdowns();
     }
 
     handleClick(e) {
@@ -692,12 +706,22 @@ class IdleClickerGame {
             localStorage.setItem('idleClickerSave', JSON.stringify(saveData));
             
             if (showNotification) {
-                console.log('Game saved!');
-                // Could add a visual notification here
+                this.showSaveNotification();
             }
         } catch (error) {
             console.error('Error saving game:', error);
         }
+    }
+    
+    showSaveNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'save-notification';
+        notification.textContent = '💾 Game Saved!';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
     }
 
     loadGame() {
@@ -798,6 +822,110 @@ class IdleClickerGame {
             console.error('Error importing save:', error);
             alert('Error importing save! Make sure the data is correct.');
         }
+    }
+    
+    // Admin Panel Functions
+    toggleAdminPanel() {
+        if (!this.adminUnlocked) {
+            const password = prompt('🔒 Enter admin password:');
+            if (password === this.adminPassword) {
+                this.adminUnlocked = true;
+                alert('✅ Admin panel unlocked!');
+            } else if (password !== null) {
+                alert('❌ Incorrect password!');
+                return;
+            } else {
+                return;
+            }
+        }
+        
+        const panel = document.getElementById('admin-panel');
+        const toggle = document.getElementById('admin-toggle');
+        
+        if (panel.classList.contains('hidden')) {
+            panel.classList.remove('hidden');
+            toggle.classList.add('hidden');
+        } else {
+            panel.classList.add('hidden');
+            toggle.classList.remove('hidden');
+        }
+    }
+    
+    closeAdminPanel() {
+        document.getElementById('admin-panel').classList.add('hidden');
+        document.getElementById('admin-toggle').classList.remove('hidden');
+    }
+    
+    populateAdminDropdowns() {
+        // Populate generators dropdown
+        const generatorSelect = document.getElementById('admin-generator-select');
+        this.config.generators.forEach(generator => {
+            const option = document.createElement('option');
+            option.value = generator.id;
+            option.textContent = `${generator.icon} ${generator.name}`;
+            generatorSelect.appendChild(option);
+        });
+        
+        // Populate upgrades dropdown
+        const upgradeSelect = document.getElementById('admin-upgrade-select');
+        this.config.clickUpgrades.forEach(upgrade => {
+            const option = document.createElement('option');
+            option.value = upgrade.id;
+            option.textContent = `${upgrade.icon} ${upgrade.name}`;
+            upgradeSelect.appendChild(option);
+        });
+    }
+    
+    adminAddGems() {
+        const amount = parseFloat(document.getElementById('admin-gems-input').value);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid amount!');
+            return;
+        }
+        
+        this.gameState.currency += amount;
+        this.updateUI();
+        this.renderGenerators();
+        this.renderClickUpgrades();
+        this.playSound('achievement');
+        console.log(`✅ Admin: Added ${this.formatNumber(amount)} gems`);
+    }
+    
+    adminSetGenerator() {
+        const generatorId = document.getElementById('admin-generator-select').value;
+        const level = parseInt(document.getElementById('admin-generator-level').value);
+        
+        if (isNaN(level) || level < 0) {
+            alert('Please enter a valid level!');
+            return;
+        }
+        
+        this.gameState.generators[generatorId].level = level;
+        this.renderGenerators();
+        this.updateUI();
+        this.playSound('buy');
+        
+        const generator = this.config.generators.find(g => g.id === generatorId);
+        console.log(`✅ Admin: Set ${generator.name} to level ${level}`);
+    }
+    
+    adminSetUpgrade() {
+        const upgradeId = document.getElementById('admin-upgrade-select').value;
+        const level = parseInt(document.getElementById('admin-upgrade-level').value);
+        
+        if (isNaN(level) || level < 0) {
+            alert('Please enter a valid level!');
+            return;
+        }
+        
+        this.gameState.clickUpgrades[upgradeId].level = level;
+        this.updateClickPower();
+        this.renderClickUpgrades();
+        this.updateUI();
+        this.playSound('buy');
+        
+        const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
+        console.log(`✅ Admin: Set ${upgrade.name} to level ${level}`);
     }
 }
 

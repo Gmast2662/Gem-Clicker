@@ -136,6 +136,38 @@
         </div>
     </div>
 
+    <!-- Admin Panel Toggle -->
+    <button id="admin-toggle" class="admin-toggle">🔧 Admin</button>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel hidden">
+        <h3>🔧 Admin Panel</h3>
+        
+        <div class="admin-input-group">
+            <label>Add Gems</label>
+            <input type="number" id="admin-gems-input" placeholder="Amount" value="1000">
+        </div>
+
+        <div class="admin-input-group">
+            <label>Set Generator Level</label>
+            <select id="admin-generator-select"></select>
+            <input type="number" id="admin-generator-level" placeholder="Level" value="1" min="0">
+        </div>
+
+        <div class="admin-input-group">
+            <label>Set Upgrade Level</label>
+            <select id="admin-upgrade-select"></select>
+            <input type="number" id="admin-upgrade-level" placeholder="Level" value="1" min="0">
+        </div>
+
+        <div class="admin-buttons">
+            <button class="admin-btn" id="admin-add-gems">Add Gems</button>
+            <button class="admin-btn" id="admin-set-generator">Set Generator</button>
+            <button class="admin-btn" id="admin-set-upgrade">Set Upgrade</button>
+            <button class="admin-btn close" id="admin-close">Close</button>
+        </div>
+    </div>
+
     <script src="game.js"></script>
 </body>
 </html>
