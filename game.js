@@ -137,6 +137,23 @@ class IdleClickerGame {
             const response = await fetch(`config.json?v=${Date.now()}`);
             this.config = await response.json();
             
+            // Load tips and changelog
+            try {
+                const tipsResponse = await fetch(`tips.json?v=${Date.now()}`);
+                this.tips = await tipsResponse.json();
+            } catch (e) {
+                console.log('Tips.json not found, using defaults');
+                this.tips = null;
+            }
+            
+            try {
+                const changelogResponse = await fetch(`changelog.json?v=${Date.now()}`);
+                this.changelog = await changelogResponse.json();
+            } catch (e) {
+                console.log('Changelog.json not found, using defaults');
+                this.changelog = null;
+            }
+            
             // Load save or initialize new game
             this.loadGame();
             
@@ -236,6 +253,8 @@ class IdleClickerGame {
         this.renderCosmetics();
         this.renderAchievements();
         this.renderMilestones();
+        this.renderTips();
+        this.renderChangelog();
         this.updateSettingsDropdowns();
         this.updateUI();
         
@@ -1276,6 +1295,9 @@ class IdleClickerGame {
                 (1 + (this.gameState.prestigePoints * this.config.prestige.bonusPerPoint)) : 1;
             const actualProduction = production * prestigeBonus;
             
+            // Show base production (what you get with 1 level) if not owned yet
+            const baseProductionDisplay = generator.baseProduction * prestigeBonus;
+            
             const item = document.createElement('div');
             item.className = `upgrade-item ${!canAfford ? 'disabled' : ''}`;
             item.style.cursor = 'pointer'; // Ensure cursor shows clickable
@@ -1286,7 +1308,10 @@ class IdleClickerGame {
                     <div class="upgrade-description">${generator.description}</div>
                     <div class="upgrade-stats">
                         <span class="upgrade-level">Level: ${level}</span>
-                        ${level > 0 ? `<span class="upgrade-production">+${this.formatNumber(actualProduction)}/s</span>` : ''}
+                        ${level > 0 
+                            ? `<span class="upgrade-production">+${this.formatNumber(actualProduction)}/s</span>` 
+                            : `<span class="upgrade-production" style="opacity: 0.7;">Base: ${this.formatNumber(baseProductionDisplay)}/s</span>`
+                        }
                     </div>
                 </div>
                 <div class="upgrade-cost">${this.formatNumber(cost)} ${this.config.game.currencyIcon}</div>
@@ -1786,6 +1811,63 @@ class IdleClickerGame {
             `;
             
             container.appendChild(item);
+        });
+    }
+    
+    renderTips() {
+        if (!this.tips) return; // Use HTML defaults if no JSON file
+        
+        const container = document.getElementById('tips-container');
+        if (!container) return;
+        
+        container.innerHTML = '<h3>💡 Strategy Tips</h3>';
+        
+        this.tips.tips.forEach(section => {
+            const tipCard = document.createElement('div');
+            tipCard.className = 'tip-card';
+            
+            let itemsHTML = section.items.map(item => `<li>${item}</li>`).join('');
+            
+            tipCard.innerHTML = `
+                <h4>${section.title}</h4>
+                <ul>${itemsHTML}</ul>
+            `;
+            
+            container.appendChild(tipCard);
+        });
+    }
+    
+    renderChangelog() {
+        if (!this.changelog) return; // Use HTML defaults if no JSON file
+        
+        const container = document.getElementById('changelog-container');
+        if (!container) return;
+        
+        container.innerHTML = '<h3>📝 Changelog</h3>';
+        
+        // Current version banner
+        const currentEntry = document.createElement('div');
+        currentEntry.className = 'changelog-entry';
+        currentEntry.innerHTML = `
+            <h4>📍 Current Version: ${this.changelog.currentVersion}</h4>
+            <p>${this.changelog.currentDescription}</p>
+        `;
+        container.appendChild(currentEntry);
+        
+        // All versions
+        this.changelog.versions.forEach(version => {
+            const versionEntry = document.createElement('div');
+            versionEntry.className = 'changelog-entry';
+            
+            let changesHTML = version.changes.map(change => `<li>${change}</li>`).join('');
+            
+            versionEntry.innerHTML = `
+                <h4>${version.version} - ${version.title}</h4>
+                <p class="changelog-date">${version.date}</p>
+                <ul>${changesHTML}</ul>
+            `;
+            
+            container.appendChild(versionEntry);
         });
     }
 

@@ -1,0 +1,70 @@
+{
+  "tips": [
+    {
+      "title": "🎯 Early Game (0-50K gems)",
+      "items": [
+        "Click manually - buy click upgrades to increase power",
+        "Buy your first Miner at 25 gems (produces 0.1 gems/sec)",
+        "Focus on generators first - multipliers are expensive now!",
+        "Save 50K for Auto-Clicker (was 5K, now rebalanced)",
+        "Don't buy multipliers too early - bad value"
+      ]
+    },
+    {
+      "title": "⚙️ Mid Game (50K-1M gems)",
+      "items": [
+        "Now you can afford first multiplier (Click Boost: 10K)",
+        "Get Mining Efficiency (+20% generator production)",
+        "Buy high-tier generators (Crystal Cave, Deep Shaft)",
+        "Unlock shop items (Smart Notifications: 250K)",
+        "Start saving for cosmetics (Golden Particles: 500K)"
+      ]
+    },
+    {
+      "title": "🚀 Late Game (1M-2.5M gems)",
+      "items": [
+        "Multipliers are now worth it - but EXPENSIVE!",
+        "Buy 2nd tier multipliers (Hand Amplifier: 250K, Automation: 350K)",
+        "Purchase powerful shop items (Golden Touch: 2.5M)",
+        "Collect cosmetics - they don't reset on prestige!",
+        "Prestige becomes available at 2.5M total earned"
+      ]
+    },
+    {
+      "title": "⭐ Prestige Strategy",
+      "items": [
+        "First prestige at 2.5M total earned (was 1M - rebalanced!)",
+        "Each prestige point = +5% to ALL production",
+        "Prestige scaling: 2.5M → 3.75M → 5.6M (1.5x harder each time)",
+        "Milestones, achievements, and cosmetics are KEPT!",
+        "Shop purchases are KEPT through prestige!"
+      ]
+    },
+    {
+      "title": "🎨 Cosmetics Guide",
+      "items": [
+        "Press '5' to open Cosmetics tab - separate from shop!",
+        "Buy cosmetics, then equip in Settings (Press '0')",
+        "4 gem skins (Ruby, Sapphire, Emerald, Amethyst)",
+        "4 premium themes (change entire color scheme)",
+        "6 particle effects (different colors when clicking)",
+        "Cosmetics are cosmetic only - no gameplay advantage!"
+      ]
+    },
+    {
+      "title": "💎 Pro Tips",
+      "items": [
+        "Auto-Clicker scales with click power - invest in both!",
+        "Multipliers are now SMALL bonuses (+20-40%) but stack",
+        "Don't buy all multipliers - focus on best value",
+        "Daily rewards increase with streaks - login daily!",
+        "Use keyboard shortcuts (0-9) for faster play",
+        "Smart Notifications (250K shop) alerts when you can prestige",
+        "Milestones at 1M, 100M, 1B, 1T give permanent bonuses",
+        "Game is single-player - play at your own pace!",
+        "External auto-clickers? Go ahead - it's your game!"
+      ]
+    }
+  ]
+}
+

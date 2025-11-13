@@ -1,0 +1,104 @@
+{
+  "currentVersion": "v1.5.0",
+  "currentDescription": "Massive cosmetics update with rebalanced economy! Gems now look amazing!",
+  "versions": [
+    {
+      "version": "v1.5.0",
+      "title": "Cosmetics & Balance 🎨",
+      "date": "November 13, 2024",
+      "changes": [
+        "🎨 NEW: Separate Cosmetics Tab - Buy & equip themes, skins, particles",
+        "💎 4 Animated Gem Skins - Classic diamond cut with shimmering effects",
+        "✦ Sparkle animations on all gems (rotating star effects)",
+        "🌈 5-layer background gradients for visual depth and facets",
+        "🌊 4 Premium Themes - Deep Purple, Ocean Blue, Emerald Forest, Sunset",
+        "❄️ 6 Particle Effects - Rainbow, Golden, Ice, Fire, Nature",
+        "⚙️ Settings integration - Select cosmetics from dropdowns",
+        "🔧 Admin panel - Unlock All / Reset All cosmetics buttons",
+        "⚡ Economy rebalance - Nerfed multipliers (2x → 1.2x, etc)",
+        "💰 Increased costs 5-10x across all upgrades",
+        "📊 Fixed average clicks/sec stat (shows real-time rate)",
+        "🎯 Prestige requirement increased to 2.5M (was 1M)",
+        "⌨️ Cosmetics tab accessible with '5' key, Settings with '0'",
+        "📖 Added COSMETICS_GUIDE.md for adding new items",
+        "🔧 Admin panel now updates live (no close/reopen needed)"
+      ]
+    },
+    {
+      "version": "v1.4.0",
+      "title": "Major Systems Update 🔮",
+      "date": "November 2024",
+      "changes": [
+        "🔮 Rebirth system (2x multiplier per point!)",
+        "🏪 Shop with permanent one-time purchases",
+        "🎰 Lucky Events (Golden Gem & Gem Rush)",
+        "📊 Progress bars for prestige & milestones",
+        "💡 Tips tab with complete strategy guide",
+        "📝 Changelog tab (you're reading it!)",
+        "🌙 Offline earnings popup notification",
+        "📱 Full mobile optimization",
+        "🔧 Expanded admin panel controls",
+        "⌨️ Updated keyboard shortcuts (1-9)"
+      ]
+    },
+    {
+      "version": "v1.3.0",
+      "title": "Progression Update 🚀",
+      "date": "November 2024",
+      "changes": [
+        "🤖 Auto-Clicker system (scales with click power!)",
+        "🎁 Daily login rewards with streak system",
+        "🌟 Milestones with permanent bonuses (1M, 100M, 1B, 1T)",
+        "✨ Enhanced animations (bounce, pulse, smooth transitions)",
+        "🔧 Expanded admin panel with achievement controls",
+        "🌙 Offline earnings now include auto-clicker",
+        "📱 Mobile-friendly responsive design"
+      ]
+    },
+    {
+      "version": "v1.2.0",
+      "title": "Quality of Life Update 🎵",
+      "date": "November 2024",
+      "changes": [
+        "🎵 Sound effects (click, buy, achievement)",
+        "🔊 Sound settings with volume control and mute",
+        "🎨 Light mode theme option",
+        "⌨️ Keyboard shortcuts (Space, 1-9)",
+        "💫 Particle effects on clicks",
+        "🏆 Beautiful achievement popup notifications",
+        "📊 Enhanced stats (gems/hour, avg clicks/sec)",
+        "💾 Visual 'Game Saved' notification"
+      ]
+    },
+    {
+      "version": "v1.1.0",
+      "title": "Multiplier Update ✨",
+      "date": "November 2024",
+      "changes": [
+        "✨ Added multiplier system with 2 categories",
+        "👆 3 click multipliers (2x, 3x, 5x)",
+        "🏭 4 generator multipliers (2x, 3x, 5x, 10x)",
+        "📊 Multipliers tab for easy access",
+        "⭐ Prestige system with permanent bonuses",
+        "💰 Better UI for showing costs and levels",
+        "🔧 Admin panel for testing"
+      ]
+    },
+    {
+      "version": "v1.0.0",
+      "title": "Initial Release 🎮",
+      "date": "November 2024",
+      "changes": [
+        "💎 Click to mine gems - core gameplay",
+        "⛏️ 4 click upgrade tiers (Pickaxe → Laser Drill)",
+        "👷 10 generator types (Miner → Stellar Forge)",
+        "🏆 16 achievements to unlock",
+        "💾 Auto-save every 5 seconds",
+        "🌙 Offline earnings (up to 24 hours)",
+        "📱 Mobile-friendly interface",
+        "🎨 Beautiful modern UI with animations"
+      ]
+    }
+  ]
+}
+
