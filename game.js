@@ -292,7 +292,7 @@ class IdleClickerGame {
         document.getElementById('admin-set-upgrade').addEventListener('click', () => this.adminSetUpgrade());
         document.getElementById('admin-set-autoclicker').addEventListener('click', () => this.adminSetAutoClicker());
         document.getElementById('admin-set-prestige').addEventListener('click', () => this.adminSetPrestige());
-        document.getElementById('admin-instant-prestige').addEventListener('click', () => this.adminInstantPrestige());
+        document.getElementById('admin-set-prestige-count').addEventListener('click', () => this.adminSetPrestigeCount());
         document.getElementById('admin-set-rebirth').addEventListener('click', () => this.adminSetRebirth());
         document.getElementById('admin-instant-rebirth').addEventListener('click', () => this.adminInstantRebirth());
         document.getElementById('admin-unlock-all').addEventListener('click', () => this.adminUnlockAllAchievements());
@@ -331,6 +331,11 @@ class IdleClickerGame {
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+        
+        // Save on page unload to ensure offline earnings work
+        window.addEventListener('beforeunload', () => {
+            this.saveGame();
+        });
         
         // Apply saved settings
         this.applySettings();
@@ -1584,13 +1589,17 @@ class IdleClickerGame {
             const rebirthGain = canRebirth ? 1 : 0;
             const currentBonus = Math.pow(this.config.rebirth.bonusPerPoint, this.gameState.rebirthPoints);
             
+            // Always show rebirth section if player has rebirthed at least once OR meets requirement
+            if (this.gameState.rebirthPoints > 0 || canRebirth) {
+                document.getElementById('rebirth-section').style.display = 'block';
+            }
+            
             document.getElementById('rebirth-gain').textContent = rebirthGain;
             document.getElementById('rebirth-bonus-display').textContent = this.formatNumber(currentBonus) + 'x';
             
             const rebirthButton = document.getElementById('rebirth-button');
             if (canRebirth) {
                 rebirthButton.disabled = false;
-                document.getElementById('rebirth-section').style.display = 'block';
             } else {
                 rebirthButton.disabled = true;
             }
@@ -1780,6 +1789,8 @@ class IdleClickerGame {
                 // Handle offline progress
                 const offlineTime = (Date.now() - saveData.timestamp) / 1000; // seconds
                 
+                console.log(`Time since last save: ${offlineTime.toFixed(1)} seconds`);
+                
                 // Merge saved state with current state
                 this.gameState = {
                     ...this.gameState,
@@ -1787,8 +1798,9 @@ class IdleClickerGame {
                 };
                 
                 // Calculate offline earnings (limited to prevent exploits)
-                // Only show if away for at least 1 minute and less than 24 hours
-                if (offlineTime > 60 && offlineTime < 86400) { // 1 minute to 24 hours
+                // Only show if away for at least 30 seconds and less than 24 hours (or 48 with upgrade)
+                const maxOfflineTime = this.gameState.shopPurchases?.['offline_cap'] ? 172800 : 86400;
+                if (offlineTime > 30 && offlineTime < maxOfflineTime) { // 30 seconds to 24/48 hours
                     const production = this.calculateProductionPerSecond();
                     
                     // Also calculate auto-clicker offline production
@@ -2006,8 +2018,9 @@ class IdleClickerGame {
         // Update auto clicker level
         document.getElementById('admin-current-autoclicker').textContent = this.gameState.autoClickerLevel;
         
-        // Update prestige points
+        // Update prestige points and count
         document.getElementById('admin-current-prestige').textContent = this.gameState.prestigePoints;
+        document.getElementById('admin-current-prestige-count').textContent = this.gameState.prestigeCount;
         
         // Update rebirth points
         document.getElementById('admin-current-rebirth').textContent = this.gameState.rebirthPoints;
@@ -2160,6 +2173,20 @@ class IdleClickerGame {
         console.log(`✅ Admin: Set prestige points to ${points}`);
     }
     
+    adminSetPrestigeCount() {
+        const count = parseInt(document.getElementById('admin-prestige-count').value);
+        if (isNaN(count) || count < 0) {
+            alert('Please enter a valid number!');
+            return;
+        }
+        
+        this.gameState.prestigeCount = count;
+        this.updateUI();
+        this.playSound('achievement');
+        this.updateAdminDisplay();
+        console.log(`✅ Admin: Set prestige count to ${count}`);
+    }
+    
     adminInstantPrestige() {
         if (!confirm('Perform instant prestige without resetting?')) return;
         
@@ -2169,6 +2196,7 @@ class IdleClickerGame {
             this.gameState.prestigeCount++;
             this.updateUI();
             this.playSound('achievement');
+            this.updateAdminDisplay();
             console.log(`✅ Admin: Instant prestige! +${gain} points`);
         } else {
             alert('Not enough total earned for prestige!');
@@ -2226,11 +2254,7 @@ class IdleClickerGame {
     }
     
     adminTriggerEvent(eventType) {
-        if (!this.gameState.shopPurchases['lucky_events']) {
-            alert('Must unlock Lucky Events in shop first!');
-            return;
-        }
-        
+        // Admin can trigger events without shop unlock
         this.gameState.luckyEvent.active = true;
         this.gameState.luckyEvent.type = eventType;
         

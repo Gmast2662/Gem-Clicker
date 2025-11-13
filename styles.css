@@ -807,6 +807,12 @@ body {
     cursor: pointer;
 }
 
+#admin-generator-select option,
+#admin-upgrade-select option {
+    background: #16213e;
+    color: #eaeaea;
+}
+
 #admin-generator-select:focus,
 #admin-upgrade-select:focus {
     outline: none;

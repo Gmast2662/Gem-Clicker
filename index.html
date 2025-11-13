@@ -490,12 +490,15 @@
 
         <div class="admin-section">
             <h4>⭐ Prestige</h4>
-            <div class="admin-current">Current: <span id="admin-current-prestige">0</span> points</div>
+            <div class="admin-current">Points: <span id="admin-current-prestige">0</span> | Count: <span id="admin-current-prestige-count">0</span></div>
             <div class="admin-input-row">
                 <input type="number" id="admin-prestige-points" placeholder="Points" value="10" min="0">
                 <button class="admin-btn" id="admin-set-prestige">Set Points</button>
             </div>
-            <button class="admin-btn full-width" id="admin-instant-prestige">Instant Prestige</button>
+            <div class="admin-input-row">
+                <input type="number" id="admin-prestige-count" placeholder="Count" value="10" min="0">
+                <button class="admin-btn" id="admin-set-prestige-count">Set Count</button>
+            </div>
         </div>
 
         <div class="admin-section">
