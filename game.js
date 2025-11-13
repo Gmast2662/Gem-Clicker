@@ -2109,8 +2109,8 @@ class IdleClickerGame {
     }
     
     updateProgressBars() {
-        // Prestige progress
-        const prestigeReq = this.config.prestige.requirement;
+        // Prestige progress (use scaled requirement)
+        const prestigeReq = this.getPrestigeRequirement();
         const prestigeProgress = Math.min((this.gameState.totalEarned / prestigeReq) * 100, 100);
         document.getElementById('prestige-progress-bar').style.width = prestigeProgress + '%';
         document.getElementById('prestige-progress-text').textContent = 
