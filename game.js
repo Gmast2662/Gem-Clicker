@@ -34,7 +34,7 @@ class IdleClickerGame {
         
         // Admin panel
         this.adminUnlocked = false;
-        this.adminPassword = 'GemMaster2024'; // Change this to your own password
+        this.adminPassword = 'Admin123'; // Change this to your own password
     }
     
     initAudio() {
@@ -185,6 +185,20 @@ class IdleClickerGame {
         document.getElementById('admin-add-gems').addEventListener('click', () => this.adminAddGems());
         document.getElementById('admin-set-generator').addEventListener('click', () => this.adminSetGenerator());
         document.getElementById('admin-set-upgrade').addEventListener('click', () => this.adminSetUpgrade());
+        document.getElementById('admin-max-generator').addEventListener('click', () => this.adminMaxGenerator());
+        document.getElementById('admin-max-upgrade').addEventListener('click', () => this.adminMaxUpgrade());
+        
+        // Quick gem buttons
+        document.querySelectorAll('.admin-quick-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const amount = parseInt(btn.getAttribute('data-amount'));
+                this.adminAddGems(amount);
+            });
+        });
+        
+        // Update current levels when changing selection
+        document.getElementById('admin-generator-select').addEventListener('change', () => this.updateAdminGeneratorLevel());
+        document.getElementById('admin-upgrade-select').addEventListener('change', () => this.updateAdminUpgradeLevel());
         
         // Populate admin dropdowns
         this.populateAdminDropdowns();
@@ -561,6 +575,40 @@ class IdleClickerGame {
         });
     }
 
+    updateAffordability() {
+        // Update generator affordability without full re-render
+        const generatorItems = document.querySelectorAll('#generators-container .upgrade-item');
+        this.config.generators.forEach((generator, index) => {
+            const level = this.gameState.generators[generator.id].level;
+            const cost = this.calculateCost(generator.baseCost, generator.costMultiplier, level);
+            const canAfford = this.gameState.currency >= cost;
+            
+            if (generatorItems[index]) {
+                if (canAfford) {
+                    generatorItems[index].classList.remove('disabled');
+                } else {
+                    generatorItems[index].classList.add('disabled');
+                }
+            }
+        });
+        
+        // Update click upgrade affordability
+        const upgradeItems = document.querySelectorAll('#upgrades-container .upgrade-item');
+        this.config.clickUpgrades.forEach((upgrade, index) => {
+            const level = this.gameState.clickUpgrades[upgrade.id].level;
+            const cost = this.calculateCost(upgrade.baseCost, upgrade.costMultiplier, level);
+            const canAfford = this.gameState.currency >= cost;
+            
+            if (upgradeItems[index]) {
+                if (canAfford) {
+                    upgradeItems[index].classList.remove('disabled');
+                } else {
+                    upgradeItems[index].classList.add('disabled');
+                }
+            }
+        });
+    }
+    
     updateUI() {
         // Update currency display
         document.getElementById('currency-amount').textContent = this.formatNumber(this.gameState.currency);
@@ -684,6 +732,9 @@ class IdleClickerGame {
             
             // Update UI
             this.updateUI();
+            
+            // Update affordability of items (so they light up when you can buy)
+            this.updateAffordability();
             
             // Check achievements
             this.checkAchievements();
@@ -845,10 +896,35 @@ class IdleClickerGame {
         if (panel.classList.contains('hidden')) {
             panel.classList.remove('hidden');
             toggle.classList.add('hidden');
+            // Update current values when opening
+            this.updateAdminDisplay();
         } else {
             panel.classList.add('hidden');
             toggle.classList.remove('hidden');
         }
+    }
+    
+    updateAdminDisplay() {
+        // Update current gem count
+        document.getElementById('admin-current-gems').textContent = this.formatNumber(this.gameState.currency);
+        
+        // Update generator level
+        this.updateAdminGeneratorLevel();
+        
+        // Update upgrade level
+        this.updateAdminUpgradeLevel();
+    }
+    
+    updateAdminGeneratorLevel() {
+        const generatorId = document.getElementById('admin-generator-select').value;
+        const level = this.gameState.generators[generatorId]?.level || 0;
+        document.getElementById('admin-current-generator-level').textContent = level;
+    }
+    
+    updateAdminUpgradeLevel() {
+        const upgradeId = document.getElementById('admin-upgrade-select').value;
+        const level = this.gameState.clickUpgrades[upgradeId]?.level || 0;
+        document.getElementById('admin-current-upgrade-level').textContent = level;
     }
     
     closeAdminPanel() {
@@ -876,8 +952,8 @@ class IdleClickerGame {
         });
     }
     
-    adminAddGems() {
-        const amount = parseFloat(document.getElementById('admin-gems-input').value);
+    adminAddGems(customAmount = null) {
+        const amount = customAmount || parseFloat(document.getElementById('admin-gems-input').value);
         if (isNaN(amount) || amount <= 0) {
             alert('Please enter a valid amount!');
             return;
@@ -888,6 +964,7 @@ class IdleClickerGame {
         this.renderGenerators();
         this.renderClickUpgrades();
         this.playSound('achievement');
+        this.updateAdminDisplay();
         console.log(`✅ Admin: Added ${this.formatNumber(amount)} gems`);
     }
     
@@ -904,9 +981,22 @@ class IdleClickerGame {
         this.renderGenerators();
         this.updateUI();
         this.playSound('buy');
+        this.updateAdminGeneratorLevel();
         
         const generator = this.config.generators.find(g => g.id === generatorId);
         console.log(`✅ Admin: Set ${generator.name} to level ${level}`);
+    }
+    
+    adminMaxGenerator() {
+        const generatorId = document.getElementById('admin-generator-select').value;
+        this.gameState.generators[generatorId].level = 100;
+        this.renderGenerators();
+        this.updateUI();
+        this.playSound('buy');
+        this.updateAdminGeneratorLevel();
+        
+        const generator = this.config.generators.find(g => g.id === generatorId);
+        console.log(`✅ Admin: Set ${generator.name} to MAX (100)`);
     }
     
     adminSetUpgrade() {
@@ -923,9 +1013,23 @@ class IdleClickerGame {
         this.renderClickUpgrades();
         this.updateUI();
         this.playSound('buy');
+        this.updateAdminUpgradeLevel();
         
         const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
         console.log(`✅ Admin: Set ${upgrade.name} to level ${level}`);
+    }
+    
+    adminMaxUpgrade() {
+        const upgradeId = document.getElementById('admin-upgrade-select').value;
+        this.gameState.clickUpgrades[upgradeId].level = 100;
+        this.updateClickPower();
+        this.renderClickUpgrades();
+        this.updateUI();
+        this.playSound('buy');
+        this.updateAdminUpgradeLevel();
+        
+        const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
+        console.log(`✅ Admin: Set ${upgrade.name} to MAX (100)`);
     }
 }
 

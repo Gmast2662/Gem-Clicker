@@ -143,29 +143,45 @@
     <div id="admin-panel" class="admin-panel hidden">
         <h3>🔧 Admin Panel</h3>
         
-        <div class="admin-input-group">
-            <label>Add Gems</label>
-            <input type="number" id="admin-gems-input" placeholder="Amount" value="1000">
+        <div class="admin-section">
+            <h4>💎 Gems</h4>
+            <div class="admin-current">Current: <span id="admin-current-gems">0</span></div>
+            <div class="admin-quick-buttons">
+                <button class="admin-quick-btn" data-amount="100">+100</button>
+                <button class="admin-quick-btn" data-amount="1000">+1K</button>
+                <button class="admin-quick-btn" data-amount="10000">+10K</button>
+                <button class="admin-quick-btn" data-amount="100000">+100K</button>
+                <button class="admin-quick-btn" data-amount="1000000">+1M</button>
+            </div>
+            <div class="admin-input-row">
+                <input type="number" id="admin-gems-input" placeholder="Custom amount" value="1000">
+                <button class="admin-btn" id="admin-add-gems">Add</button>
+            </div>
         </div>
 
-        <div class="admin-input-group">
-            <label>Set Generator Level</label>
+        <div class="admin-section">
+            <h4>🏗️ Generators</h4>
             <select id="admin-generator-select"></select>
-            <input type="number" id="admin-generator-level" placeholder="Level" value="1" min="0">
+            <div class="admin-current">Current Level: <span id="admin-current-generator-level">0</span></div>
+            <div class="admin-input-row">
+                <input type="number" id="admin-generator-level" placeholder="Level" value="10" min="0">
+                <button class="admin-btn" id="admin-set-generator">Set</button>
+                <button class="admin-btn" id="admin-max-generator">Max (100)</button>
+            </div>
         </div>
 
-        <div class="admin-input-group">
-            <label>Set Upgrade Level</label>
+        <div class="admin-section">
+            <h4>⬆️ Click Upgrades</h4>
             <select id="admin-upgrade-select"></select>
-            <input type="number" id="admin-upgrade-level" placeholder="Level" value="1" min="0">
+            <div class="admin-current">Current Level: <span id="admin-current-upgrade-level">0</span></div>
+            <div class="admin-input-row">
+                <input type="number" id="admin-upgrade-level" placeholder="Level" value="10" min="0">
+                <button class="admin-btn" id="admin-set-upgrade">Set</button>
+                <button class="admin-btn" id="admin-max-upgrade">Max (100)</button>
+            </div>
         </div>
 
-        <div class="admin-buttons">
-            <button class="admin-btn" id="admin-add-gems">Add Gems</button>
-            <button class="admin-btn" id="admin-set-generator">Set Generator</button>
-            <button class="admin-btn" id="admin-set-upgrade">Set Upgrade</button>
-            <button class="admin-btn close" id="admin-close">Close</button>
-        </div>
+        <button class="admin-btn close full-width" id="admin-close">Close Panel</button>
     </div>
 
     <script src="game.js"></script>
