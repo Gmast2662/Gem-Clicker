@@ -337,38 +337,24 @@ class IdleClickerGame {
             this.saveGame();
         });
         
-        // Handle tab visibility changes (pause when tab hidden)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                // Save when tab becomes hidden
-                this.saveGame();
-                this.pauseGame();
-            } else {
-                // Resume when tab becomes visible
-                this.resumeGame();
-            }
-        });
-        
         // Apply saved settings
         this.applySettings();
     }
     
     pauseGame() {
-        // Pause game loop when tab is hidden
+        // Pause game loop (not currently used, but available for future features)
         if (this.updateInterval) {
             clearInterval(this.updateInterval);
             this.updateInterval = null;
         }
-        console.log('Game paused (tab hidden)');
     }
     
     resumeGame() {
-        // Resume game loop and calculate offline progress
+        // Resume game loop (not currently used, but available for future features)
         if (!this.updateInterval) {
             this.lastUpdate = Date.now();
             this.startGameLoop();
         }
-        console.log('Game resumed (tab visible)');
     }
     
     handleKeyboard(e) {
@@ -467,11 +453,9 @@ class IdleClickerGame {
         
         // Calculate earn amount (with golden gem bonus if active)
         let earnAmount = this.gameState.clickPower;
-        const baseAmount = earnAmount;
         
         if (this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'golden_gem') {
             earnAmount *= this.config.luckyEvents.goldenGemMultiplier;
-            console.log(`🌟 Golden Gem Click: ${baseAmount} → ${earnAmount} (${this.config.luckyEvents.goldenGemMultiplier}x)`);
         }
         
         // Add currency
@@ -1800,10 +1784,7 @@ class IdleClickerGame {
 
     saveGame(showNotification = false) {
         // Don't save if we're in the middle of resetting
-        if (this.isResetting) {
-            console.log('⚠️ Save blocked: Reset in progress');
-            return;
-        }
+        if (this.isResetting) return;
         
         try {
             const saveData = {
@@ -1923,8 +1904,6 @@ class IdleClickerGame {
                     <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${remaining}s remaining</div>
                 `;
             }
-            
-            console.log(`⏱️ Event timer: ${remaining}s remaining`);
         }
         
         // Only randomly trigger events if shop item is unlocked
@@ -1940,8 +1919,6 @@ class IdleClickerGame {
         // Randomly choose event type
         const eventType = Math.random() < 0.6 ? 'golden_gem' : 'gem_rush';
         
-        console.log(`🎰 Triggering lucky event: ${eventType}`);
-        
         this.gameState.luckyEvent.active = true;
         this.gameState.luckyEvent.type = eventType;
         
@@ -1950,7 +1927,7 @@ class IdleClickerGame {
         const eventTextContainer = document.getElementById('event-text-container');
         
         if (!banner || !eventIcon || !eventTextContainer) {
-            console.error('❌ Lucky event elements not found!', { banner, eventIcon, eventTextContainer });
+            console.error('❌ Lucky event elements not found!');
             return;
         }
         
@@ -1962,7 +1939,6 @@ class IdleClickerGame {
                 <div class="event-name">🌟 Golden Gem Active!</div>
                 <div class="event-timer">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! ${duration}s remaining</div>
             `;
-            console.log(`🌟 Golden Gem event started! Ends at: ${new Date(this.gameState.luckyEvent.endTime).toLocaleTimeString()}`);
         } else {
             const duration = this.config.luckyEvents.gemRushDuration;
             this.gameState.luckyEvent.endTime = Date.now() + (duration * 1000);
@@ -1971,12 +1947,10 @@ class IdleClickerGame {
                 <div class="event-name">🎊 Gem Rush Active!</div>
                 <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${duration}s remaining</div>
             `;
-            console.log(`🎊 Gem Rush event started! Ends at: ${new Date(this.gameState.luckyEvent.endTime).toLocaleTimeString()}`);
         }
         
         banner.style.display = 'flex';
         this.playSound('achievement');
-        console.log(`✅ Event banner displayed. Active: ${this.gameState.luckyEvent.active}, Type: ${this.gameState.luckyEvent.type}`);
     }
     
     updateProgressBars() {
@@ -2042,19 +2016,12 @@ class IdleClickerGame {
             document.body.appendChild(resetOverlay);
             
             // Stop all game activity
-            if (this.updateInterval) {
-                clearInterval(this.updateInterval);
-                console.log('✅ Game loop stopped');
-            }
-            if (this.saveInterval) {
-                clearInterval(this.saveInterval);
-                console.log('✅ Auto-save stopped');
-            }
+            if (this.updateInterval) clearInterval(this.updateInterval);
+            if (this.saveInterval) clearInterval(this.saveInterval);
             
             // Nuclear option: Delete everything
             try {
                 localStorage.clear();
-                console.log('✅ localStorage.clear() executed');
             } catch (e) {
                 console.error('localStorage.clear() failed:', e);
             }
@@ -2070,16 +2037,9 @@ class IdleClickerGame {
                 localStorage.removeItem(key);
                 sessionStorage.removeItem(key);
             });
-            console.log('✅ All known keys removed');
-            
-            // Verify localStorage is empty
-            console.log('📊 localStorage length after clear:', localStorage.length);
-            console.log('📊 localStorage contents:', { ...localStorage });
             
             // Force reload in multiple ways
             setTimeout(() => {
-                console.log('🔄 Executing reload...');
-                // Try multiple reload methods
                 window.location.reload(true);
                 window.location.href = window.location.href.split('?')[0] + '?reset=' + Date.now();
             }, 500);
@@ -2426,8 +2386,6 @@ class IdleClickerGame {
     
     adminTriggerEvent(eventType) {
         // Admin can trigger events without shop unlock
-        console.log(`👑 Admin triggering: ${eventType}`);
-        
         this.gameState.luckyEvent.active = true;
         this.gameState.luckyEvent.type = eventType;
         
@@ -2449,7 +2407,6 @@ class IdleClickerGame {
                 <div class="event-name">🌟 Golden Gem Active!</div>
                 <div class="event-timer">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! ${duration}s remaining</div>
             `;
-            console.log(`✅ Admin: Golden Gem active until ${new Date(this.gameState.luckyEvent.endTime).toLocaleTimeString()}`);
         } else {
             const duration = this.config.luckyEvents.gemRushDuration;
             this.gameState.luckyEvent.endTime = Date.now() + (duration * 1000);
@@ -2458,18 +2415,15 @@ class IdleClickerGame {
                 <div class="event-name">🎊 Gem Rush Active!</div>
                 <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${duration}s remaining</div>
             `;
-            console.log(`✅ Admin: Gem Rush active until ${new Date(this.gameState.luckyEvent.endTime).toLocaleTimeString()}`);
         }
         
         banner.style.display = 'flex';
         this.playSound('achievement');
-        
-        console.log(`Event state: Active=${this.gameState.luckyEvent.active}, Type=${this.gameState.luckyEvent.type}, EndTime=${this.gameState.luckyEvent.endTime}`);
     }
     
     adminForceReset() {
         // Admin command for instant reset (use from console: game.adminForceReset())
-        console.log('👑 ADMIN FORCE RESET - Bypassing confirmation');
+        console.log('👑 Admin force reset initiated');
         
         this.isResetting = true;
         
@@ -2480,9 +2434,6 @@ class IdleClickerGame {
         // Clear storage
         localStorage.clear();
         sessionStorage.clear();
-        
-        console.log('✅ Storage cleared via admin command');
-        console.log('🔄 Reloading in 1 second...');
         
         setTimeout(() => {
             window.location.href = window.location.origin + window.location.pathname + '?reset=' + Date.now();
