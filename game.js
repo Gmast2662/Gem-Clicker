@@ -1799,6 +1799,12 @@ class IdleClickerGame {
     }
 
     saveGame(showNotification = false) {
+        // Don't save if we're in the middle of resetting
+        if (this.isResetting) {
+            console.log('⚠️ Save blocked: Reset in progress');
+            return;
+        }
+        
         try {
             const saveData = {
                 version: '1.0',
@@ -1885,7 +1891,6 @@ class IdleClickerGame {
 
     updateLuckyEvents() {
         if (!this.config.luckyEvents?.enabled) return;
-        if (!this.gameState.shopPurchases['lucky_events']) return; // Must unlock in shop first
         
         const now = Date.now();
         
@@ -1897,7 +1902,7 @@ class IdleClickerGame {
             console.log('Lucky event ended!');
         }
         
-        // Update event timer and info display
+        // Update event timer and info display (even if triggered by admin)
         if (this.gameState.luckyEvent.active) {
             const remaining = Math.ceil((this.gameState.luckyEvent.endTime - now) / 1000);
             const eventTextContainer = document.getElementById('event-text-container');
@@ -1918,7 +1923,12 @@ class IdleClickerGame {
                     <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${remaining}s remaining</div>
                 `;
             }
+            
+            console.log(`⏱️ Event timer: ${remaining}s remaining`);
         }
+        
+        // Only randomly trigger events if shop item is unlocked
+        if (!this.gameState.shopPurchases['lucky_events']) return;
         
         // Chance to trigger new event (only if no event active)
         if (!this.gameState.luckyEvent.active && Math.random() < 0.001) { // 0.1% chance per check
@@ -1994,27 +2004,89 @@ class IdleClickerGame {
     }
     
     confirmReset() {
-        const confirmed = confirm('Are you sure you want to reset ALL progress?\n\nThis will:\n- Delete all game data\n- Reset to brand new game\n- Cannot be undone!\n\nAre you absolutely sure?');
-        if (confirmed) {
-            try {
-                console.log('🔄 Starting reset...');
-                
-                // Stop all intervals
-                if (this.updateInterval) clearInterval(this.updateInterval);
-                if (this.saveInterval) clearInterval(this.saveInterval);
-                
-                // Clear all game data
-                localStorage.clear(); // Clear everything to be safe
-                console.log('✅ LocalStorage cleared');
-                
-                // Force hard reload
-                setTimeout(() => {
-                    window.location.href = window.location.href;
-                }, 100);
-            } catch (e) {
-                console.error('❌ Error resetting:', e);
-                alert('Error resetting game. Please try:\n1. Clearing browser cache\n2. Using incognito mode\n3. Refreshing the page');
+        const confirmed = confirm('⚠️ FINAL WARNING ⚠️\n\nReset ALL progress?\n\nThis will DELETE:\n✗ All gems\n✗ All generators\n✗ All upgrades\n✗ All prestige/rebirth\n✗ All achievements\n✗ ALL progress\n\nThis CANNOT be undone!\n\nClick OK to PERMANENTLY DELETE everything.');
+        
+        if (!confirmed) {
+            console.log('Reset cancelled');
+            return;
+        }
+        
+        try {
+            console.log('🔄 RESET INITIATED...');
+            
+            // Flag to prevent auto-save during reset
+            this.isResetting = true;
+            
+            // Create visual feedback
+            const resetOverlay = document.createElement('div');
+            resetOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                z-index: 99999;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+            `;
+            resetOverlay.innerHTML = `
+                <div>🔄 RESETTING GAME...</div>
+                <div style="font-size: 16px; margin-top: 20px;">Please wait...</div>
+            `;
+            document.body.appendChild(resetOverlay);
+            
+            // Stop all game activity
+            if (this.updateInterval) {
+                clearInterval(this.updateInterval);
+                console.log('✅ Game loop stopped');
             }
+            if (this.saveInterval) {
+                clearInterval(this.saveInterval);
+                console.log('✅ Auto-save stopped');
+            }
+            
+            // Nuclear option: Delete everything
+            try {
+                localStorage.clear();
+                console.log('✅ localStorage.clear() executed');
+            } catch (e) {
+                console.error('localStorage.clear() failed:', e);
+            }
+            
+            // Double-check: manually remove known keys
+            const keysToRemove = [
+                'idleClickerSave',
+                'gemClickerSettings',
+                'gameState',
+                'settings'
+            ];
+            keysToRemove.forEach(key => {
+                localStorage.removeItem(key);
+                sessionStorage.removeItem(key);
+            });
+            console.log('✅ All known keys removed');
+            
+            // Verify localStorage is empty
+            console.log('📊 localStorage length after clear:', localStorage.length);
+            console.log('📊 localStorage contents:', { ...localStorage });
+            
+            // Force reload in multiple ways
+            setTimeout(() => {
+                console.log('🔄 Executing reload...');
+                // Try multiple reload methods
+                window.location.reload(true);
+                window.location.href = window.location.href.split('?')[0] + '?reset=' + Date.now();
+            }, 500);
+            
+        } catch (e) {
+            console.error('❌ CRITICAL ERROR during reset:', e);
+            alert('Reset failed! Please:\n\n1. Press F12\n2. Go to Application tab\n3. Click "Clear storage"\n4. Click "Clear site data"\n5. Refresh page\n\nOR use incognito mode');
         }
     }
 
@@ -2393,6 +2465,28 @@ class IdleClickerGame {
         this.playSound('achievement');
         
         console.log(`Event state: Active=${this.gameState.luckyEvent.active}, Type=${this.gameState.luckyEvent.type}, EndTime=${this.gameState.luckyEvent.endTime}`);
+    }
+    
+    adminForceReset() {
+        // Admin command for instant reset (use from console: game.adminForceReset())
+        console.log('👑 ADMIN FORCE RESET - Bypassing confirmation');
+        
+        this.isResetting = true;
+        
+        // Stop everything
+        if (this.updateInterval) clearInterval(this.updateInterval);
+        if (this.saveInterval) clearInterval(this.saveInterval);
+        
+        // Clear storage
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        console.log('✅ Storage cleared via admin command');
+        console.log('🔄 Reloading in 1 second...');
+        
+        setTimeout(() => {
+            window.location.href = window.location.origin + window.location.pathname + '?reset=' + Date.now();
+        }, 1000);
     }
 }
 
