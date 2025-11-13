@@ -4,6 +4,41 @@ This document tracks planned features, improvements, and ideas for future update
 
 ---
 
+## **To do: (by me)**
+*All current requests completed!*
+
+## ✅ Recently Completed (v1.5.0)
+
+### **🎨 Cosmetics System**
+- [x] Separate cosmetics tab with dedicated UI
+- [x] 4 animated gem skins (Ruby, Sapphire, Emerald, Amethyst)
+- [x] Octagonal diamond shapes (not circles!)
+- [x] Shimmering animations and sparkle effects
+- [x] 4 premium themes (Deep Purple, Ocean, Forest, Sunset)
+- [x] 6 particle effects (Rainbow, Golden, Ice, Fire, Nature)
+- [x] Settings integration with dropdowns for customization
+- [x] Admin panel unlock/reset cosmetics buttons
+- [x] Separated cosmetics into own config section
+
+### **⚖️ Economy Rebalance #2**
+- [x] Multipliers nerfed from 1.5-3x to 1.2-1.4x
+- [x] Costs increased 5-10x across all systems
+- [x] Max levels reduced (15→8, 10→6, 5→4)
+- [x] Prestige requirement: 1M → 2.5M gems
+- [x] Auto-clicker cost: 5K → 50K base
+
+### **📊 Stats & UI Fixes**
+- [x] Fixed average clicks/sec calculation (shows actual rate, not total)
+- [x] Milestones auto-update when achieved
+- [x] Cosmetic affordability updates in real-time
+- [x] Keyboard shortcut for cosmetics tab (5 key)
+
+### **📖 Documentation**
+- [x] Created COSMETICS_GUIDE.md with full instructions
+- [x] Updated README.md with v1.5.0 changelog
+- [x] Updated in-game changelog tab
+- [x] Documented admin panel access (no console needed!)
+
 ## ✅ Recently Completed (v1.2.0)
 
 ### **🔢 Number Formatting**

@@ -23,6 +23,21 @@ A fully customizable idle/incremental clicker game built with vanilla JavaScript
 4. Buy generators to mine gems automatically
 5. Prestige when ready for permanent bonuses
 
+### Admin Panel Access
+
+**No Console Needed!**
+
+1. Click the **🔧 Admin** button (bottom-right corner)
+2. Enter password: **`Admin123`**
+3. Access all admin controls!
+
+**Admin Features:**
+- Add gems (quick buttons or custom amount)
+- Set generator/upgrade levels
+- Unlock all achievements/shop/cosmetics
+- Trigger lucky events
+- Set prestige/rebirth points
+
 ### File Structure
 
 ```
@@ -31,7 +46,11 @@ idle-clicker-game/
 ├── styles.css          # All styling
 ├── game.js            # Game logic
 ├── config.json        # Game configuration (customize here!)
-└── README.md          # This file
+├── README.md          # Player documentation
+├── SETUP.md           # Developer guide (this file)
+├── COSMETICS_GUIDE.md # Guide for adding cosmetics
+├── TODO.md            # Feature tracking
+└── favicon.svg        # Game icon
 ```
 
 ## ⚙️ Customization Guide
@@ -367,6 +386,45 @@ Want to modify the code further?
 - Test changes frequently
 - Keep backups of working versions
 - Use browser dev tools (F12) to debug
+
+## 🎨 Adding Cosmetics
+
+Want to add custom themes, gem skins, or particle effects?
+
+**See COSMETICS_GUIDE.md for complete instructions!**
+
+### Quick Cosmetics Overview
+
+**Structure in config.json:**
+```json
+"cosmetics": {
+  "themes": [...],    // Color schemes for entire UI
+  "skins": [...],     // Gem appearance changes
+  "particles": [...]  // Click particle effects
+}
+```
+
+**To add a new cosmetic:**
+1. Add item to appropriate array in `config.json`
+2. Add CSS styling in `styles.css` (for themes/skins)
+3. Add color arrays in `game.js` (for particles)
+4. Test in-game!
+
+**Required fields for all cosmetics:**
+- `id` - Unique identifier
+- `name` - Display name
+- `description` - What it does
+- `icon` - Emoji icon
+- `cost` - Price in gems
+- `purchased` - Always `false` initially
+- `value` - CSS class name or effect identifier
+
+**Admin Testing:**
+1. Click **🔧 Admin** button → Password: `Admin123`
+2. Cosmetics section → Click **Unlock All**
+3. Go to Settings → Select your cosmetics!
+
+**Full Guide:** See `COSMETICS_GUIDE.md` for step-by-step examples
 
 ## 📝 License
 
