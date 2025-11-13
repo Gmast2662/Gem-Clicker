@@ -66,6 +66,11 @@ body {
     border-color: rgba(255, 215, 0, 0.3);
 }
 
+.rebirth-stat {
+    background: rgba(155, 89, 182, 0.1);
+    border-color: rgba(155, 89, 182, 0.3);
+}
+
 .bonus-text {
     color: #ffd43b;
     font-size: 0.9em;
@@ -1498,6 +1503,168 @@ body.light-theme .changelog-entry p {
     .achievement-popup {
         top: 100px;
     }
+}
+
+/* Rebirth Section */
+.rebirth-section {
+    background: rgba(155, 89, 182, 0.1);
+    border: 2px solid rgba(155, 89, 182, 0.4);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.rebirth-button {
+    width: 100%;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rebirth-button:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(155, 89, 182, 0.6);
+}
+
+.rebirth-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(155, 89, 182, 0.3);
+}
+
+.rebirth-info {
+    font-size: 0.85em;
+    opacity: 0.95;
+}
+
+.rebirth-description {
+    margin-top: 10px;
+    color: #a0a0a0;
+    font-size: 0.9em;
+}
+
+.rebirth-bonus {
+    margin-top: 5px;
+    color: #9b59b6;
+    font-weight: bold;
+}
+
+/* Lucky Event Banner */
+.lucky-event-banner {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.98), rgba(243, 156, 18, 0.98));
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 15px 30px;
+    display: none;
+    align-items: center;
+    gap: 15px;
+    z-index: 10000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 40px rgba(241, 196, 15, 0.8);
+    animation: eventBounce 0.6s ease-out, eventPulse 2s ease-in-out infinite;
+}
+
+.event-icon {
+    font-size: 3em;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+}
+
+.event-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.event-name {
+    color: #ffffff;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.event-timer {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1em;
+    font-weight: bold;
+}
+
+@keyframes eventBounce {
+    0% { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+    60% { transform: translateX(-50%) translateY(10px); }
+    100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@keyframes eventPulse {
+    0%, 100% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 40px rgba(241, 196, 15, 0.8); }
+    50% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(241, 196, 15, 1); }
+}
+
+/* Progress Bars */
+.progress-section {
+    background: rgba(78, 205, 196, 0.05);
+    border: 2px solid rgba(78, 205, 196, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.progress-section h4 {
+    color: #4ecdc4;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.progress-item {
+    margin-bottom: 15px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: #eaeaea;
+    font-size: 0.95em;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(78, 205, 196, 0.1);
+    border: 2px solid rgba(78, 205, 196, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ecdc4, #2ecc71);
+    border-radius: 8px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+}
+
+/* Shop Purchased State */
+.upgrade-item.purchased {
+    opacity: 0.7;
+    background: rgba(46, 204, 113, 0.1);
+    border-color: rgba(46, 204, 113, 0.4);
+}
+
+.upgrade-item.purchased .upgrade-name {
+    color: #2ecc71;
 }
 
 /* Auto Clicker Section */

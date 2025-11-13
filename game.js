@@ -13,16 +13,24 @@ class IdleClickerGame {
             generatorEarned: 0,
             prestigePoints: 0,
             prestigeCount: 0,
+            rebirthPoints: 0,
+            rebirthCount: 0,
             playTime: 0,
             generators: {},
             clickUpgrades: {},
             clickMultipliers: {},
             generatorMultipliers: {},
             autoClickerLevel: 0,
+            shopPurchases: {},
             milestones: {},
             dailyReward: {
                 lastClaim: 0,
                 streak: 0
+            },
+            luckyEvent: {
+                active: false,
+                type: null,
+                endTime: 0
             },
             achievements: {},
             lastSave: Date.now(),
@@ -184,6 +192,15 @@ class IdleClickerGame {
             });
         }
         
+        // Initialize shop purchases
+        if (this.config.shop?.enabled) {
+            this.config.shop.items.forEach(item => {
+                if (this.gameState.shopPurchases[item.id] === undefined) {
+                    this.gameState.shopPurchases[item.id] = false;
+                }
+            });
+        }
+        
         // Initialize achievements
         if (this.config.achievements.enabled) {
             this.config.achievements.list.forEach(achievement => {
@@ -205,6 +222,7 @@ class IdleClickerGame {
         this.renderGenerators();
         this.renderClickUpgrades();
         this.renderMultiplierUpgrades();
+        this.renderShop();
         this.renderAchievements();
         this.updateUI();
         
@@ -214,6 +232,11 @@ class IdleClickerGame {
             document.getElementById('prestige-stat').style.display = 'flex';
             document.getElementById('prestige-icon').textContent = this.config.prestige.currencyIcon;
             document.getElementById('prestige-currency-name').textContent = this.config.prestige.currencyIcon;
+        }
+        
+        // Show rebirth UI if enabled and unlocked
+        if (this.config.rebirth?.enabled && this.gameState.prestigeCount >= this.config.rebirth.requirement) {
+            document.getElementById('rebirth-section').style.display = 'block';
         }
     }
 
@@ -244,6 +267,11 @@ class IdleClickerGame {
         // Prestige button
         if (this.config.prestige.enabled) {
             document.getElementById('prestige-button').addEventListener('click', () => this.handlePrestige());
+        }
+        
+        // Rebirth button
+        if (this.config.rebirth?.enabled) {
+            document.getElementById('rebirth-button').addEventListener('click', () => this.handleRebirth());
         }
         
         // Import modal
@@ -324,18 +352,21 @@ class IdleClickerGame {
                 this.switchTab('multipliers');
                 break;
             case '4':
-                this.switchTab('achievements');
+                this.switchTab('shop');
                 break;
             case '5':
-                this.switchTab('stats');
+                this.switchTab('achievements');
                 break;
             case '6':
-                this.switchTab('tips');
+                this.switchTab('stats');
                 break;
             case '7':
-                this.switchTab('changelog');
+                this.switchTab('tips');
                 break;
             case '8':
+                this.switchTab('changelog');
+                break;
+            case '9':
                 this.switchTab('settings');
                 break;
         }
@@ -390,11 +421,17 @@ class IdleClickerGame {
             this.audioContext.resume();
         }
         
+        // Calculate earn amount (with golden gem bonus if active)
+        let earnAmount = this.gameState.clickPower;
+        if (this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'golden_gem') {
+            earnAmount *= this.config.luckyEvents.goldenGemMultiplier;
+        }
+        
         // Add currency
-        this.gameState.currency += this.gameState.clickPower;
+        this.gameState.currency += earnAmount;
         this.gameState.totalClicks++;
-        this.gameState.totalEarned += this.gameState.clickPower;
-        this.gameState.clickEarned += this.gameState.clickPower;
+        this.gameState.totalEarned += earnAmount;
+        this.gameState.clickEarned += earnAmount;
         
         // Track click for rate calculation
         const now = Date.now();
@@ -515,6 +552,17 @@ class IdleClickerGame {
         if (this.config.prestige.enabled) {
             const prestigeBonus = 1 + (this.gameState.prestigePoints * this.config.prestige.bonusPerPoint);
             totalMultiplier *= prestigeBonus;
+        }
+        
+        // Apply rebirth bonus (multiplicative!)
+        if (this.config.rebirth?.enabled && this.gameState.rebirthPoints > 0) {
+            const rebirthBonus = Math.pow(this.config.rebirth.bonusPerPoint, this.gameState.rebirthPoints);
+            totalMultiplier *= rebirthBonus;
+        }
+        
+        // Apply lucky event bonus
+        if (this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'gem_rush') {
+            totalMultiplier *= this.config.luckyEvents.gemRushMultiplier;
         }
         
         return totalMultiplier;
@@ -843,14 +891,22 @@ class IdleClickerGame {
             generatorEarned: 0,
             prestigePoints: newPrestigePoints,
             prestigeCount: newPrestigeCount,
+            rebirthPoints: this.gameState.rebirthPoints, // Keep rebirth points
+            rebirthCount: this.gameState.rebirthCount, // Keep rebirth count
             playTime: playTime,
             generators: {},
             clickUpgrades: {},
             clickMultipliers: {},
             generatorMultipliers: {},
             autoClickerLevel: 0,
+            shopPurchases: this.gameState.shopPurchases, // Keep shop purchases
             milestones: this.gameState.milestones, // Keep milestones through prestige
             dailyReward: this.gameState.dailyReward, // Keep daily reward data
+            luckyEvent: {
+                active: false,
+                type: null,
+                endTime: 0
+            },
             achievements: this.gameState.achievements,
             lastSave: Date.now(),
             startTime: Date.now()
@@ -879,6 +935,108 @@ class IdleClickerGame {
         this.renderMultiplierUpgrades();
         this.updateUI();
         this.saveGame();
+    }
+    
+    handleRebirth() {
+        if (!this.config.rebirth?.enabled) return;
+        
+        // Check if player has enough prestiges
+        if (this.gameState.prestigeCount < this.config.rebirth.requirement) {
+            alert(`You need ${this.config.rebirth.requirement} prestiges to rebirth! (Currently: ${this.gameState.prestigeCount})`);
+            return;
+        }
+        
+        const gain = 1; // 1 rebirth point per rebirth
+        
+        if (this.config.rebirth.confirmationRequired) {
+            const currentBonus = Math.pow(this.config.rebirth.bonusPerPoint, this.gameState.rebirthPoints);
+            const newBonus = Math.pow(this.config.rebirth.bonusPerPoint, this.gameState.rebirthPoints + gain);
+            const confirmed = confirm(
+                `Are you sure you want to REBIRTH?\n\n` +
+                `You will gain ${gain} ${this.config.rebirth.currencyName}.\n` +
+                `This will reset EVERYTHING including prestige!\n\n` +
+                `Current multiplier: ${this.formatNumber(currentBonus)}x\n` +
+                `New multiplier: ${this.formatNumber(newBonus)}x`
+            );
+            
+            if (!confirmed) return;
+        }
+        
+        // Reset EVERYTHING but keep rebirth, milestones, shop, achievements, daily rewards
+        const newRebirthPoints = this.gameState.rebirthPoints + gain;
+        const newRebirthCount = this.gameState.rebirthCount + 1;
+        const milestones = this.gameState.milestones;
+        const shopPurchases = this.gameState.shopPurchases;
+        const achievements = this.gameState.achievements;
+        const dailyReward = this.gameState.dailyReward;
+        
+        this.gameState = {
+            currency: 0,
+            clickPower: 0,
+            totalClicks: 0,
+            totalEarned: 0,
+            clickEarned: 0,
+            generatorEarned: 0,
+            prestigePoints: 0,
+            prestigeCount: 0,
+            rebirthPoints: newRebirthPoints,
+            rebirthCount: newRebirthCount,
+            playTime: 0,
+            generators: {},
+            clickUpgrades: {},
+            clickMultipliers: {},
+            generatorMultipliers: {},
+            autoClickerLevel: 0,
+            shopPurchases: shopPurchases,
+            milestones: milestones,
+            dailyReward: dailyReward,
+            luckyEvent: {
+                active: false,
+                type: null,
+                endTime: 0
+            },
+            achievements: achievements,
+            lastSave: Date.now(),
+            startTime: Date.now()
+        };
+        
+        // Re-initialize everything
+        this.config.generators.forEach(generator => {
+            this.gameState.generators[generator.id] = { level: 0 };
+        });
+        
+        this.config.clickUpgrades.forEach(upgrade => {
+            this.gameState.clickUpgrades[upgrade.id] = { level: 0 };
+        });
+        
+        this.config.clickMultipliers.forEach(multiplier => {
+            this.gameState.clickMultipliers[multiplier.id] = { level: 0 };
+        });
+        
+        this.config.generatorMultipliers.forEach(multiplier => {
+            this.gameState.generatorMultipliers[multiplier.id] = { level: 0 };
+        });
+        
+        this.updateClickPower();
+        this.renderGenerators();
+        this.renderClickUpgrades();
+        this.renderMultiplierUpgrades();
+        this.updateUI();
+        this.saveGame();
+        
+        // Show rebirth notification
+        const popup = document.createElement('div');
+        popup.className = 'milestone-popup';
+        popup.innerHTML = `
+            <div class="milestone-popup-header">🔮 REBIRTH COMPLETE!</div>
+            <div class="milestone-popup-name">+${gain} Rebirth Point${gain > 1 ? 's' : ''}!</div>
+            <div class="milestone-popup-desc">${Math.pow(this.config.rebirth.bonusPerPoint, newRebirthPoints)}x multiplier to all production!</div>
+        `;
+        document.body.appendChild(popup);
+        setTimeout(() => {
+            popup.classList.add('fade-out');
+            setTimeout(() => popup.remove(), 500);
+        }, 5000);
     }
 
     checkAchievements() {
@@ -1101,6 +1259,85 @@ class IdleClickerGame {
         });
     }
 
+    renderShop() {
+        if (!this.config.shop?.enabled) return;
+        
+        const container = document.getElementById('shop-container');
+        container.innerHTML = '';
+        
+        this.config.shop.items.forEach(item => {
+            const purchased = this.gameState.shopPurchases[item.id];
+            const canAfford = this.gameState.currency >= item.cost;
+            
+            const shopItem = document.createElement('div');
+            shopItem.className = `upgrade-item ${purchased ? 'purchased' : (!canAfford ? 'disabled' : '')}`;
+            shopItem.style.cursor = purchased ? 'default' : 'pointer';
+            shopItem.innerHTML = `
+                <div class="upgrade-icon">${item.icon}</div>
+                <div class="upgrade-info">
+                    <div class="upgrade-name">${item.name}${purchased ? ' ✓' : ''}</div>
+                    <div class="upgrade-description">${item.description}</div>
+                </div>
+                <div class="upgrade-cost">${purchased ? 'OWNED' : this.formatNumber(item.cost) + ' ' + this.config.game.currencyIcon}</div>
+            `;
+            
+            if (!purchased) {
+                shopItem.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.buyShopItem(item.id);
+                });
+            }
+            
+            container.appendChild(shopItem);
+        });
+    }
+    
+    buyShopItem(itemId) {
+        const item = this.config.shop.items.find(i => i.id === itemId);
+        if (!item || this.gameState.shopPurchases[itemId]) return;
+        
+        if (this.gameState.currency >= item.cost) {
+            this.gameState.currency -= item.cost;
+            this.gameState.shopPurchases[itemId] = true;
+            
+            this.playSound('achievement');
+            this.renderShop();
+            this.updateUI();
+            
+            // Show purchase notification
+            const popup = document.createElement('div');
+            popup.className = 'achievement-popup';
+            popup.innerHTML = `
+                <div class="achievement-popup-header">🏪 Shop Purchase!</div>
+                <div class="achievement-popup-icon">${item.icon}</div>
+                <div class="achievement-popup-name">${item.name}</div>
+                <div class="achievement-popup-desc">Unlocked permanently!</div>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                popup.classList.add('fade-out');
+                setTimeout(() => popup.remove(), 500);
+            }, 3000);
+            
+            console.log(`✅ Purchased: ${item.name}`);
+            
+            // Apply shop effects
+            this.applyShopEffects();
+        }
+    }
+    
+    applyShopEffects() {
+        // Apply shop item effects
+        if (this.gameState.shopPurchases['autosave_boost']) {
+            // Restart save interval with faster rate
+            clearInterval(this.saveInterval);
+            this.saveInterval = setInterval(() => {
+                this.saveGame();
+            }, 2000); // 2 seconds instead of 5
+        }
+    }
+    
     renderAchievements() {
         if (!this.config.achievements.enabled) return;
         
@@ -1190,6 +1427,23 @@ class IdleClickerGame {
             }
             multiplierIndex++;
         });
+        
+        // Update shop item affordability
+        if (this.config.shop?.enabled) {
+            const shopItems = document.querySelectorAll('#shop-container .upgrade-item');
+            this.config.shop.items.forEach((item, index) => {
+                const purchased = this.gameState.shopPurchases[item.id];
+                const canAfford = this.gameState.currency >= item.cost;
+                
+                if (shopItems[index] && !purchased) {
+                    if (canAfford) {
+                        shopItems[index].classList.remove('disabled');
+                    } else {
+                        shopItems[index].classList.add('disabled');
+                    }
+                }
+            });
+        }
     }
     
     updateUI() {
@@ -1253,6 +1507,14 @@ class IdleClickerGame {
             }
         }
         
+        // Update rebirth
+        if (this.config.rebirth?.enabled && this.gameState.rebirthPoints > 0) {
+            document.getElementById('rebirth-stat').style.display = 'flex';
+            document.getElementById('rebirth-amount').textContent = this.formatNumber(this.gameState.rebirthPoints);
+            const rebirthMultiplier = Math.pow(this.config.rebirth.bonusPerPoint, this.gameState.rebirthPoints);
+            document.getElementById('rebirth-multiplier').textContent = this.formatNumber(rebirthMultiplier);
+        }
+        
         // Update stats
         document.getElementById('stat-total-earned').textContent = this.formatNumber(this.gameState.totalEarned);
         document.getElementById('stat-total-clicks').textContent = this.formatNumber(this.gameState.totalClicks);
@@ -1268,7 +1530,26 @@ class IdleClickerGame {
         document.getElementById('stat-avg-clicks').textContent = avgClicksPerSecond.toFixed(2);
         
         document.getElementById('stat-prestige-count').textContent = this.gameState.prestigeCount;
+        document.getElementById('stat-rebirth-count').textContent = this.gameState.rebirthCount;
         document.getElementById('stat-play-time').textContent = this.formatPlayTime(this.gameState.playTime);
+        
+        // Update rebirth UI
+        if (this.config.rebirth?.enabled) {
+            const canRebirth = this.gameState.prestigeCount >= this.config.rebirth.requirement;
+            const rebirthGain = canRebirth ? 1 : 0;
+            const currentBonus = Math.pow(this.config.rebirth.bonusPerPoint, this.gameState.rebirthPoints);
+            
+            document.getElementById('rebirth-gain').textContent = rebirthGain;
+            document.getElementById('rebirth-bonus-display').textContent = this.formatNumber(currentBonus) + 'x';
+            
+            const rebirthButton = document.getElementById('rebirth-button');
+            if (canRebirth) {
+                rebirthButton.disabled = false;
+                document.getElementById('rebirth-section').style.display = 'block';
+            } else {
+                rebirthButton.disabled = true;
+            }
+        }
         
         // Update auto clicker display
         if (this.config.autoClicker.enabled) {
@@ -1401,6 +1682,12 @@ class IdleClickerGame {
             
             // Check milestones
             this.checkMilestones();
+            
+            // Check and update lucky events
+            this.updateLuckyEvents();
+            
+            // Update progress bars
+            this.updateProgressBars();
         }, 100);
         
         // Auto-save loop
@@ -1455,7 +1742,8 @@ class IdleClickerGame {
                 };
                 
                 // Calculate offline earnings (limited to prevent exploits)
-                if (offlineTime > 0 && offlineTime < 86400) { // Max 24 hours
+                // Only show if away for at least 1 minute and less than 24 hours
+                if (offlineTime > 60 && offlineTime < 86400) { // 1 minute to 24 hours
                     const production = this.calculateProductionPerSecond();
                     
                     // Also calculate auto-clicker offline production
@@ -1469,14 +1757,17 @@ class IdleClickerGame {
                     const totalProduction = production + autoClickerProduction;
                     const offlineEarnings = totalProduction * offlineTime;
                     
-                    this.gameState.currency += offlineEarnings;
-                    this.gameState.totalEarned += offlineEarnings;
-                    this.gameState.generatorEarned += offlineEarnings;
-                    
-                    // Show offline earnings popup
-                    this.showOfflineEarningsPopup(offlineEarnings, offlineTime);
-                    
-                    console.log(`Welcome back! You earned ${this.formatNumber(offlineEarnings)} while away!`);
+                    // Only give offline earnings if there's actual production
+                    if (offlineEarnings > 0) {
+                        this.gameState.currency += offlineEarnings;
+                        this.gameState.totalEarned += offlineEarnings;
+                        this.gameState.generatorEarned += offlineEarnings;
+                        
+                        // Show offline earnings popup
+                        this.showOfflineEarningsPopup(offlineEarnings, offlineTime);
+                        
+                        console.log(`Welcome back! You earned ${this.formatNumber(offlineEarnings)} while away!`);
+                    }
                 }
                 
                 this.gameState.lastSave = Date.now();
@@ -1487,6 +1778,82 @@ class IdleClickerGame {
         }
     }
 
+    updateLuckyEvents() {
+        if (!this.config.luckyEvents?.enabled) return;
+        if (!this.gameState.shopPurchases['lucky_events']) return; // Must unlock in shop first
+        
+        const now = Date.now();
+        
+        // Check if current event ended
+        if (this.gameState.luckyEvent.active && now >= this.gameState.luckyEvent.endTime) {
+            this.gameState.luckyEvent.active = false;
+            this.gameState.luckyEvent.type = null;
+            document.getElementById('lucky-event-banner').style.display = 'none';
+            console.log('Lucky event ended!');
+        }
+        
+        // Update event timer display
+        if (this.gameState.luckyEvent.active) {
+            const remaining = Math.ceil((this.gameState.luckyEvent.endTime - now) / 1000);
+            document.getElementById('event-timer').textContent = `${remaining}s remaining`;
+        }
+        
+        // Chance to trigger new event (only if no event active)
+        if (!this.gameState.luckyEvent.active && Math.random() < 0.001) { // 0.1% chance per check
+            this.triggerLuckyEvent();
+        }
+    }
+    
+    triggerLuckyEvent() {
+        // Randomly choose event type
+        const eventType = Math.random() < 0.6 ? 'golden_gem' : 'gem_rush';
+        
+        this.gameState.luckyEvent.active = true;
+        this.gameState.luckyEvent.type = eventType;
+        
+        const banner = document.getElementById('lucky-event-banner');
+        const eventIcon = document.getElementById('event-icon');
+        const eventName = document.getElementById('event-name');
+        
+        if (eventType === 'golden_gem') {
+            this.gameState.luckyEvent.endTime = Date.now() + 15000; // 15 seconds
+            eventIcon.textContent = '🌟';
+            eventName.textContent = `Golden Gem! (${this.config.luckyEvents.goldenGemMultiplier}x clicks!)`;
+        } else {
+            this.gameState.luckyEvent.endTime = Date.now() + (this.config.luckyEvents.gemRushDuration * 1000);
+            eventIcon.textContent = '🎊';
+            eventName.textContent = `Gem Rush! (${this.config.luckyEvents.gemRushMultiplier}x production!)`;
+        }
+        
+        banner.style.display = 'flex';
+        this.playSound('achievement');
+        console.log(`🎰 Lucky event started: ${eventType}`);
+    }
+    
+    updateProgressBars() {
+        // Prestige progress
+        const prestigeReq = this.config.prestige.requirement;
+        const prestigeProgress = Math.min((this.gameState.totalEarned / prestigeReq) * 100, 100);
+        document.getElementById('prestige-progress-bar').style.width = prestigeProgress + '%';
+        document.getElementById('prestige-progress-text').textContent = 
+            `${this.formatNumber(this.gameState.totalEarned)} / ${this.formatNumber(prestigeReq)}`;
+        
+        // Milestone progress
+        if (this.config.milestones?.enabled) {
+            const nextMilestone = this.config.milestones.list.find(m => !this.gameState.milestones[m.id]);
+            if (nextMilestone) {
+                const milestoneProgress = Math.min((this.gameState.totalEarned / nextMilestone.threshold) * 100, 100);
+                document.getElementById('milestone-progress-bar').style.width = milestoneProgress + '%';
+                document.getElementById('milestone-progress-text').textContent = 
+                    `${this.formatNumber(this.gameState.totalEarned)} / ${this.formatNumber(nextMilestone.threshold)}`;
+            } else {
+                // All milestones completed
+                document.getElementById('milestone-progress-bar').style.width = '100%';
+                document.getElementById('milestone-progress-text').textContent = 'All Complete!';
+            }
+        }
+    }
+    
     confirmReset() {
         const confirmed = confirm('Are you sure you want to reset ALL progress? This cannot be undone!');
         if (confirmed) {

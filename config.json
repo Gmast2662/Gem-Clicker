@@ -283,6 +283,59 @@
     "bonusPerPoint": 0.01,
     "confirmationRequired": true
   },
+  "rebirth": {
+    "enabled": true,
+    "currencyName": "Rebirth Points",
+    "currencyIcon": "🔮",
+    "requirement": 10,
+    "bonusPerPoint": 2,
+    "confirmationRequired": true
+  },
+  "shop": {
+    "enabled": true,
+    "items": [
+      {
+        "id": "offline_cap",
+        "name": "Extended Offline Earnings",
+        "description": "Increase offline earnings cap from 24h to 48h",
+        "icon": "🌙",
+        "cost": 50000,
+        "purchased": false
+      },
+      {
+        "id": "autosave_boost",
+        "name": "Faster Auto-Save",
+        "description": "Save every 2 seconds instead of 5",
+        "icon": "💾",
+        "cost": 25000,
+        "purchased": false
+      },
+      {
+        "id": "lucky_events",
+        "name": "Unlock Lucky Events",
+        "description": "Enable random golden gem events",
+        "icon": "🎰",
+        "cost": 100000,
+        "purchased": false
+      },
+      {
+        "id": "particle_boost",
+        "name": "Particle Explosion",
+        "description": "2x more particles on click",
+        "icon": "✨",
+        "cost": 30000,
+        "purchased": false
+      }
+    ]
+  },
+  "luckyEvents": {
+    "enabled": true,
+    "goldenGemChance": 0.01,
+    "goldenGemMultiplier": 10,
+    "gemRushChance": 0.005,
+    "gemRushDuration": 30,
+    "gemRushMultiplier": 2
+  },
   "achievements": {
     "enabled": true,
     "list": [

@@ -25,6 +25,11 @@
                     <span id="prestige-amount">0</span>
                     <span class="bonus-text">(+<span id="prestige-bonus">0</span>%)</span>
                 </div>
+                <div class="stat-item rebirth-stat" id="rebirth-stat" style="display: none;">
+                    <span>🔮</span>
+                    <span id="rebirth-amount">0</span>
+                    <span class="bonus-text">(<span id="rebirth-multiplier">1</span>x)</span>
+                </div>
             </div>
         </header>
 
@@ -64,6 +69,25 @@
                     <p class="prestige-description">Reset all progress for permanent bonuses!</p>
                 </div>
 
+                <!-- Rebirth Button -->
+                <div class="rebirth-section" id="rebirth-section" style="display: none;">
+                    <button id="rebirth-button" class="rebirth-button" disabled>
+                        <span>🔮 Rebirth</span>
+                        <span class="rebirth-info">Reset EVERYTHING for <span id="rebirth-gain">0</span> 🔮</span>
+                    </button>
+                    <p class="rebirth-description">Reset prestige & all progress for massive multipliers!</p>
+                    <p class="rebirth-bonus">Current Bonus: <span id="rebirth-bonus-display">1x</span></p>
+                </div>
+
+                <!-- Lucky Event Display -->
+                <div class="lucky-event-banner" id="lucky-event-banner" style="display: none;">
+                    <div class="event-icon" id="event-icon">✨</div>
+                    <div class="event-text">
+                        <div class="event-name" id="event-name">Lucky Event!</div>
+                        <div class="event-timer" id="event-timer">30s remaining</div>
+                    </div>
+                </div>
+
                 <!-- Game Controls -->
                 <div class="controls">
                     <button id="save-button" class="control-btn">💾 Save</button>
@@ -79,6 +103,7 @@
                     <button class="tab-button active" data-tab="generators">🏭 Generators</button>
                     <button class="tab-button" data-tab="upgrades">⬆️ Upgrades</button>
                     <button class="tab-button" data-tab="multipliers">✨ Multipliers</button>
+                    <button class="tab-button" data-tab="shop">🏪 Shop</button>
                     <button class="tab-button" data-tab="achievements">🏆 Achievements</button>
                     <button class="tab-button" data-tab="stats">📊 Stats</button>
                     <button class="tab-button" data-tab="tips">💡 Tips</button>
@@ -105,6 +130,12 @@
                     </div>
                 </div>
 
+                <div class="tab-content" id="shop-tab">
+                    <div id="shop-container" class="upgrades-container">
+                        <!-- Shop items will be dynamically added here -->
+                    </div>
+                </div>
+
                 <div class="tab-content" id="achievements-tab">
                     <div id="achievements-container" class="achievements-container">
                         <!-- Achievements will be dynamically added here -->
@@ -114,6 +145,30 @@
                 <div class="tab-content" id="stats-tab">
                     <div class="stats-container">
                         <h3>Game Statistics</h3>
+                        
+                        <!-- Progress Bars -->
+                        <div class="progress-section">
+                            <h4>📊 Progress</h4>
+                            <div class="progress-item">
+                                <div class="progress-label">
+                                    <span>Next Prestige:</span>
+                                    <span id="prestige-progress-text">0 / 1M</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="prestige-progress-bar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-label">
+                                    <span>Next Milestone:</span>
+                                    <span id="milestone-progress-text">0 / 1M</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="milestone-progress-bar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="stat-row">
                             <span>Total Earned:</span>
                             <span id="stat-total-earned">0</span>
@@ -141,6 +196,10 @@
                         <div class="stat-row">
                             <span>Prestige Count:</span>
                             <span id="stat-prestige-count">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Rebirth Count:</span>
+                            <span id="stat-rebirth-count">0</span>
                         </div>
                         <div class="stat-row">
                             <span>Play Time:</span>
@@ -313,11 +372,12 @@
                                 <div class="shortcut-item"><kbd>1</kbd> - Generators tab</div>
                                 <div class="shortcut-item"><kbd>2</kbd> - Upgrades tab</div>
                                 <div class="shortcut-item"><kbd>3</kbd> - Multipliers tab</div>
-                                <div class="shortcut-item"><kbd>4</kbd> - Achievements tab</div>
-                                <div class="shortcut-item"><kbd>5</kbd> - Stats tab</div>
-                                <div class="shortcut-item"><kbd>6</kbd> - Tips tab</div>
-                                <div class="shortcut-item"><kbd>7</kbd> - Changelog tab</div>
-                                <div class="shortcut-item"><kbd>8</kbd> - Settings tab</div>
+                                <div class="shortcut-item"><kbd>4</kbd> - Shop tab</div>
+                                <div class="shortcut-item"><kbd>5</kbd> - Achievements tab</div>
+                                <div class="shortcut-item"><kbd>6</kbd> - Stats tab</div>
+                                <div class="shortcut-item"><kbd>7</kbd> - Tips tab</div>
+                                <div class="shortcut-item"><kbd>8</kbd> - Changelog tab</div>
+                                <div class="shortcut-item"><kbd>9</kbd> - Settings tab</div>
                             </div>
                         </div>
                     </div>
