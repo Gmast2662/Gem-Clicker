@@ -16,7 +16,8 @@ class IdleClickerGame {
             playTime: 0,
             generators: {},
             clickUpgrades: {},
-            multiplierUpgrades: {},
+            clickMultipliers: {},
+            generatorMultipliers: {},
             achievements: {},
             lastSave: Date.now(),
             startTime: Date.now()
@@ -125,10 +126,17 @@ class IdleClickerGame {
             }
         });
         
-        // Initialize multiplier upgrades
-        this.config.multiplierUpgrades.forEach(upgrade => {
-            if (!this.gameState.multiplierUpgrades[upgrade.id]) {
-                this.gameState.multiplierUpgrades[upgrade.id] = { level: 0 };
+        // Initialize click multipliers
+        this.config.clickMultipliers.forEach(multiplier => {
+            if (!this.gameState.clickMultipliers[multiplier.id]) {
+                this.gameState.clickMultipliers[multiplier.id] = { level: 0 };
+            }
+        });
+        
+        // Initialize generator multipliers
+        this.config.generatorMultipliers.forEach(multiplier => {
+            if (!this.gameState.generatorMultipliers[multiplier.id]) {
+                this.gameState.generatorMultipliers[multiplier.id] = { level: 0 };
             }
         });
         
@@ -270,6 +278,16 @@ class IdleClickerGame {
             power += level * upgrade.powerIncrease;
         });
         
+        // Apply click multipliers
+        let clickMultiplier = 1;
+        this.config.clickMultipliers.forEach(multiplier => {
+            const level = this.gameState.clickMultipliers[multiplier.id].level;
+            if (level > 0) {
+                clickMultiplier *= Math.pow(multiplier.multiplier, level);
+            }
+        });
+        power *= clickMultiplier;
+        
         // Apply prestige bonus
         if (this.config.prestige.enabled) {
             const bonus = 1 + (this.gameState.prestigePoints * this.config.prestige.bonusPerPoint);
@@ -279,14 +297,14 @@ class IdleClickerGame {
         this.gameState.clickPower = Math.floor(power);
     }
 
-    calculateTotalMultiplier() {
+    calculateGeneratorMultiplier() {
         let totalMultiplier = 1;
         
-        // Multiplier upgrades stack multiplicatively
-        this.config.multiplierUpgrades.forEach(upgrade => {
-            const level = this.gameState.multiplierUpgrades[upgrade.id].level;
+        // Generator multipliers stack multiplicatively
+        this.config.generatorMultipliers.forEach(multiplier => {
+            const level = this.gameState.generatorMultipliers[multiplier.id].level;
             if (level > 0) {
-                totalMultiplier *= Math.pow(upgrade.multiplier, level);
+                totalMultiplier *= Math.pow(multiplier.multiplier, level);
             }
         });
         
@@ -307,8 +325,8 @@ class IdleClickerGame {
             production += level * generator.baseProduction;
         });
         
-        // Apply all multipliers
-        production *= this.calculateTotalMultiplier();
+        // Apply generator multipliers
+        production *= this.calculateGeneratorMultiplier();
         
         return production;
     }
@@ -386,28 +404,53 @@ class IdleClickerGame {
         }
     }
     
-    buyMultiplierUpgrade(upgradeId) {
-        const upgrade = this.config.multiplierUpgrades.find(u => u.id === upgradeId);
-        if (!upgrade) {
-            console.log('Multiplier upgrade not found:', upgradeId);
+    buyClickMultiplier(multiplierId) {
+        const multiplier = this.config.clickMultipliers.find(m => m.id === multiplierId);
+        if (!multiplier) {
+            console.log('Click multiplier not found:', multiplierId);
             return;
         }
         
-        const currentLevel = this.gameState.multiplierUpgrades[upgradeId].level;
-        const cost = this.calculateCost(upgrade.baseCost, upgrade.costMultiplier, currentLevel);
-        
-        console.log(`Attempting to buy ${upgrade.name}:`, {
-            currentCurrency: this.gameState.currency,
-            cost: cost,
-            canAfford: this.gameState.currency >= cost
-        });
+        const currentLevel = this.gameState.clickMultipliers[multiplierId].level;
+        const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, currentLevel);
         
         if (this.gameState.currency >= cost) {
-            if (upgrade.maxLevel === null || currentLevel < upgrade.maxLevel) {
+            if (multiplier.maxLevel === null || currentLevel < multiplier.maxLevel) {
                 this.gameState.currency -= cost;
-                this.gameState.multiplierUpgrades[upgradeId].level++;
+                this.gameState.clickMultipliers[multiplierId].level++;
                 
-                console.log(`✅ Purchased ${upgrade.name}! New level: ${this.gameState.multiplierUpgrades[upgradeId].level}`);
+                console.log(`✅ Purchased ${multiplier.name}! New level: ${this.gameState.clickMultipliers[multiplierId].level}`);
+                
+                // Play buy sound
+                this.playSound('buy');
+                
+                // Update everything
+                this.updateClickPower();
+                this.renderMultiplierUpgrades();
+                this.updateUI();
+                this.checkAchievements();
+            }
+        } else {
+            console.log(`❌ Cannot afford ${multiplier.name}. Need ${cost - this.gameState.currency} more gems.`);
+        }
+    }
+    
+    buyGeneratorMultiplier(multiplierId) {
+        const multiplier = this.config.generatorMultipliers.find(m => m.id === multiplierId);
+        if (!multiplier) {
+            console.log('Generator multiplier not found:', multiplierId);
+            return;
+        }
+        
+        const currentLevel = this.gameState.generatorMultipliers[multiplierId].level;
+        const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, currentLevel);
+        
+        if (this.gameState.currency >= cost) {
+            if (multiplier.maxLevel === null || currentLevel < multiplier.maxLevel) {
+                this.gameState.currency -= cost;
+                this.gameState.generatorMultipliers[multiplierId].level++;
+                
+                console.log(`✅ Purchased ${multiplier.name}! New level: ${this.gameState.generatorMultipliers[multiplierId].level}`);
                 
                 // Play buy sound
                 this.playSound('buy');
@@ -419,7 +462,7 @@ class IdleClickerGame {
                 this.checkAchievements();
             }
         } else {
-            console.log(`❌ Cannot afford ${upgrade.name}. Need ${cost - this.gameState.currency} more gems.`);
+            console.log(`❌ Cannot afford ${multiplier.name}. Need ${cost - this.gameState.currency} more gems.`);
         }
     }
 
@@ -477,7 +520,8 @@ class IdleClickerGame {
             playTime: playTime,
             generators: {},
             clickUpgrades: {},
-            multiplierUpgrades: {},
+            clickMultipliers: {},
+            generatorMultipliers: {},
             achievements: this.gameState.achievements,
             lastSave: Date.now(),
             startTime: Date.now()
@@ -492,8 +536,12 @@ class IdleClickerGame {
             this.gameState.clickUpgrades[upgrade.id] = { level: 0 };
         });
         
-        this.config.multiplierUpgrades.forEach(upgrade => {
-            this.gameState.multiplierUpgrades[upgrade.id] = { level: 0 };
+        this.config.clickMultipliers.forEach(multiplier => {
+            this.gameState.clickMultipliers[multiplier.id] = { level: 0 };
+        });
+        
+        this.config.generatorMultipliers.forEach(multiplier => {
+            this.gameState.generatorMultipliers[multiplier.id] = { level: 0 };
         });
         
         this.updateClickPower();
@@ -628,24 +676,31 @@ class IdleClickerGame {
         const container = document.getElementById('multipliers-container');
         container.innerHTML = '';
         
-        this.config.multiplierUpgrades.forEach(upgrade => {
-            const level = this.gameState.multiplierUpgrades[upgrade.id].level;
-            const cost = this.calculateCost(upgrade.baseCost, upgrade.costMultiplier, level);
+        // Add Click Multipliers section header
+        const clickHeader = document.createElement('h3');
+        clickHeader.className = 'multiplier-section-header';
+        clickHeader.textContent = '👆 Click Multipliers';
+        container.appendChild(clickHeader);
+        
+        // Render click multipliers
+        this.config.clickMultipliers.forEach(multiplier => {
+            const level = this.gameState.clickMultipliers[multiplier.id].level;
+            const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, level);
             const canAfford = this.gameState.currency >= cost;
-            const currentMultiplier = level > 0 ? Math.pow(upgrade.multiplier, level) : 1;
-            const nextMultiplier = Math.pow(upgrade.multiplier, level + 1);
+            const currentMultiplier = level > 0 ? Math.pow(multiplier.multiplier, level) : 1;
+            const nextMultiplier = Math.pow(multiplier.multiplier, level + 1);
             
             const item = document.createElement('div');
             item.className = `upgrade-item ${!canAfford ? 'disabled' : ''}`;
             item.style.cursor = 'pointer';
             item.innerHTML = `
-                <div class="upgrade-icon">${upgrade.icon}</div>
+                <div class="upgrade-icon">${multiplier.icon}</div>
                 <div class="upgrade-info">
-                    <div class="upgrade-name">${upgrade.name}</div>
-                    <div class="upgrade-description">${upgrade.description}</div>
+                    <div class="upgrade-name">${multiplier.name}</div>
+                    <div class="upgrade-description">${multiplier.description}</div>
                     <div class="upgrade-stats">
                         <span class="upgrade-level">Level: ${level}</span>
-                        ${level > 0 ? `<span class="upgrade-production">Current: ${this.formatNumber(currentMultiplier)}x → ${this.formatNumber(nextMultiplier)}x</span>` : `<span class="upgrade-production">Next: ${upgrade.multiplier}x</span>`}
+                        ${level > 0 ? `<span class="upgrade-production">Current: ${this.formatNumber(currentMultiplier)}x → ${this.formatNumber(nextMultiplier)}x</span>` : `<span class="upgrade-production">Next: ${multiplier.multiplier}x</span>`}
                     </div>
                 </div>
                 <div class="upgrade-cost">${this.formatNumber(cost)} ${this.config.game.currencyIcon}</div>
@@ -654,7 +709,46 @@ class IdleClickerGame {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                this.buyMultiplierUpgrade(upgrade.id);
+                this.buyClickMultiplier(multiplier.id);
+            });
+            
+            container.appendChild(item);
+        });
+        
+        // Add Generator Multipliers section header
+        const generatorHeader = document.createElement('h3');
+        generatorHeader.className = 'multiplier-section-header';
+        generatorHeader.textContent = '🏭 Generator Multipliers';
+        container.appendChild(generatorHeader);
+        
+        // Render generator multipliers
+        this.config.generatorMultipliers.forEach(multiplier => {
+            const level = this.gameState.generatorMultipliers[multiplier.id].level;
+            const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, level);
+            const canAfford = this.gameState.currency >= cost;
+            const currentMultiplier = level > 0 ? Math.pow(multiplier.multiplier, level) : 1;
+            const nextMultiplier = Math.pow(multiplier.multiplier, level + 1);
+            
+            const item = document.createElement('div');
+            item.className = `upgrade-item ${!canAfford ? 'disabled' : ''}`;
+            item.style.cursor = 'pointer';
+            item.innerHTML = `
+                <div class="upgrade-icon">${multiplier.icon}</div>
+                <div class="upgrade-info">
+                    <div class="upgrade-name">${multiplier.name}</div>
+                    <div class="upgrade-description">${multiplier.description}</div>
+                    <div class="upgrade-stats">
+                        <span class="upgrade-level">Level: ${level}</span>
+                        ${level > 0 ? `<span class="upgrade-production">Current: ${this.formatNumber(currentMultiplier)}x → ${this.formatNumber(nextMultiplier)}x</span>` : `<span class="upgrade-production">Next: ${multiplier.multiplier}x</span>`}
+                    </div>
+                </div>
+                <div class="upgrade-cost">${this.formatNumber(cost)} ${this.config.game.currencyIcon}</div>
+            `;
+            
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.buyGeneratorMultiplier(multiplier.id);
             });
             
             container.appendChild(item);
@@ -717,18 +811,38 @@ class IdleClickerGame {
         
         // Update multiplier upgrade affordability
         const multiplierItems = document.querySelectorAll('#multipliers-container .upgrade-item');
-        this.config.multiplierUpgrades.forEach((upgrade, index) => {
-            const level = this.gameState.multiplierUpgrades[upgrade.id].level;
-            const cost = this.calculateCost(upgrade.baseCost, upgrade.costMultiplier, level);
+        let multiplierIndex = 0;
+        
+        // Check click multipliers
+        this.config.clickMultipliers.forEach((multiplier) => {
+            const level = this.gameState.clickMultipliers[multiplier.id].level;
+            const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, level);
             const canAfford = this.gameState.currency >= cost;
             
-            if (multiplierItems[index]) {
+            if (multiplierItems[multiplierIndex]) {
                 if (canAfford) {
-                    multiplierItems[index].classList.remove('disabled');
+                    multiplierItems[multiplierIndex].classList.remove('disabled');
                 } else {
-                    multiplierItems[index].classList.add('disabled');
+                    multiplierItems[multiplierIndex].classList.add('disabled');
                 }
             }
+            multiplierIndex++;
+        });
+        
+        // Check generator multipliers
+        this.config.generatorMultipliers.forEach((multiplier) => {
+            const level = this.gameState.generatorMultipliers[multiplier.id].level;
+            const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, level);
+            const canAfford = this.gameState.currency >= cost;
+            
+            if (multiplierItems[multiplierIndex]) {
+                if (canAfford) {
+                    multiplierItems[multiplierIndex].classList.remove('disabled');
+                } else {
+                    multiplierItems[multiplierIndex].classList.add('disabled');
+                }
+            }
+            multiplierIndex++;
         });
     }
     
@@ -1133,7 +1247,7 @@ class IdleClickerGame {
 
 // Initialize game when page loads
 window.addEventListener('DOMContentLoaded', () => {
-    const game = new IdleClickerGame();
-    game.init();
+    window.game = new IdleClickerGame(); // Make game accessible in console
+    window.game.init();
 });
 

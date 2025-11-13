@@ -51,7 +51,39 @@
       "maxLevel": null
     }
   ],
-  "multiplierUpgrades": [
+  "clickMultipliers": [
+    {
+      "id": "click_boost",
+      "name": "Click Power Boost",
+      "description": "2x click power",
+      "icon": "👆",
+      "baseCost": 250,
+      "costMultiplier": 2.5,
+      "multiplier": 2,
+      "maxLevel": null
+    },
+    {
+      "id": "hand_amplifier",
+      "name": "Hand Amplifier",
+      "description": "3x click power",
+      "icon": "✋",
+      "baseCost": 2500,
+      "costMultiplier": 3,
+      "multiplier": 3,
+      "maxLevel": null
+    },
+    {
+      "id": "click_mastery",
+      "name": "Click Mastery",
+      "description": "5x click power",
+      "icon": "💪",
+      "baseCost": 25000,
+      "costMultiplier": 4,
+      "multiplier": 5,
+      "maxLevel": null
+    }
+  ],
+  "generatorMultipliers": [
     {
       "id": "efficiency",
       "name": "Mining Efficiency",
@@ -75,7 +107,7 @@
     {
       "id": "gemology",
       "name": "Gemology Research",
-      "description": "5x gem production from all sources",
+      "description": "5x gem production from generators",
       "icon": "🔬",
       "baseCost": 50000,
       "costMultiplier": 4,
@@ -83,9 +115,9 @@
       "maxLevel": null
     },
     {
-      "id": "amplifier",
-      "name": "Quantum Amplifier",
-      "description": "10x multiplier to all production",
+      "id": "generator_amplifier",
+      "name": "Generator Amplifier",
+      "description": "10x multiplier to all generators",
       "icon": "⚡",
       "baseCost": 500000,
       "costMultiplier": 5,
