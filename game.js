@@ -1766,9 +1766,17 @@ class IdleClickerGame {
             // Generate currency from generators
             const production = this.calculateProductionPerSecond();
             const earned = production * deltaTime;
-            this.gameState.currency += earned;
-            this.gameState.totalEarned += earned;
-            this.gameState.generatorEarned += earned;
+            
+            // Safety check: prevent infinity and NaN
+            if (!Number.isFinite(earned) || earned > Number.MAX_SAFE_INTEGER) {
+                console.warn('⚠️ Production too high, capping at safe maximum');
+                this.gameState.currency = Number.MAX_SAFE_INTEGER;
+                this.gameState.totalEarned = Number.MAX_SAFE_INTEGER;
+            } else {
+                this.gameState.currency += earned;
+                this.gameState.totalEarned += earned;
+                this.gameState.generatorEarned += earned;
+            }
             
             // Auto clicker
             if (this.config.autoClicker.enabled && this.gameState.autoClickerLevel > 0) {

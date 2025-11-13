@@ -55,74 +55,74 @@
     {
       "id": "click_boost",
       "name": "Click Power Boost",
-      "description": "2x click power",
+      "description": "1.5x click power",
       "icon": "👆",
       "baseCost": 250,
-      "costMultiplier": 2.5,
-      "multiplier": 2,
-      "maxLevel": null
+      "costMultiplier": 3,
+      "multiplier": 1.5,
+      "maxLevel": 15
     },
     {
       "id": "hand_amplifier",
       "name": "Hand Amplifier",
-      "description": "3x click power",
+      "description": "2x click power",
       "icon": "✋",
       "baseCost": 2500,
-      "costMultiplier": 3,
-      "multiplier": 3,
-      "maxLevel": null
+      "costMultiplier": 4,
+      "multiplier": 2,
+      "maxLevel": 10
     },
     {
       "id": "click_mastery",
       "name": "Click Mastery",
-      "description": "5x click power",
+      "description": "2.5x click power",
       "icon": "💪",
       "baseCost": 25000,
-      "costMultiplier": 4,
-      "multiplier": 5,
-      "maxLevel": null
+      "costMultiplier": 5,
+      "multiplier": 2.5,
+      "maxLevel": 5
     }
   ],
   "generatorMultipliers": [
     {
       "id": "efficiency",
       "name": "Mining Efficiency",
-      "description": "All generators produce 2x more gems",
+      "description": "All generators produce 1.5x more gems",
       "icon": "⚙️",
       "baseCost": 500,
-      "costMultiplier": 2.5,
-      "multiplier": 2,
-      "maxLevel": null
+      "costMultiplier": 3,
+      "multiplier": 1.5,
+      "maxLevel": 10
     },
     {
       "id": "automation",
       "name": "Automation System",
-      "description": "Generators are 3x more effective",
+      "description": "Generators are 2x more effective",
       "icon": "🤖",
       "baseCost": 5000,
-      "costMultiplier": 3,
-      "multiplier": 3,
-      "maxLevel": null
+      "costMultiplier": 4,
+      "multiplier": 2,
+      "maxLevel": 8
     },
     {
       "id": "gemology",
       "name": "Gemology Research",
-      "description": "5x gem production from generators",
+      "description": "2.5x gem production from generators",
       "icon": "🔬",
       "baseCost": 50000,
-      "costMultiplier": 4,
-      "multiplier": 5,
-      "maxLevel": null
+      "costMultiplier": 5,
+      "multiplier": 2.5,
+      "maxLevel": 5
     },
     {
       "id": "generator_amplifier",
       "name": "Generator Amplifier",
-      "description": "10x multiplier to all generators",
+      "description": "3x multiplier to all generators",
       "icon": "⚡",
       "baseCost": 500000,
-      "costMultiplier": 5,
-      "multiplier": 10,
-      "maxLevel": null
+      "costMultiplier": 6,
+      "multiplier": 3,
+      "maxLevel": 3
     }
   ],
   "autoClicker": {
