@@ -1460,17 +1460,19 @@ class IdleClickerGame {
     }
     
     renderCosmetics() {
-        if (!this.config.shop?.enabled) return;
+        if (!this.config.cosmetics?.enabled) return;
         
         const container = document.getElementById('cosmetics-container');
         container.innerHTML = '';
         
-        // Filter for cosmetic items only
-        const cosmeticItems = this.config.shop.items.filter(item => 
-            item.type && item.type.startsWith('cosmetic_')
-        );
+        // Combine all cosmetic types
+        const allCosmetics = [
+            ...(this.config.cosmetics.themes || []),
+            ...(this.config.cosmetics.skins || []),
+            ...(this.config.cosmetics.particles || [])
+        ];
         
-        cosmeticItems.forEach(item => {
+        allCosmetics.forEach(item => {
             const purchased = this.gameState.shopPurchases[item.id];
             const canAfford = this.gameState.currency >= item.cost;
             
@@ -1493,12 +1495,60 @@ class IdleClickerGame {
                 cosmeticItem.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    this.buyShopItem(item.id);
+                    this.buyCosmeticItem(item.id);
                 });
             }
             
             container.appendChild(cosmeticItem);
         });
+    }
+    
+    buyCosmeticItem(itemId) {
+        // Find the cosmetic in any of the categories
+        const allCosmetics = [
+            ...(this.config.cosmetics.themes || []),
+            ...(this.config.cosmetics.skins || []),
+            ...(this.config.cosmetics.particles || [])
+        ];
+        
+        const item = allCosmetics.find(i => i.id === itemId);
+        if (!item || this.gameState.shopPurchases[itemId]) return;
+        
+        if (this.gameState.currency >= item.cost) {
+            this.gameState.currency -= item.cost;
+            this.gameState.shopPurchases[itemId] = true;
+            
+            this.playSound('achievement');
+            
+            // Render both shop and cosmetics
+            this.renderShop();
+            this.renderCosmetics();
+            
+            // Update settings dropdowns with newly purchased item
+            this.updateSettingsDropdowns();
+            
+            // Apply cosmetics based on settings
+            this.applyCosmetics();
+            
+            this.updateUI();
+            
+            // Show purchase notification
+            const popup = document.createElement('div');
+            popup.className = 'achievement-popup';
+            popup.innerHTML = `
+                <div class="achievement-popup-header">🎨 Cosmetic Unlocked!</div>
+                <div class="achievement-popup-icon">${item.icon}</div>
+                <div class="achievement-popup-name">${item.name}</div>
+                <div class="achievement-popup-desc">Go to Settings to equip!</div>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                popup.classList.add('fade-out');
+                setTimeout(() => popup.remove(), 500);
+            }, 3000);
+            
+            console.log(`✅ Purchased cosmetic: ${item.name}`);
+        }
     }
     
     buyShopItem(itemId) {
@@ -1596,8 +1646,8 @@ class IdleClickerGame {
         if (premiumThemeSelect) {
             premiumThemeSelect.innerHTML = '<option value="none">None (use base theme)</option>';
             
-            const themeItems = this.config.shop.items.filter(item => 
-                item.type === 'cosmetic_theme' && this.gameState.shopPurchases[item.id]
+            const themeItems = (this.config.cosmetics?.themes || []).filter(item => 
+                this.gameState.shopPurchases[item.id]
             );
             
             themeItems.forEach(item => {
@@ -1615,13 +1665,13 @@ class IdleClickerGame {
         if (gemSkinSelect) {
             gemSkinSelect.innerHTML = '<option value="default">💎 Default Diamond</option>';
             
-            const skinItems = this.config.shop.items.filter(item => 
-                item.type === 'cosmetic_skin' && this.gameState.shopPurchases[item.id]
+            const skinItems = (this.config.cosmetics?.skins || []).filter(item => 
+                this.gameState.shopPurchases[item.id]
             );
             
             skinItems.forEach(item => {
                 const option = document.createElement('option');
-                option.value = item.value.replace('-skin', ''); // "ruby-skin" -> "ruby"
+                option.value = item.value;
                 option.textContent = `${item.icon} ${item.name}`;
                 gemSkinSelect.appendChild(option);
             });
@@ -1634,8 +1684,8 @@ class IdleClickerGame {
         if (particleEffectSelect) {
             particleEffectSelect.innerHTML = '<option value="default">✨ Default Blue</option>';
             
-            const particleItems = this.config.shop.items.filter(item => 
-                item.type === 'cosmetic_particle' && this.gameState.shopPurchases[item.id]
+            const particleItems = (this.config.cosmetics?.particles || []).filter(item => 
+                this.gameState.shopPurchases[item.id]
             );
             
             particleItems.forEach(item => {
@@ -1828,13 +1878,15 @@ class IdleClickerGame {
         }
         
         // Update cosmetic item affordability
-        if (this.config.shop?.enabled) {
+        if (this.config.cosmetics?.enabled) {
             const cosmeticItems = document.querySelectorAll('#cosmetics-container .upgrade-item');
-            const cosmeticOnlyItems = this.config.shop.items.filter(item => 
-                item.type && item.type.startsWith('cosmetic_')
-            );
+            const allCosmetics = [
+                ...(this.config.cosmetics.themes || []),
+                ...(this.config.cosmetics.skins || []),
+                ...(this.config.cosmetics.particles || [])
+            ];
             
-            cosmeticOnlyItems.forEach((item, index) => {
+            allCosmetics.forEach((item, index) => {
                 const purchased = this.gameState.shopPurchases[item.id];
                 const canAfford = this.gameState.currency >= item.cost;
                 
