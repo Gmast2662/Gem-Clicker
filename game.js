@@ -429,18 +429,21 @@ class IdleClickerGame {
                 this.switchTab('shop');
                 break;
             case '5':
-                this.switchTab('achievements');
+                this.switchTab('cosmetics');
                 break;
             case '6':
-                this.switchTab('stats');
+                this.switchTab('achievements');
                 break;
             case '7':
-                this.switchTab('tips');
+                this.switchTab('stats');
                 break;
             case '8':
-                this.switchTab('changelog');
+                this.switchTab('tips');
                 break;
             case '9':
+                this.switchTab('changelog');
+                break;
+            case '0':
                 this.switchTab('settings');
                 break;
         }
@@ -689,12 +692,19 @@ class IdleClickerGame {
     checkMilestones() {
         if (!this.config.milestones?.enabled) return;
         
+        let newMilestone = false;
         this.config.milestones.list.forEach(milestone => {
             if (!this.gameState.milestones[milestone.id] && this.gameState.totalEarned >= milestone.threshold) {
                 this.gameState.milestones[milestone.id] = true;
                 this.showMilestoneNotification(milestone);
+                newMilestone = true;
             }
         });
+        
+        // Re-render milestones if any were achieved
+        if (newMilestone) {
+            this.renderMilestones();
+        }
     }
     
     showMilestoneNotification(milestone) {
@@ -1777,7 +1787,11 @@ class IdleClickerGame {
         // Update shop item affordability
         if (this.config.shop?.enabled) {
             const shopItems = document.querySelectorAll('#shop-container .upgrade-item');
-            this.config.shop.items.forEach((item, index) => {
+            const shopOnlyItems = this.config.shop.items.filter(item => 
+                item.type === 'gameplay' || item.type === 'feature'
+            );
+            
+            shopOnlyItems.forEach((item, index) => {
                 const purchased = this.gameState.shopPurchases[item.id];
                 const canAfford = this.gameState.currency >= item.cost;
                 
@@ -1786,6 +1800,27 @@ class IdleClickerGame {
                         shopItems[index].classList.remove('disabled');
                     } else {
                         shopItems[index].classList.add('disabled');
+                    }
+                }
+            });
+        }
+        
+        // Update cosmetic item affordability
+        if (this.config.shop?.enabled) {
+            const cosmeticItems = document.querySelectorAll('#cosmetics-container .upgrade-item');
+            const cosmeticOnlyItems = this.config.shop.items.filter(item => 
+                item.type && item.type.startsWith('cosmetic_')
+            );
+            
+            cosmeticOnlyItems.forEach((item, index) => {
+                const purchased = this.gameState.shopPurchases[item.id];
+                const canAfford = this.gameState.currency >= item.cost;
+                
+                if (cosmeticItems[index] && !purchased) {
+                    if (canAfford) {
+                        cosmeticItems[index].classList.remove('disabled');
+                    } else {
+                        cosmeticItems[index].classList.add('disabled');
                     }
                 }
             });
