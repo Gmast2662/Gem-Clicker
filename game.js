@@ -1160,19 +1160,33 @@ class IdleClickerGame {
         // Calculate per second from generators
         const generatorPerSecond = this.calculateProductionPerSecond();
         
-        // Calculate per second from clicking
+        // Calculate per second from auto-clicker
+        let autoClickerPerSecond = 0;
+        if (this.config.autoClicker.enabled && this.gameState.autoClickerLevel > 0) {
+            const clicksPerSec = this.config.autoClicker.clicksPerSecond + 
+                (this.gameState.autoClickerLevel - 1) * this.config.autoClicker.clicksIncreasePerLevel;
+            autoClickerPerSecond = clicksPerSec * this.gameState.clickPower;
+        }
+        
+        // Calculate per second from manual clicking
         const now = Date.now();
         this.recentClicks = this.recentClicks.filter(time => now - time < this.clickRateWindow);
         const clickRate = this.recentClicks.length / (this.clickRateWindow / 1000);
-        const clicksPerSecond = clickRate * this.gameState.clickPower;
+        const manualClicksPerSecond = clickRate * this.gameState.clickPower;
         
-        // Combine both rates
-        const totalPerSecond = generatorPerSecond + clicksPerSecond;
+        // Combine all rates
+        const totalPerSecond = generatorPerSecond + autoClickerPerSecond + manualClicksPerSecond;
         
-        // Show combined rate, with breakdown if actively clicking
-        if (clicksPerSecond > 0.1) {
+        // Show breakdown
+        if (manualClicksPerSecond > 0.1 && autoClickerPerSecond > 0) {
             document.getElementById('per-second').textContent = 
-                `${this.formatNumber(totalPerSecond)} (${this.formatNumber(generatorPerSecond)} + ${this.formatNumber(clicksPerSecond)})`;
+                `${this.formatNumber(totalPerSecond)} (Gen: ${this.formatNumber(generatorPerSecond)} + Auto: ${this.formatNumber(autoClickerPerSecond)} + Click: ${this.formatNumber(manualClicksPerSecond)})`;
+        } else if (manualClicksPerSecond > 0.1) {
+            document.getElementById('per-second').textContent = 
+                `${this.formatNumber(totalPerSecond)} (Gen: ${this.formatNumber(generatorPerSecond)} + Click: ${this.formatNumber(manualClicksPerSecond)})`;
+        } else if (autoClickerPerSecond > 0) {
+            document.getElementById('per-second').textContent = 
+                `${this.formatNumber(totalPerSecond)} (Gen: ${this.formatNumber(generatorPerSecond)} + Auto: ${this.formatNumber(autoClickerPerSecond)})`;
         } else {
             document.getElementById('per-second').textContent = this.formatNumber(generatorPerSecond);
         }
