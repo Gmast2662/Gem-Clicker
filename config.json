@@ -51,6 +51,48 @@
       "maxLevel": null
     }
   ],
+  "multiplierUpgrades": [
+    {
+      "id": "efficiency",
+      "name": "Mining Efficiency",
+      "description": "All generators produce 2x more gems",
+      "icon": "⚙️",
+      "baseCost": 500,
+      "costMultiplier": 2.5,
+      "multiplier": 2,
+      "maxLevel": null
+    },
+    {
+      "id": "automation",
+      "name": "Automation System",
+      "description": "Generators are 3x more effective",
+      "icon": "🤖",
+      "baseCost": 5000,
+      "costMultiplier": 3,
+      "multiplier": 3,
+      "maxLevel": null
+    },
+    {
+      "id": "gemology",
+      "name": "Gemology Research",
+      "description": "5x gem production from all sources",
+      "icon": "🔬",
+      "baseCost": 50000,
+      "costMultiplier": 4,
+      "multiplier": 5,
+      "maxLevel": null
+    },
+    {
+      "id": "amplifier",
+      "name": "Quantum Amplifier",
+      "description": "10x multiplier to all production",
+      "icon": "⚡",
+      "baseCost": 500000,
+      "costMultiplier": 5,
+      "multiplier": 10,
+      "maxLevel": null
+    }
+  ],
   "generators": [
     {
       "id": "miner",
@@ -187,6 +229,66 @@
         }
       },
       {
+        "id": "thousand_gems",
+        "name": "Gem Enthusiast",
+        "description": "Mine 1,000 gems",
+        "icon": "💍",
+        "requirement": {
+          "type": "total_earned",
+          "value": 1000
+        }
+      },
+      {
+        "id": "ten_thousand_gems",
+        "name": "Gem Expert",
+        "description": "Mine 10,000 gems",
+        "icon": "👑",
+        "requirement": {
+          "type": "total_earned",
+          "value": 10000
+        }
+      },
+      {
+        "id": "hundred_thousand_gems",
+        "name": "Gem Master",
+        "description": "Mine 100,000 gems",
+        "icon": "🌟",
+        "requirement": {
+          "type": "total_earned",
+          "value": 100000
+        }
+      },
+      {
+        "id": "millionaire",
+        "name": "Gem Millionaire",
+        "description": "Mine 1 million gems",
+        "icon": "💰",
+        "requirement": {
+          "type": "total_earned",
+          "value": 1000000
+        }
+      },
+      {
+        "id": "billionaire",
+        "name": "Gem Billionaire",
+        "description": "Mine 1 billion gems",
+        "icon": "💸",
+        "requirement": {
+          "type": "total_earned",
+          "value": 1000000000
+        }
+      },
+      {
+        "id": "trillionaire",
+        "name": "Gem Trillionaire",
+        "description": "Mine 1 trillion gems",
+        "icon": "🏆",
+        "requirement": {
+          "type": "total_earned",
+          "value": 1000000000000
+        }
+      },
+      {
         "id": "first_miner",
         "name": "Mining Boss",
         "description": "Hire your first Miner",
@@ -198,13 +300,75 @@
         }
       },
       {
-        "id": "millionaire",
-        "name": "Gem Millionaire",
-        "description": "Mine 1 million gems",
-        "icon": "💰",
+        "id": "ten_miners",
+        "name": "Mining Team",
+        "description": "Own 10 Miners",
+        "icon": "👥",
         "requirement": {
-          "type": "total_earned",
-          "value": 1000000
+          "type": "generator_owned",
+          "id": "miner",
+          "value": 10
+        }
+      },
+      {
+        "id": "first_portal",
+        "name": "Portal Pioneer",
+        "description": "Open your first Gem Portal",
+        "icon": "🌀",
+        "requirement": {
+          "type": "generator_owned",
+          "id": "gemportal",
+          "value": 1
+        }
+      },
+      {
+        "id": "hundred_clicks",
+        "name": "Click Novice",
+        "description": "Click 100 times",
+        "icon": "👆",
+        "requirement": {
+          "type": "total_clicks",
+          "value": 100
+        }
+      },
+      {
+        "id": "thousand_clicks",
+        "name": "Click Enthusiast",
+        "description": "Click 1,000 times",
+        "icon": "👍",
+        "requirement": {
+          "type": "total_clicks",
+          "value": 1000
+        }
+      },
+      {
+        "id": "ten_thousand_clicks",
+        "name": "Click Master",
+        "description": "Click 10,000 times",
+        "icon": "⚡",
+        "requirement": {
+          "type": "total_clicks",
+          "value": 10000
+        }
+      },
+      {
+        "id": "first_prestige",
+        "name": "Ascension",
+        "description": "Prestige for the first time",
+        "icon": "⭐",
+        "requirement": {
+          "type": "prestige_count",
+          "value": 1
+        }
+      },
+      {
+        "id": "five_prestiges",
+        "name": "Veteran Miner",
+        "description": "Prestige 5 times",
+        "icon": "🌠",
+        "requirement": {
+          "type": "prestige_count",
+          "value": 5
         }
       }
     ]
