@@ -330,6 +330,12 @@ class IdleClickerGame {
                 this.switchTab('stats');
                 break;
             case '6':
+                this.switchTab('tips');
+                break;
+            case '7':
+                this.switchTab('changelog');
+                break;
+            case '8':
                 this.switchTab('settings');
                 break;
         }
@@ -602,6 +608,39 @@ class IdleClickerGame {
         document.getElementById('daily-streak').textContent = streak;
         document.getElementById('daily-reward-amount').textContent = this.formatNumber(reward);
         popup.classList.remove('hidden');
+    }
+    
+    showOfflineEarningsPopup(earnings, timeAway) {
+        const hours = Math.floor(timeAway / 3600);
+        const minutes = Math.floor((timeAway % 3600) / 60);
+        
+        let timeText = '';
+        if (hours > 0) {
+            timeText = `${hours}h ${minutes}m`;
+        } else {
+            timeText = `${minutes}m`;
+        }
+        
+        const popup = document.createElement('div');
+        popup.className = 'offline-earnings-popup';
+        popup.innerHTML = `
+            <h2>🌙 Welcome Back!</h2>
+            <div class="offline-time">You were away for ${timeText}</div>
+            <div class="offline-earnings">
+                <div class="offline-label">Earned while offline:</div>
+                <div class="offline-amount">+${this.formatNumber(earnings)} 💎</div>
+            </div>
+            <button class="claim-btn" onclick="this.parentElement.remove()">Awesome!</button>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        setTimeout(() => {
+            if (popup.parentElement) {
+                popup.classList.add('fade-out');
+                setTimeout(() => popup.remove(), 500);
+            }
+        }, 8000);
     }
     
     calculateProductionPerSecond() {
@@ -1418,10 +1457,24 @@ class IdleClickerGame {
                 // Calculate offline earnings (limited to prevent exploits)
                 if (offlineTime > 0 && offlineTime < 86400) { // Max 24 hours
                     const production = this.calculateProductionPerSecond();
-                    const offlineEarnings = production * offlineTime;
+                    
+                    // Also calculate auto-clicker offline production
+                    let autoClickerProduction = 0;
+                    if (this.config.autoClicker?.enabled && this.gameState.autoClickerLevel > 0) {
+                        const clicksPerSec = this.config.autoClicker.clicksPerSecond + 
+                            (this.gameState.autoClickerLevel - 1) * this.config.autoClicker.clicksIncreasePerLevel;
+                        autoClickerProduction = clicksPerSec * this.gameState.clickPower;
+                    }
+                    
+                    const totalProduction = production + autoClickerProduction;
+                    const offlineEarnings = totalProduction * offlineTime;
+                    
                     this.gameState.currency += offlineEarnings;
                     this.gameState.totalEarned += offlineEarnings;
                     this.gameState.generatorEarned += offlineEarnings;
+                    
+                    // Show offline earnings popup
+                    this.showOfflineEarningsPopup(offlineEarnings, offlineTime);
                     
                     console.log(`Welcome back! You earned ${this.formatNumber(offlineEarnings)} while away!`);
                 }

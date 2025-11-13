@@ -835,6 +835,112 @@ body {
     border: 1px solid rgba(78, 205, 196, 0.3);
 }
 
+/* Tips Tab */
+.tips-container {
+    padding: 20px;
+}
+
+.tips-container h3 {
+    color: #4ecdc4;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.tip-card {
+    background: rgba(78, 205, 196, 0.05);
+    border: 2px solid rgba(78, 205, 196, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.tip-card h4 {
+    color: #4ecdc4;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.tip-card ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.tip-card li {
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+    color: #eaeaea;
+    line-height: 1.6;
+}
+
+.tip-card li:before {
+    content: "💎";
+    position: absolute;
+    left: 0;
+}
+
+/* Changelog Tab */
+.changelog-container {
+    padding: 20px;
+}
+
+.changelog-container h3 {
+    color: #4ecdc4;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.changelog-entry {
+    background: rgba(78, 205, 196, 0.05);
+    border: 2px solid rgba(78, 205, 196, 0.2);
+    border-left: 5px solid #4ecdc4;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.changelog-entry h4 {
+    color: #4ecdc4;
+    margin-bottom: 5px;
+    font-size: 1.3em;
+}
+
+.changelog-date {
+    color: #a0a0a0;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.changelog-entry ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.changelog-entry li {
+    padding: 6px 0;
+    padding-left: 30px;
+    position: relative;
+    color: #eaeaea;
+    line-height: 1.6;
+}
+
+.changelog-entry li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #2ecc71;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.changelog-entry p {
+    color: #4ecdc4;
+    font-style: italic;
+}
+
 /* Settings Tab */
 .settings-container {
     padding: 20px;
@@ -1150,6 +1256,32 @@ body.light-theme input[type="range"]::-moz-range-thumb {
     border-color: #f5f7fa;
 }
 
+body.light-theme .tip-card,
+body.light-theme .changelog-entry {
+    background: rgba(52, 152, 219, 0.1);
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+body.light-theme .tip-card h4,
+body.light-theme .changelog-entry h4,
+body.light-theme .tips-container h3,
+body.light-theme .changelog-container h3 {
+    color: #2c3e50;
+}
+
+body.light-theme .tip-card li,
+body.light-theme .changelog-entry li {
+    color: #2c3e50;
+}
+
+body.light-theme .changelog-date {
+    color: #7f8c8d;
+}
+
+body.light-theme .changelog-entry p {
+    color: #3498db;
+}
+
 /* Achievement Popup */
 .achievement-popup {
     position: fixed;
@@ -1243,6 +1375,128 @@ body.light-theme input[type="range"]::-moz-range-thumb {
     100% {
         opacity: 0;
         transform: translate(var(--vx), var(--vy)) scale(0);
+    }
+}
+
+/* Offline Earnings Popup */
+.offline-earnings-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(52, 73, 94, 0.98), rgba(44, 62, 80, 0.98));
+    border: 3px solid rgba(52, 152, 219, 0.8);
+    border-radius: 20px;
+    padding: 40px;
+    min-width: 400px;
+    text-align: center;
+    z-index: 10003;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 60px rgba(52, 152, 219, 0.5);
+    animation: scaleIn 0.5s ease-out;
+    backdrop-filter: blur(10px);
+}
+
+.offline-earnings-popup h2 {
+    color: #4ecdc4;
+    font-size: 2em;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(78, 205, 196, 0.8);
+}
+
+.offline-time {
+    color: #ffffff;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.offline-earnings {
+    margin: 20px 0;
+}
+
+.offline-label {
+    color: #ffffff;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.offline-amount {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #4ecdc4;
+    text-shadow: 0 0 20px rgba(78, 205, 196, 0.8);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header h1 {
+        font-size: 1.8em;
+    }
+    
+    .header-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .stat-item {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+    
+    .game-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-clicker {
+        width: 180px;
+        height: 180px;
+        font-size: 6em;
+    }
+    
+    .tabs {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .tab-button {
+        font-size: 0.85em;
+        padding: 8px 12px;
+    }
+    
+    .upgrade-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 12px;
+    }
+    
+    .upgrade-icon {
+        font-size: 2.5em;
+    }
+    
+    .admin-panel {
+        width: 90%;
+        right: 5%;
+        left: auto;
+    }
+    
+    .achievement-popup,
+    .milestone-popup,
+    .daily-reward-popup,
+    .offline-earnings-popup {
+        width: 90%;
+        min-width: auto;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 25px;
+    }
+    
+    .achievement-popup {
+        top: 100px;
     }
 }
 
