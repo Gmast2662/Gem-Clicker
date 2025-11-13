@@ -290,8 +290,16 @@ class IdleClickerGame {
         document.getElementById('admin-set-generator').addEventListener('click', () => this.adminSetGenerator());
         document.getElementById('admin-set-upgrade').addEventListener('click', () => this.adminSetUpgrade());
         document.getElementById('admin-set-autoclicker').addEventListener('click', () => this.adminSetAutoClicker());
+        document.getElementById('admin-set-prestige').addEventListener('click', () => this.adminSetPrestige());
+        document.getElementById('admin-instant-prestige').addEventListener('click', () => this.adminInstantPrestige());
+        document.getElementById('admin-set-rebirth').addEventListener('click', () => this.adminSetRebirth());
+        document.getElementById('admin-instant-rebirth').addEventListener('click', () => this.adminInstantRebirth());
         document.getElementById('admin-unlock-all').addEventListener('click', () => this.adminUnlockAllAchievements());
         document.getElementById('admin-reset-achievements').addEventListener('click', () => this.adminResetAchievements());
+        document.getElementById('admin-unlock-shop').addEventListener('click', () => this.adminUnlockAllShop());
+        document.getElementById('admin-reset-shop').addEventListener('click', () => this.adminResetShop());
+        document.getElementById('admin-trigger-golden').addEventListener('click', () => this.adminTriggerEvent('golden_gem'));
+        document.getElementById('admin-trigger-rush').addEventListener('click', () => this.adminTriggerEvent('gem_rush'));
         
         // Quick gem buttons
         document.querySelectorAll('.admin-quick-btn').forEach(btn => {
@@ -1960,6 +1968,12 @@ class IdleClickerGame {
         
         // Update auto clicker level
         document.getElementById('admin-current-autoclicker').textContent = this.gameState.autoClickerLevel;
+        
+        // Update prestige points
+        document.getElementById('admin-current-prestige').textContent = this.gameState.prestigePoints;
+        
+        // Update rebirth points
+        document.getElementById('admin-current-rebirth').textContent = this.gameState.rebirthPoints;
     }
     
     updateAdminGeneratorLevel() {
@@ -2007,12 +2021,13 @@ class IdleClickerGame {
         }
         
         this.gameState.currency += amount;
+        this.gameState.totalEarned += amount; // CRITICAL: Also add to totalEarned for prestige/stats!
         this.updateUI();
         this.renderGenerators();
         this.renderClickUpgrades();
         this.playSound('achievement');
         this.updateAdminDisplay();
-        console.log(`✅ Admin: Added ${this.formatNumber(amount)} gems`);
+        console.log(`✅ Admin: Added ${this.formatNumber(amount)} gems (total earned updated)`);
     }
     
     adminSetGenerator() {
@@ -2091,6 +2106,114 @@ class IdleClickerGame {
         
         this.renderAchievements();
         console.log('✅ Admin: Reset all achievements');
+    }
+    
+    adminSetPrestige() {
+        const points = parseInt(document.getElementById('admin-prestige-points').value);
+        if (isNaN(points) || points < 0) {
+            alert('Please enter a valid number!');
+            return;
+        }
+        
+        this.gameState.prestigePoints = points;
+        this.updateUI();
+        this.renderGenerators();
+        this.playSound('achievement');
+        this.updateAdminDisplay();
+        console.log(`✅ Admin: Set prestige points to ${points}`);
+    }
+    
+    adminInstantPrestige() {
+        if (!confirm('Perform instant prestige without resetting?')) return;
+        
+        const gain = this.calculatePrestigeGain();
+        if (gain > 0) {
+            this.gameState.prestigePoints += gain;
+            this.gameState.prestigeCount++;
+            this.updateUI();
+            this.playSound('achievement');
+            console.log(`✅ Admin: Instant prestige! +${gain} points`);
+        } else {
+            alert('Not enough total earned for prestige!');
+        }
+    }
+    
+    adminSetRebirth() {
+        const points = parseInt(document.getElementById('admin-rebirth-points').value);
+        if (isNaN(points) || points < 0) {
+            alert('Please enter a valid number!');
+            return;
+        }
+        
+        this.gameState.rebirthPoints = points;
+        this.updateUI();
+        this.renderGenerators();
+        this.playSound('achievement');
+        this.updateAdminDisplay();
+        console.log(`✅ Admin: Set rebirth points to ${points}`);
+    }
+    
+    adminInstantRebirth() {
+        if (!confirm('Perform instant rebirth without resetting?')) return;
+        
+        this.gameState.rebirthPoints++;
+        this.gameState.rebirthCount++;
+        this.updateUI();
+        this.playSound('achievement');
+        console.log(`✅ Admin: Instant rebirth! Now at ${this.gameState.rebirthPoints} points`);
+    }
+    
+    adminUnlockAllShop() {
+        if (!confirm('Unlock all shop items?')) return;
+        
+        this.config.shop.items.forEach(item => {
+            this.gameState.shopPurchases[item.id] = true;
+        });
+        
+        this.renderShop();
+        this.applyShopEffects();
+        this.playSound('achievement');
+        console.log('✅ Admin: Unlocked all shop items');
+    }
+    
+    adminResetShop() {
+        if (!confirm('Reset all shop purchases?')) return;
+        
+        this.config.shop.items.forEach(item => {
+            this.gameState.shopPurchases[item.id] = false;
+        });
+        
+        this.renderShop();
+        this.playSound('achievement');
+        console.log('✅ Admin: Reset all shop purchases');
+    }
+    
+    adminTriggerEvent(eventType) {
+        if (!this.gameState.shopPurchases['lucky_events']) {
+            alert('Must unlock Lucky Events in shop first!');
+            return;
+        }
+        
+        this.gameState.luckyEvent.active = true;
+        this.gameState.luckyEvent.type = eventType;
+        
+        const banner = document.getElementById('lucky-event-banner');
+        const eventIcon = document.getElementById('event-icon');
+        const eventName = document.getElementById('event-name');
+        
+        if (eventType === 'golden_gem') {
+            this.gameState.luckyEvent.endTime = Date.now() + 15000;
+            eventIcon.textContent = '🌟';
+            eventName.textContent = `Golden Gem! (${this.config.luckyEvents.goldenGemMultiplier}x clicks!)`;
+        } else {
+            this.gameState.luckyEvent.endTime = Date.now() + (this.config.luckyEvents.gemRushDuration * 1000);
+            eventIcon.textContent = '🎊';
+            eventName.textContent = `Gem Rush! (${this.config.luckyEvents.gemRushMultiplier}x production!)`;
+        }
+        
+        banner.style.display = 'flex';
+        this.playSound('achievement');
+        console.log(`✅ Admin: Triggered ${eventType} event`);
     }
 }
 

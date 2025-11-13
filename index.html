@@ -272,16 +272,53 @@
                         <h3>📝 Changelog</h3>
                         
                         <div class="changelog-entry">
-                            <h4>v1.0.0 - Initial Release 🎉</h4>
+                            <h4>📍 Current Version: v1.4.0</h4>
+                            <p>The most feature-rich version yet! Check TODO.md for upcoming features.</p>
+                        </div>
+
+                        <div class="changelog-entry">
+                            <h4>v1.4.0 - Major Systems Update 🔮</h4>
                             <p class="changelog-date">November 2024</p>
                             <ul>
-                                <li>🎮 Complete idle clicker game with gem mining theme</li>
-                                <li>⛏️ 4 click upgrades (Pickaxe to Laser Drill)</li>
-                                <li>🏭 10 generators (Miner to Stellar Forge)</li>
-                                <li>⭐ Prestige system with permanent bonuses</li>
-                                <li>🏆 16 achievements to unlock</li>
-                                <li>💾 Auto-save, export, and import system</li>
-                                <li>🌙 Offline earnings (up to 24 hours)</li>
+                                <li>🔮 Rebirth system (2x multiplier per point!)</li>
+                                <li>🏪 Shop with permanent one-time purchases</li>
+                                <li>🎰 Lucky Events (Golden Gem & Gem Rush)</li>
+                                <li>📊 Progress bars for prestige & milestones</li>
+                                <li>💡 Tips tab with complete strategy guide</li>
+                                <li>📝 Changelog tab (you're reading it!)</li>
+                                <li>🌙 Offline earnings popup notification</li>
+                                <li>📱 Full mobile optimization</li>
+                                <li>🔧 Expanded admin panel controls</li>
+                                <li>⌨️ Updated keyboard shortcuts (1-9)</li>
+                            </ul>
+                        </div>
+
+                        <div class="changelog-entry">
+                            <h4>v1.3.0 - Progression Update 🚀</h4>
+                            <p class="changelog-date">November 2024</p>
+                            <ul>
+                                <li>🤖 Auto-Clicker system (scales with click power!)</li>
+                                <li>🎁 Daily login rewards with streak system</li>
+                                <li>🌟 Milestones with permanent bonuses (1M, 100M, 1B, 1T)</li>
+                                <li>✨ Enhanced animations (bounce, pulse, smooth transitions)</li>
+                                <li>🔧 Expanded admin panel with achievement controls</li>
+                                <li>🌙 Offline earnings now include auto-clicker</li>
+                                <li>📱 Mobile-friendly responsive design</li>
+                            </ul>
+                        </div>
+
+                        <div class="changelog-entry">
+                            <h4>v1.2.0 - Quality of Life Update 🎵</h4>
+                            <p class="changelog-date">November 2024</p>
+                            <ul>
+                                <li>🎵 Sound effects (click, buy, achievement)</li>
+                                <li>🔊 Sound settings with volume control and mute</li>
+                                <li>🎨 Light mode theme option</li>
+                                <li>⌨️ Keyboard shortcuts (Space, 1-9)</li>
+                                <li>💫 Particle effects on clicks</li>
+                                <li>🏆 Beautiful achievement popup notifications</li>
+                                <li>📊 Enhanced stats (gems/hour, avg clicks/sec)</li>
+                                <li>💾 Visual "Game Saved" notification</li>
                             </ul>
                         </div>
 
@@ -298,38 +335,17 @@
                         </div>
 
                         <div class="changelog-entry">
-                            <h4>v1.2.0 - Quality of Life Update 🎵</h4>
+                            <h4>v1.0.0 - Initial Release 🎉</h4>
                             <p class="changelog-date">November 2024</p>
                             <ul>
-                                <li>🎵 Sound effects (click, buy, achievement)</li>
-                                <li>🔊 Sound settings with volume control and mute</li>
-                                <li>🎨 Light mode theme option</li>
-                                <li>⌨️ Keyboard shortcuts (Space, 1-8)</li>
-                                <li>💫 Particle effects on clicks</li>
-                                <li>🏆 Beautiful achievement popup notifications</li>
-                                <li>📊 Enhanced stats (gems/hour, avg clicks/sec)</li>
-                                <li>💾 Visual "Game Saved" notification</li>
+                                <li>🎮 Complete idle clicker game with gem mining theme</li>
+                                <li>⛏️ 4 click upgrades (Pickaxe to Laser Drill)</li>
+                                <li>🏭 10 generators (Miner to Stellar Forge)</li>
+                                <li>⭐ Prestige system with permanent bonuses</li>
+                                <li>🏆 16 achievements to unlock</li>
+                                <li>💾 Auto-save, export, and import system</li>
+                                <li>🌙 Offline earnings (up to 24 hours)</li>
                             </ul>
-                        </div>
-
-                        <div class="changelog-entry">
-                            <h4>v1.3.0 - Progression Update 🚀</h4>
-                            <p class="changelog-date">November 2024</p>
-                            <ul>
-                                <li>🤖 Auto-Clicker system (scales with click power!)</li>
-                                <li>🎁 Daily login rewards with streak system</li>
-                                <li>🌟 Milestones with permanent bonuses (1M, 100M, 1B, 1T)</li>
-                                <li>✨ Enhanced animations (bounce, pulse, smooth transitions)</li>
-                                <li>🔧 Expanded admin panel with achievement controls</li>
-                                <li>🌙 Offline earnings now include auto-clicker</li>
-                                <li>📱 Mobile-friendly responsive design</li>
-                                <li>💡 Tips tab with strategy guides</li>
-                            </ul>
-                        </div>
-
-                        <div class="changelog-entry">
-                            <h4>📍 Current Version: v1.3.0</h4>
-                            <p>More features coming soon! Check TODO.md for planned features.</p>
                         </div>
                     </div>
                 </div>
@@ -466,10 +482,46 @@
         </div>
 
         <div class="admin-section">
+            <h4>⭐ Prestige</h4>
+            <div class="admin-current">Current: <span id="admin-current-prestige">0</span> points</div>
+            <div class="admin-input-row">
+                <input type="number" id="admin-prestige-points" placeholder="Points" value="10" min="0">
+                <button class="admin-btn" id="admin-set-prestige">Set Points</button>
+            </div>
+            <button class="admin-btn full-width" id="admin-instant-prestige">Instant Prestige</button>
+        </div>
+
+        <div class="admin-section">
+            <h4>🔮 Rebirth</h4>
+            <div class="admin-current">Current: <span id="admin-current-rebirth">0</span> points</div>
+            <div class="admin-input-row">
+                <input type="number" id="admin-rebirth-points" placeholder="Points" value="5" min="0">
+                <button class="admin-btn" id="admin-set-rebirth">Set Points</button>
+            </div>
+            <button class="admin-btn full-width" id="admin-instant-rebirth">Instant Rebirth</button>
+        </div>
+
+        <div class="admin-section">
             <h4>🏆 Achievements</h4>
             <div class="admin-buttons">
                 <button class="admin-btn" id="admin-unlock-all">Unlock All</button>
                 <button class="admin-btn" id="admin-reset-achievements">Reset All</button>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h4>🏪 Shop</h4>
+            <div class="admin-buttons">
+                <button class="admin-btn" id="admin-unlock-shop">Unlock All</button>
+                <button class="admin-btn" id="admin-reset-shop">Reset All</button>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h4>🎰 Lucky Events</h4>
+            <div class="admin-buttons">
+                <button class="admin-btn" id="admin-trigger-golden">Golden Gem</button>
+                <button class="admin-btn" id="admin-trigger-rush">Gem Rush</button>
             </div>
         </div>
 
