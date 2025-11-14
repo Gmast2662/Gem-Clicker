@@ -695,6 +695,46 @@
         "duration": 10,
         "effect": "auto_clicker_boost",
         "value": 20
+      },
+      {
+        "id": "time_warp",
+        "name": "Time Warp",
+        "icon": "⏰",
+        "description": "Everything 3x faster!",
+        "chance": 0.003,
+        "duration": 15,
+        "effect": "time_multiplier",
+        "value": 3
+      },
+      {
+        "id": "treasure_chest",
+        "name": "Treasure Chest",
+        "icon": "💰",
+        "description": "Instant bonus gems!",
+        "chance": 0.005,
+        "duration": 0,
+        "effect": "instant_gems",
+        "value": 0.1
+      },
+      {
+        "id": "black_hole",
+        "name": "Black Hole",
+        "icon": "🌀",
+        "description": "Gravity pulls in 10x gems!",
+        "chance": 0.002,
+        "duration": 12,
+        "effect": "production_multiplier",
+        "value": 10
+      },
+      {
+        "id": "gem_goblin",
+        "name": "Gem Goblin",
+        "icon": "👺",
+        "description": "Goblin steals 5% but leaves a gift!",
+        "chance": 0.006,
+        "duration": 0,
+        "effect": "goblin_visit",
+        "value": 0.05
       }
     ]
   },
