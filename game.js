@@ -1820,6 +1820,12 @@ class IdleClickerGame {
                 }
             }
             
+            // Check if Lucky Fortune requires Lucky Events
+            let requirementNotice = '';
+            if (item.id === 'prestige_lucky_boost' && !this.gameState.shopPurchases['lucky_events']) {
+                requirementNotice = `<div style="color: #ff6b6b; font-size: 0.85em; margin-top: 5px;">⚠️ Requires: Unlock Lucky Events (Shop)</div>`;
+            }
+            
             const prestigeItem = document.createElement('div');
             prestigeItem.className = `upgrade-item ${maxed ? 'purchased' : (!canAfford ? 'disabled' : '')}`;
             prestigeItem.style.cursor = maxed ? 'default' : 'pointer';
@@ -1829,6 +1835,7 @@ class IdleClickerGame {
                     <div class="upgrade-name">${item.name} ${maxed ? '(MAX)' : `Lv.${currentLevel}`}</div>
                     <div class="upgrade-description">${item.description}</div>
                     ${bonusDisplay}
+                    ${requirementNotice}
                 </div>
                 <div class="upgrade-cost">${maxed ? 'MAXED' : cost + ' ⭐'}</div>
             `;
@@ -2702,7 +2709,12 @@ class IdleClickerGame {
         const decimals = this.config.ui.numberFormat.decimalPlaces;
         
         // Handle small numbers
+        if (num < 1) {
+            // Show decimals for numbers less than 1
+            return num.toFixed(2);
+        }
         if (num < 1000) {
+            // Show whole numbers for 1-999
             return Math.floor(num).toString();
         }
         
@@ -3261,13 +3273,53 @@ class IdleClickerGame {
             `⏱️ Play Time: ${this.formatPlayTime(this.gameState.playTime)}\n\n` +
             `Play now: https://gmast2662.github.io/Gem-Clicker/`;
         
-        navigator.clipboard.writeText(shareText).then(() => {
-            this.showNotification('🏆 Achievements copied to clipboard!', 'success');
-            console.log('✅ Achievements copied to clipboard');
-        }).catch(err => {
-            console.error('Failed to copy:', err);
-            alert('✅ Achievements copied to clipboard!');
-        });
+        // Try native share API first (mobile/desktop)
+        if (navigator.share) {
+            navigator.share({
+                title: 'My Gem Clicker Achievements',
+                text: shareText
+            }).then(() => {
+                this.showNotification('🏆 Achievements shared!');
+                console.log('✅ Achievements shared');
+            }).catch(err => {
+                // User cancelled or error - fallback to clipboard
+                if (err.name !== 'AbortError') {
+                    this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!');
+                }
+            });
+        } else {
+            // Fallback to clipboard for desktop
+            this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!');
+        }
+    }
+    
+    showNotification(message) {
+        // Create notification popup
+        const notification = document.createElement('div');
+        notification.className = 'achievement-popup';
+        notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 10000;
+            animation: slideDown 0.3s ease-out;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideUp 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
     
     shareStats() {
@@ -3285,12 +3337,33 @@ class IdleClickerGame {
             `⏱️ Play Time: ${this.formatPlayTime(this.gameState.playTime)}\n\n` +
             `Play now: https://gmast2662.github.io/Gem-Clicker/`;
         
-        navigator.clipboard.writeText(shareText).then(() => {
-            this.showNotification('📊 Stats copied to clipboard!', 'success');
-            console.log('✅ Stats copied to clipboard');
+        // Try native share API first (mobile/desktop)
+        if (navigator.share) {
+            navigator.share({
+                title: 'My Gem Clicker Stats',
+                text: shareText
+            }).then(() => {
+                this.showNotification('📊 Stats shared!');
+                console.log('✅ Stats shared');
+            }).catch(err => {
+                // User cancelled or error - fallback to clipboard
+                if (err.name !== 'AbortError') {
+                    this.copyToClipboard(shareText, '📊 Stats copied to clipboard!');
+                }
+            });
+        } else {
+            // Fallback to clipboard for desktop
+            this.copyToClipboard(shareText, '📊 Stats copied to clipboard!');
+        }
+    }
+    
+    copyToClipboard(text, successMessage) {
+        navigator.clipboard.writeText(text).then(() => {
+            this.showNotification(successMessage);
+            console.log('✅', successMessage);
         }).catch(err => {
             console.error('Failed to copy:', err);
-            alert('✅ Stats copied to clipboard!');
+            alert(successMessage);
         });
     }
 

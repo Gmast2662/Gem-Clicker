@@ -1,9 +1,22 @@
 {
-  "currentVersion": "v1.6.9",
-  "currentDescription": "Critical fixes: shop persistence, instant affordability updates, auto-prestige improvements!",
+  "currentVersion": "v1.7.0",
+  "currentDescription": "Major UX improvements: decimal numbers, native share dialog, Lucky Fortune requirements!",
   "versions": [
     {
-      "version": "v1.6.9 (Latest)",
+      "version": "v1.7.0 (Latest)",
+      "title": "UX & Share Improvements! ✨",
+      "date": "November 14, 2025",
+      "changes": [
+        "✨ Generators now show decimals (0.10/s instead of 0/s)!",
+        "📱 Share buttons now use native share dialog on mobile/desktop!",
+        "✅ Share notifications now actually appear!",
+        "⚠️ Lucky Fortune now shows requirement warning (need Lucky Events)",
+        "🎯 Numbers under 1 now show with 2 decimal places",
+        "📋 Fallback to clipboard if native share not available"
+      ]
+    },
+    {
+      "version": "v1.6.9",
       "title": "Critical Bug Fixes! 🛠️",
       "date": "November 14, 2025",
       "changes": [
