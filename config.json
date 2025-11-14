@@ -640,6 +640,39 @@
         "effect": "production_boost",
         "value": 1.2,
         "type": "gameplay"
+      },
+      {
+        "id": "auto_buy_generators",
+        "name": "Auto-Buy Generators",
+        "description": "Automatically purchase the cheapest affordable generator",
+        "icon": "🤖",
+        "cost": 2500000,
+        "purchased": false,
+        "effect": "automation",
+        "value": "auto_buy_gen",
+        "type": "automation"
+      },
+      {
+        "id": "auto_prestige",
+        "name": "Auto-Prestige",
+        "description": "Automatically prestige when you can gain +5 or more stars",
+        "icon": "⭐",
+        "cost": 5000000,
+        "purchased": false,
+        "effect": "automation",
+        "value": "auto_prestige",
+        "type": "automation"
+      },
+      {
+        "id": "auto_claim_daily",
+        "name": "Auto-Claim Daily",
+        "description": "Automatically claim daily rewards when available",
+        "icon": "🎁",
+        "cost": 750000,
+        "purchased": false,
+        "effect": "automation",
+        "value": "auto_claim",
+        "type": "automation"
       }
     ]
   },

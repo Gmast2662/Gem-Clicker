@@ -940,7 +940,7 @@ class IdleClickerGame {
         }
     }
     
-    claimDailyReward() {
+    claimDailyReward(silent = false) {
         const baseReward = this.config.dailyRewards.baseReward;
         const streak = this.gameState.dailyReward.streak;
         const reward = Math.floor(baseReward * Math.pow(this.config.dailyRewards.streakMultiplier, streak - 1));
@@ -949,14 +949,14 @@ class IdleClickerGame {
         this.gameState.totalEarned += reward;
         this.gameState.dailyReward.lastClaim = Date.now();
         
-        this.playSound('achievement');
+        if (!silent) {
+            this.playSound('achievement');
+            // Hide popup
+            document.getElementById('daily-reward-popup').classList.add('hidden');
+        }
+        
         this.updateUI();
         this.saveGame();
-        
-        // Hide popup
-        document.getElementById('daily-reward-popup').classList.add('hidden');
-        
-        console.log(`✅ Claimed daily reward: ${this.formatNumber(reward)} gems! (Day ${streak})`);
     }
     
     showDailyRewardPopup() {
@@ -1899,6 +1899,51 @@ class IdleClickerGame {
         }
     }
     
+    runAutomation() {
+        // Auto-claim daily rewards
+        if (this.gameState.shopPurchases['auto_claim_daily']) {
+            const daysSinceLastClaim = (Date.now() - this.gameState.dailyReward.lastClaim) / (1000 * 60 * 60 * 24);
+            if (daysSinceLastClaim >= 1) {
+                this.claimDailyReward(true); // Pass true to suppress notification
+            }
+        }
+        
+        // Auto-buy generators
+        if (this.gameState.shopPurchases['auto_buy_generators']) {
+            this.autoBuyGenerator();
+        }
+        
+        // Auto-prestige
+        if (this.gameState.shopPurchases['auto_prestige']) {
+            const prestigeGain = this.calculatePrestigeGain();
+            if (prestigeGain >= 5) { // Only auto-prestige when gaining 5+ stars
+                this.handlePrestige();
+                console.log(`🤖 Auto-Prestige: Prestiged for +${prestigeGain}⭐!`);
+            }
+        }
+    }
+    
+    autoBuyGenerator() {
+        // Find the cheapest generator we can afford
+        let cheapestAffordable = null;
+        let cheapestCost = Infinity;
+        
+        this.config.generators.forEach(generator => {
+            const level = this.gameState.generators[generator.id].level;
+            if (generator.maxLevel && level >= generator.maxLevel) return;
+            
+            const cost = this.calculateCost(generator.baseCost, generator.costMultiplier, level);
+            if (this.gameState.currency >= cost && cost < cheapestCost) {
+                cheapestAffordable = generator.id;
+                cheapestCost = cost;
+            }
+        });
+        
+        if (cheapestAffordable) {
+            this.buyGenerator(cheapestAffordable);
+        }
+    }
+    
     renderAchievements() {
         if (!this.config.achievements.enabled) return;
         
@@ -2459,6 +2504,11 @@ class IdleClickerGame {
             // Check smart notifications (every 10 seconds to avoid spam)
             if (Math.random() < 0.01) { // ~1% chance per 100ms = once every ~10 seconds
                 this.checkSmartNotifications();
+            }
+            
+            // Run automation (every 5 seconds)
+            if (Math.random() < 0.05) { // ~5% chance per 100ms = once every ~2 seconds
+                this.runAutomation();
             }
             
             // Update admin panel if open
