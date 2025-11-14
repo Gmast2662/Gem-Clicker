@@ -665,7 +665,11 @@
                     .then(registration => {
                         console.log('✅ Service Worker registered:', registration.scope);
                         
-                        // Check for updates
+                        // Check for updates immediately on load
+                        console.log('🔍 Checking for updates immediately...');
+                        registration.update();
+                        
+                        // Listen for update events
                         registration.addEventListener('updatefound', () => {
                             newWorker = registration.installing;
                             console.log('📦 New version found, installing...');
@@ -679,10 +683,10 @@
                             });
                         });
                         
-                        // Check for updates every 5 minutes
+                        // Also check for updates every 5 minutes (in case user keeps page open)
                         setInterval(() => {
                             registration.update();
-                            console.log('🔍 Checking for updates...');
+                            console.log('🔍 Periodic update check...');
                         }, 300000); // 5 minutes
                     })
                     .catch(error => {
