@@ -627,18 +627,69 @@
         <button class="admin-btn close full-width" id="admin-close">Close Panel</button>
     </div>
 
+    <!-- Update notification -->
+    <div id="update-notification" class="update-notification hidden">
+        <span>🎉 New version available!</span>
+        <button id="update-button" class="update-button">Update Now</button>
+    </div>
+
     <script src="game.js"></script>
     <script>
         // Register service worker for offline support and PWA
         if ('serviceWorker' in navigator) {
+            let newWorker;
+            
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
                     .then(registration => {
                         console.log('✅ Service Worker registered:', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            newWorker = registration.installing;
+                            console.log('📦 New version found, installing...');
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available!
+                                    console.log('🎉 New version ready!');
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                        
+                        // Check for updates every hour
+                        setInterval(() => {
+                            registration.update();
+                        }, 3600000); // 1 hour
                     })
                     .catch(error => {
                         console.log('❌ Service Worker registration failed:', error);
                     });
+            });
+            
+            // Show update notification
+            function showUpdateNotification() {
+                const notification = document.getElementById('update-notification');
+                if (notification) {
+                    notification.classList.remove('hidden');
+                }
+            }
+            
+            // Handle update button click
+            const updateButton = document.getElementById('update-button');
+            if (updateButton) {
+                updateButton.addEventListener('click', () => {
+                    if (newWorker) {
+                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    }
+                    window.location.reload();
+                });
+            }
+            
+            // Auto-reload when new service worker takes control
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('🔄 New version activated!');
             });
         }
     </script>

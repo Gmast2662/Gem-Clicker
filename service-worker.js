@@ -1,5 +1,5 @@
 // Gem Clicker - Service Worker for Offline Support
-const CACHE_NAME = 'gem-clicker-v1.5.0';
+const CACHE_NAME = 'gem-clicker-v1.6.0';
 const urlsToCache = [
     './',
     './index.html',
@@ -14,14 +14,25 @@ const urlsToCache = [
 
 // Install event - cache all resources
 self.addEventListener('install', event => {
+    console.log('📦 Service Worker installing - v1.6.0');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('📦 Caching app resources');
                 return cache.addAll(urlsToCache);
             })
-            .then(() => self.skipWaiting())
+            .then(() => {
+                console.log('✅ New version cached, activating...');
+                return self.skipWaiting();
+            })
     );
+});
+
+// Message event - listen for update requests
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
 
 // Activate event - clean up old caches

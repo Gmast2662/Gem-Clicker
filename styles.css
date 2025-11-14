@@ -2884,6 +2884,64 @@ body.skin-amethyst .floating-number {
 }
 
 /* ============================================
+   UPDATE NOTIFICATION (PWA)
+   ============================================ */
+
+.update-notification {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #4ecdc4, #45b7aa);
+    color: #1a1a2e;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 99999;
+    font-weight: bold;
+    animation: slideDown 0.3s ease;
+}
+
+.update-notification.hidden {
+    display: none;
+}
+
+.update-button {
+    background: #1a1a2e;
+    color: #4ecdc4;
+    border: 2px solid #1a1a2e;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.update-button:hover {
+    background: #2c3e50;
+    transform: scale(1.05);
+}
+
+.update-button:active {
+    transform: scale(0.95);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================
    TOAST NOTIFICATIONS
    ============================================ */
 
