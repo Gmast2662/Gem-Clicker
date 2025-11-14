@@ -751,15 +751,55 @@ class IdleClickerGame {
             this.audioContext.resume();
         }
         
+        // Initialize combo state if not exists
+        if (!this.clickCombo) {
+            this.clickCombo = {
+                count: 0,
+                multiplier: 1,
+                lastClickTime: 0
+            };
+        }
+        
         // Calculate earn amount (with lucky event bonus if active)
         let earnAmount = this.gameState.clickPower;
         
+        // Apply lucky event bonuses
         if (this.gameState.luckyEvent.active) {
             const event = this.config.luckyEvents.events.find(e => e.id === this.gameState.luckyEvent.type);
             if (event) {
                 if (event.effect === 'click_multiplier' || event.effect === 'all_multiplier' || event.effect === 'time_multiplier') {
                     earnAmount *= event.value;
                 }
+            }
+        }
+        
+        // Apply critical clicks (10% chance for 5x)
+        let isCritical = false;
+        if (this.gameState.shopPurchases['critical_clicks'] && Math.random() < 0.1) {
+            earnAmount *= 5;
+            isCritical = true;
+        }
+        
+        // Apply click combo system (rapid clicking builds multiplier)
+        if (this.gameState.shopPurchases['click_combo']) {
+            const now = Date.now();
+            const timeSinceLastClick = now - this.clickCombo.lastClickTime;
+            
+            if (timeSinceLastClick < 500) { // Less than 500ms = combo continues
+                this.clickCombo.count = Math.min(this.clickCombo.count + 1, 50); // Max 50 hits
+                this.clickCombo.multiplier = Math.min(1 + (this.clickCombo.count * 0.08), 5); // Max 5x
+            } else {
+                // Combo expired
+                this.clickCombo.count = 1;
+                this.clickCombo.multiplier = 1;
+            }
+            
+            this.clickCombo.lastClickTime = now;
+            earnAmount *= this.clickCombo.multiplier;
+            
+            // Show combo multiplier
+            if (this.clickCombo.multiplier > 1) {
+                this.showComboIndicator(this.clickCombo.multiplier);
             }
         }
         
@@ -786,7 +826,7 @@ class IdleClickerGame {
         
         // Floating number animation (show actual earned amount with multipliers)
         if (this.config.ui.animations.floatingNumbers) {
-            this.createFloatingNumber(e.clientX, e.clientY, earnAmount);
+            this.createFloatingNumber(e.clientX, e.clientY, earnAmount, isCritical);
         }
         
         // Particle effects
@@ -876,18 +916,56 @@ class IdleClickerGame {
         }, 3000);
     }
 
-    createFloatingNumber(x, y, value) {
+    createFloatingNumber(x, y, value, isCritical = false) {
         const floatingNumber = document.createElement('div');
-        floatingNumber.className = 'floating-number';
-        floatingNumber.textContent = '+' + this.formatNumber(value);
+        floatingNumber.className = 'floating-number' + (isCritical ? ' critical' : '');
+        floatingNumber.textContent = (isCritical ? '💥 CRIT! ' : '+') + this.formatNumber(value);
         floatingNumber.style.left = x + 'px';
         floatingNumber.style.top = y + 'px';
+        
+        if (isCritical) {
+            floatingNumber.style.fontSize = '24px';
+            floatingNumber.style.color = '#ff6b6b';
+            floatingNumber.style.fontWeight = 'bold';
+        }
         
         document.getElementById('floating-numbers').appendChild(floatingNumber);
         
         setTimeout(() => {
             floatingNumber.remove();
         }, 1000);
+    }
+    
+    showComboIndicator(multiplier) {
+        const combo = document.getElementById('combo-indicator');
+        if (!combo) {
+            // Create combo indicator if it doesn't exist
+            const comboDiv = document.createElement('div');
+            comboDiv.id = 'combo-indicator';
+            comboDiv.style.cssText = `
+                position: fixed;
+                top: 120px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, #ff6b6b 0%, #ffd43b 100%);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 20px;
+                font-size: 18px;
+                font-weight: bold;
+                z-index: 9999;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                animation: pulse 0.3s ease-in-out;
+            `;
+            comboDiv.textContent = `⚡ COMBO ${multiplier.toFixed(1)}x`;
+            document.body.appendChild(comboDiv);
+            
+            // Remove after 1 second
+            setTimeout(() => comboDiv.remove(), 1000);
+        } else {
+            // Update existing indicator
+            combo.textContent = `⚡ COMBO ${multiplier.toFixed(1)}x`;
+        }
     }
 
     updateClickPower() {
@@ -982,10 +1060,39 @@ class IdleClickerGame {
             totalMultiplier *= 1.2;
         }
         
+        // Apply Generator Synergy (each generator boosts the next)
+        if (this.gameState.shopPurchases['generator_synergy']) {
+            let synergyBonus = 1;
+            let previousGenLevel = 0;
+            this.config.generators.forEach(generator => {
+                const level = this.gameState.generators[generator.id]?.level || 0;
+                if (previousGenLevel > 0) {
+                    synergyBonus += previousGenLevel * 0.001; // Each level of previous gen = 0.1% bonus
+                }
+                previousGenLevel = level;
+            });
+            totalMultiplier *= synergyBonus;
+        }
+        
         // Apply prestige shop bonuses
         const prestigeProductionBoost = this.gameState.prestigeShopPurchases['prestige_production_boost'] || 0;
         if (prestigeProductionBoost > 0) {
             totalMultiplier *= (1 + (prestigeProductionBoost * 0.25)); // +25% per level
+        }
+        
+        // Apply prestige milestone boost
+        const prestigeMilestoneBoost = this.gameState.prestigeShopPurchases['prestige_milestone_power'] || 0;
+        if (prestigeMilestoneBoost > 0 && this.config.milestones?.enabled) {
+            // Enhance all milestone bonuses by 50% per level
+            let milestoneEnhancement = 0;
+            this.config.milestones.list.forEach(milestone => {
+                if (this.gameState.milestones[milestone.id]) {
+                    milestoneEnhancement += milestone.bonus * (prestigeMilestoneBoost * 0.5);
+                }
+            });
+            if (milestoneEnhancement > 0) {
+                totalMultiplier *= (1 + milestoneEnhancement);
+            }
         }
         
         return totalMultiplier;
@@ -2953,7 +3060,14 @@ class IdleClickerGame {
                         autoClickerProduction = clicksPerSec * this.gameState.clickPower;
                     }
                     
-                    const totalProduction = production + autoClickerProduction;
+                    let totalProduction = production + autoClickerProduction;
+                    
+                    // Apply prestige offline boost (+25% per level)
+                    const prestigeOfflineBoost = this.gameState.prestigeShopPurchases['prestige_offline_boost'] || 0;
+                    if (prestigeOfflineBoost > 0) {
+                        totalProduction *= (1 + (prestigeOfflineBoost * 0.25));
+                    }
+                    
                     const offlineEarnings = totalProduction * offlineTime;
                     
                     // Only give offline earnings if there's actual production
@@ -3082,11 +3196,16 @@ class IdleClickerGame {
     
     handleInstantEvent(event) {
         // Handle instant events (meteor shower, treasure chest, gem goblin)
+        console.log(`🎰 Handling instant event: ${event.name}`);
+        
         const banner = document.getElementById('lucky-event-banner');
         const eventIcon = document.getElementById('event-icon');
         const eventTextContainer = document.getElementById('event-text-container');
         
-        if (!banner || !eventIcon || !eventTextContainer) return;
+        if (!banner || !eventIcon || !eventTextContainer) {
+            console.error('❌ Lucky event banner elements not found!');
+            return;
+        }
         
         let amount = 0;
         

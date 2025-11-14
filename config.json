@@ -831,12 +831,67 @@
       {
         "id": "quick_save",
         "name": "Quick Save",
-        "description": "Add a manual save button for instant saves",
+        "description": "Manual save button (always available)",
         "icon": "💾",
-        "cost": 100000,
-        "purchased": false,
+        "cost": 0,
+        "purchased": true,
         "effect": "feature",
         "value": "quick_save",
+        "type": "feature"
+      },
+      {
+        "id": "export_import",
+        "name": "Save Management",
+        "description": "Export and import your save data",
+        "icon": "📦",
+        "cost": 0,
+        "purchased": true,
+        "effect": "feature",
+        "value": "export_import",
+        "type": "feature"
+      },
+      {
+        "id": "hotkeys",
+        "name": "Keyboard Shortcuts",
+        "description": "Use keyboard shortcuts to play faster (always available)",
+        "icon": "⌨️",
+        "cost": 0,
+        "purchased": true,
+        "effect": "feature",
+        "value": "hotkeys",
+        "type": "feature"
+      },
+      {
+        "id": "number_notation",
+        "name": "Number Format Options",
+        "description": "Choose between Suffix, Scientific, Engineering, or Full number display",
+        "icon": "🔢",
+        "cost": 250000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "number_format",
+        "type": "feature"
+      },
+      {
+        "id": "advanced_tooltips",
+        "name": "Advanced Tooltips",
+        "description": "Show detailed information on hover for all upgrades",
+        "icon": "💬",
+        "cost": 150000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "tooltips",
+        "type": "feature"
+      },
+      {
+        "id": "particle_effects",
+        "name": "Particle Effects",
+        "description": "Visual effects when clicking the gem",
+        "icon": "✨",
+        "cost": 200000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "particles",
         "type": "feature"
       },
       {

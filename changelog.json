@@ -1,9 +1,29 @@
 {
-  "currentVersion": "v1.7.1",
-  "currentDescription": "Critical bug fixes + 9 new shop items!",
+  "currentVersion": "v1.7.2",
+  "currentDescription": "MASSIVE UPDATE: 14 new shop items with full implementation!",
   "versions": [
     {
-      "version": "v1.7.1 (Latest)",
+      "version": "v1.7.2 (Latest)",
+      "title": "14 New Shop Items Implemented! 🎮",
+      "date": "November 14, 2025",
+      "changes": [
+        "💥 NEW: Critical Clicks - 10% chance for 5x damage (shows CRIT!)",
+        "⚡ NEW: Click Combo System - Rapid clicking builds up to 5x multiplier!",
+        "🔗 NEW: Generator Synergy - Each generator boosts the next",
+        "🌙 NEW: Eternal Earnings (Prestige) - +25% offline production per level",
+        "🏆 NEW: Milestone Master (Prestige) - Milestones 50% stronger per level",
+        "✨ NEW: 6 more feature items (Number Format, Tooltips, Particles, etc.)",
+        "💾 Quick Save is now FREE and always available!",
+        "📦 Export/Import is now FREE and always available!",
+        "⌨️ Keyboard Shortcuts shown as FREE (already available)",
+        "🛠️ FIXED: Generator base display NEVER changes (always shows config value)",
+        "⚠️ Lucky Fortune shows warning if Lucky Events not unlocked",
+        "📱 Share buttons use native share dialog on mobile!",
+        "✅ Share notifications now show properly"
+      ]
+    },
+    {
+      "version": "v1.7.1",
       "title": "Bug Fixes & New Shop Items! 🛍️",
       "date": "November 14, 2025",
       "changes": [
