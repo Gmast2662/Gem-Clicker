@@ -520,6 +520,15 @@
         "cost": 600000,
         "purchased": false,
         "value": "zen"
+      },
+      {
+        "id": "sound_pack_premium",
+        "name": "Premium Sound Pack",
+        "description": "High-quality arcade sound effects",
+        "icon": "🎧",
+        "cost": 1500000,
+        "purchased": false,
+        "value": "premium"
       }
     ]
   },

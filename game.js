@@ -92,9 +92,9 @@ class IdleClickerGame {
     
     async loadAudioFiles() {
         console.log('🎵 Loading audio files...');
-        this.audioBuffers.click = await this.loadAudioFile('sounds/mixkit-game-click-1114.wav');
-        this.audioBuffers.buy = await this.loadAudioFile('sounds/mixkit-arcade-game-jump-coin-216.wav');
-        this.audioBuffers.achievement = await this.loadAudioFile('sounds/mixkit-unlock-new-item-game-notification-254.wav');
+        this.audioBuffers.click = await this.loadAudioFile('sounds/arcade click.mp3');
+        this.audioBuffers.buy = await this.loadAudioFile('sounds/arcade buy.mp3');
+        this.audioBuffers.achievement = await this.loadAudioFile('sounds/arcade achievement.mp3');
         console.log('✅ Audio files loaded!');
     }
     

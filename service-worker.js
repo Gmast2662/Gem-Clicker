@@ -16,9 +16,9 @@ const urlsToCache = [
     './version.json',
     './favicon.svg',
     './manifest.json',
-    './sounds/mixkit-game-click-1114.wav',
-    './sounds/mixkit-arcade-game-jump-coin-216.wav',
-    './sounds/mixkit-unlock-new-item-game-notification-254.wav'
+    './sounds/arcade click.mp3',
+    './sounds/arcade buy.mp3',
+    './sounds/arcade achievement.mp3'
 ];
 
 // Install event - cache all resources
