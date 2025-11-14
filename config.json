@@ -466,6 +466,24 @@
         "cost": 750000,
         "purchased": false,
         "value": "soft"
+      },
+      {
+        "id": "sound_pack_epic",
+        "name": "Epic Sound Pack",
+        "description": "Powerful and dramatic sound effects",
+        "icon": "⚔️",
+        "cost": 1000000,
+        "purchased": false,
+        "value": "epic"
+      },
+      {
+        "id": "sound_pack_nature",
+        "name": "Nature Sound Pack",
+        "description": "Calming natural ambient sounds",
+        "icon": "🌿",
+        "cost": 850000,
+        "purchased": false,
+        "value": "nature"
       }
     ]
   },

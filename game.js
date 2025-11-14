@@ -63,7 +63,8 @@ class IdleClickerGame {
             theme: 'dark',
             premiumTheme: 'none',
             gemSkin: 'default',
-            particleEffect: 'default'
+            particleEffect: 'default',
+            soundPack: 'default'
         };
         this.loadSettings();
     }
@@ -86,30 +87,49 @@ class IdleClickerGame {
         gainNode.connect(this.audioContext.destination);
         
         const volume = this.settings.soundVolume;
+        const soundPack = this.settings.soundPack || 'default';
         
-        switch(type) {
-            case 'click':
-                oscillator.frequency.value = 800;
-                gainNode.gain.setValueAtTime(0.1 * volume, this.audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, this.audioContext.currentTime + 0.1);
-                oscillator.start(this.audioContext.currentTime);
-                oscillator.stop(this.audioContext.currentTime + 0.1);
-                break;
-            case 'buy':
-                oscillator.frequency.value = 523.25; // C5
-                gainNode.gain.setValueAtTime(0.15 * volume, this.audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, this.audioContext.currentTime + 0.2);
-                oscillator.start(this.audioContext.currentTime);
-                oscillator.stop(this.audioContext.currentTime + 0.2);
-                break;
-            case 'achievement':
-                oscillator.frequency.value = 880; // A5
-                gainNode.gain.setValueAtTime(0.2 * volume, this.audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, this.audioContext.currentTime + 0.5);
-                oscillator.start(this.audioContext.currentTime);
-                oscillator.stop(this.audioContext.currentTime + 0.5);
-                break;
-        }
+        // Get sound parameters based on pack and type
+        const soundParams = this.getSoundParams(type, soundPack);
+        
+        oscillator.type = soundParams.waveType;
+        oscillator.frequency.value = soundParams.frequency;
+        gainNode.gain.setValueAtTime(soundParams.volume * volume, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01 * volume, this.audioContext.currentTime + soundParams.duration);
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + soundParams.duration);
+    }
+    
+    getSoundParams(type, pack) {
+        const soundLibrary = {
+            default: {
+                click: { frequency: 800, volume: 0.1, duration: 0.1, waveType: 'sine' },
+                buy: { frequency: 523.25, volume: 0.15, duration: 0.2, waveType: 'sine' },
+                achievement: { frequency: 880, volume: 0.2, duration: 0.5, waveType: 'sine' }
+            },
+            retro: {
+                click: { frequency: 1000, volume: 0.12, duration: 0.05, waveType: 'square' },
+                buy: { frequency: 600, volume: 0.18, duration: 0.15, waveType: 'square' },
+                achievement: { frequency: 1200, volume: 0.25, duration: 0.3, waveType: 'square' }
+            },
+            soft: {
+                click: { frequency: 600, volume: 0.08, duration: 0.15, waveType: 'triangle' },
+                buy: { frequency: 400, volume: 0.12, duration: 0.25, waveType: 'triangle' },
+                achievement: { frequency: 700, volume: 0.15, duration: 0.6, waveType: 'triangle' }
+            },
+            epic: {
+                click: { frequency: 900, volume: 0.15, duration: 0.12, waveType: 'sawtooth' },
+                buy: { frequency: 650, volume: 0.2, duration: 0.25, waveType: 'sawtooth' },
+                achievement: { frequency: 1000, volume: 0.3, duration: 0.4, waveType: 'sawtooth' }
+            },
+            nature: {
+                click: { frequency: 700, volume: 0.09, duration: 0.13, waveType: 'sine' },
+                buy: { frequency: 450, volume: 0.14, duration: 0.22, waveType: 'sine' },
+                achievement: { frequency: 800, volume: 0.18, duration: 0.55, waveType: 'sine' }
+            }
+        };
+        
+        return soundLibrary[pack]?.[type] || soundLibrary.default[type];
     }
     
     loadSettings() {
@@ -341,6 +361,9 @@ class IdleClickerGame {
         document.getElementById('admin-set-prestige-count').addEventListener('click', () => this.adminSetPrestigeCount());
         document.getElementById('admin-set-rebirth').addEventListener('click', () => this.adminSetRebirth());
         document.getElementById('admin-instant-rebirth').addEventListener('click', () => this.adminInstantRebirth());
+        // Master unlock everything button
+        document.getElementById('admin-unlock-everything')?.addEventListener('click', () => this.adminUnlockEverything());
+        
         document.getElementById('admin-unlock-all').addEventListener('click', () => this.adminUnlockAllAchievements());
         document.getElementById('admin-reset-achievements').addEventListener('click', () => this.adminResetAchievements());
         document.getElementById('admin-unlock-shop').addEventListener('click', () => this.adminUnlockAllShop());
@@ -412,6 +435,16 @@ class IdleClickerGame {
                 this.settings.particleEffect = e.target.value;
                 this.saveSettings();
                 // No need to call applyCosmetics here - particle effects apply on next click
+            });
+        }
+        
+        const soundPackSelect = document.getElementById('sound-pack-select');
+        if (soundPackSelect) {
+            soundPackSelect.addEventListener('change', (e) => {
+                this.settings.soundPack = e.target.value;
+                this.saveSettings();
+                // Play test sound with new pack
+                this.playSound('achievement');
             });
         }
         
@@ -1714,6 +1747,7 @@ class IdleClickerGame {
             }
         }
         
+        // Sound pack is applied automatically in playSound() method
         // Particle effects are applied in createParticles() based on this.settings.particleEffect
     }
     
@@ -1773,6 +1807,25 @@ class IdleClickerGame {
             });
             
             particleEffectSelect.value = this.settings.particleEffect;
+        }
+        
+        // Update sound pack dropdown
+        const soundPackSelect = document.getElementById('sound-pack-select');
+        if (soundPackSelect) {
+            soundPackSelect.innerHTML = '<option value="default">🎵 Default Sounds</option>';
+            
+            const soundItems = (this.config.cosmetics?.sounds || []).filter(item => 
+                this.gameState.shopPurchases[item.id]
+            );
+            
+            soundItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.textContent = `${item.icon} ${item.name}`;
+                soundPackSelect.appendChild(option);
+            });
+            
+            soundPackSelect.value = this.settings.soundPack;
         }
     }
     
@@ -3028,11 +3081,12 @@ class IdleClickerGame {
     adminUnlockAllCosmetics() {
         if (!confirm('Unlock all cosmetics?')) return;
         
-        // Get all cosmetic items
+        // Get all cosmetic items (including sounds!)
         const allCosmetics = [
             ...(this.config.cosmetics?.themes || []),
             ...(this.config.cosmetics?.skins || []),
-            ...(this.config.cosmetics?.particles || [])
+            ...(this.config.cosmetics?.particles || []),
+            ...(this.config.cosmetics?.sounds || [])
         ];
         
         allCosmetics.forEach(item => {
@@ -3051,11 +3105,12 @@ class IdleClickerGame {
     adminResetCosmetics() {
         if (!confirm('Reset all cosmetic purchases?')) return;
         
-        // Get all cosmetic items
+        // Get all cosmetic items (including sounds!)
         const allCosmetics = [
             ...(this.config.cosmetics?.themes || []),
             ...(this.config.cosmetics?.skins || []),
-            ...(this.config.cosmetics?.particles || [])
+            ...(this.config.cosmetics?.particles || []),
+            ...(this.config.cosmetics?.sounds || [])
         ];
         
         allCosmetics.forEach(item => {
@@ -3066,6 +3121,7 @@ class IdleClickerGame {
         this.settings.premiumTheme = 'none';
         this.settings.gemSkin = 'default';
         this.settings.particleEffect = 'default';
+        this.settings.soundPack = 'default';
         this.saveSettings();
         
         // Update UI
@@ -3075,6 +3131,46 @@ class IdleClickerGame {
         this.updateUI();
         this.playSound('achievement');
         console.log('✅ Admin: Reset all cosmetics');
+    }
+    
+    adminUnlockEverything() {
+        if (!confirm('Unlock EVERYTHING (Achievements, Shop, Cosmetics)? This is the master unlock!')) return;
+        
+        // Unlock all achievements
+        this.config.achievements.list.forEach(achievement => {
+            this.gameState.achievements[achievement.id] = true;
+        });
+        
+        // Unlock all shop items
+        this.config.shop.items.forEach(item => {
+            this.gameState.shopPurchases[item.id] = true;
+        });
+        
+        // Unlock all cosmetics
+        const allCosmetics = [
+            ...(this.config.cosmetics?.themes || []),
+            ...(this.config.cosmetics?.skins || []),
+            ...(this.config.cosmetics?.particles || []),
+            ...(this.config.cosmetics?.sounds || [])
+        ];
+        
+        allCosmetics.forEach(item => {
+            this.gameState.shopPurchases[item.id] = true;
+        });
+        
+        // Recalculate all bonuses
+        this.updateClickPower();
+        
+        // Update all UI elements
+        this.renderAchievements();
+        this.renderShop();
+        this.renderCosmetics();
+        this.updateSettingsDropdowns();
+        this.applyCosmetics();
+        this.applyShopEffects();
+        this.updateUI();
+        this.playSound('achievement');
+        console.log('🎉 Admin: UNLOCKED EVERYTHING!');
     }
     
     adminTriggerEvent(eventType) {
