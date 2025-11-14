@@ -665,9 +665,20 @@
                     .then(registration => {
                         console.log('✅ Service Worker registered:', registration.scope);
                         
-                        // Check for updates immediately on load
-                        console.log('🔍 Checking for updates immediately...');
-                        registration.update();
+                        // Check if there's already an update waiting
+                        if (registration.waiting) {
+                            newWorker = registration.waiting;
+                            console.log('🎉 Update already available!');
+                            showUpdateNotification();
+                        }
+                        
+                        // Check for updates immediately (with small delay to let registration complete)
+                        setTimeout(() => {
+                            console.log('🔍 Checking for updates...');
+                            registration.update().then(() => {
+                                console.log('✅ Update check complete');
+                            });
+                        }, 1000);
                         
                         // Listen for update events
                         registration.addEventListener('updatefound', () => {
@@ -675,18 +686,30 @@
                             console.log('📦 New version found, installing...');
                             
                             newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // New version available!
-                                    console.log('🎉 New version ready!');
-                                    showUpdateNotification();
+                                console.log(`📦 Service Worker state: ${newWorker.state}`);
+                                
+                                // Show notification when new version is ready
+                                if (newWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        // Update available (page already controlled by SW)
+                                        console.log('🎉 New version ready!');
+                                        showUpdateNotification();
+                                    } else {
+                                        // First install (no controller yet)
+                                        console.log('✅ First install complete');
+                                    }
+                                }
+                                
+                                if (newWorker.state === 'activated') {
+                                    console.log('✅ Service Worker activated');
                                 }
                             });
                         });
                         
                         // Also check for updates every 5 minutes (in case user keeps page open)
                         setInterval(() => {
-                            registration.update();
                             console.log('🔍 Periodic update check...');
+                            registration.update();
                         }, 300000); // 5 minutes
                     })
                     .catch(error => {
@@ -699,6 +722,7 @@
                 const notification = document.getElementById('update-notification');
                 if (notification) {
                     notification.classList.remove('hidden');
+                    console.log('🔔 Update notification shown!');
                 }
             }
             
@@ -706,6 +730,7 @@
             const updateButton = document.getElementById('update-button');
             if (updateButton) {
                 updateButton.addEventListener('click', () => {
+                    console.log('🔄 User clicked update button');
                     if (newWorker) {
                         newWorker.postMessage({ type: 'SKIP_WAITING' });
                     }
@@ -715,7 +740,7 @@
             
             // Auto-reload when new service worker takes control
             navigator.serviceWorker.addEventListener('controllerchange', () => {
-                console.log('🔄 New version activated!');
+                console.log('🔄 New version activated - controller changed!');
             });
         }
     </script>
