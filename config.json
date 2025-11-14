@@ -343,6 +343,51 @@
         "cost": 1600000,
         "purchased": false,
         "value": "sunset-orange"
+      },
+      {
+        "id": "theme_crimson_red",
+        "name": "Crimson Fire Theme",
+        "description": "Blazing red fire theme",
+        "icon": "🔥",
+        "cost": 1800000,
+        "purchased": false,
+        "value": "crimson-red"
+      },
+      {
+        "id": "theme_midnight_blue",
+        "name": "Midnight Blue Theme",
+        "description": "Deep midnight sky theme",
+        "icon": "🌃",
+        "cost": 1900000,
+        "purchased": false,
+        "value": "midnight-blue"
+      },
+      {
+        "id": "theme_gold_rush",
+        "name": "Gold Rush Theme",
+        "description": "Luxurious golden theme",
+        "icon": "👑",
+        "cost": 2000000,
+        "purchased": false,
+        "value": "gold-rush"
+      },
+      {
+        "id": "theme_halloween",
+        "name": "Halloween Theme",
+        "description": "Spooky orange and black theme",
+        "icon": "🎃",
+        "cost": 1500000,
+        "purchased": false,
+        "value": "halloween"
+      },
+      {
+        "id": "theme_winter",
+        "name": "Winter Theme",
+        "description": "Frosty blue and white theme",
+        "icon": "❄️",
+        "cost": 1500000,
+        "purchased": false,
+        "value": "winter"
       }
     ],
     "skins": [
@@ -446,6 +491,33 @@
         "cost": 650000,
         "purchased": false,
         "value": "heart"
+      },
+      {
+        "id": "cosmic_particles",
+        "name": "Cosmic Particles",
+        "description": "Galaxy and cosmic dust effects",
+        "icon": "🌌",
+        "cost": 950000,
+        "purchased": false,
+        "value": "cosmic"
+      },
+      {
+        "id": "electric_particles",
+        "name": "Electric Particles",
+        "description": "Crackling electric bolts",
+        "icon": "⚡",
+        "cost": 1000000,
+        "purchased": false,
+        "value": "electric"
+      },
+      {
+        "id": "confetti_particles",
+        "name": "Confetti Particles",
+        "description": "Celebratory confetti burst",
+        "icon": "🎊",
+        "cost": 750000,
+        "purchased": false,
+        "value": "confetti"
       }
     ],
     "sounds": [

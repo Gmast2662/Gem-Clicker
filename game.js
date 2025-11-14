@@ -738,6 +738,15 @@ class IdleClickerGame {
             case 'heart':
                 colors = ['#FF69B4', '#FFB6C1', '#FFC0CB', '#FF1493', '#DB7093', '#C71585'];
                 break;
+            case 'cosmic':
+                colors = ['#9b59b6', '#8e44ad', '#3498db', '#2c3e50', '#34495e', '#1abc9c'];
+                break;
+            case 'electric':
+                colors = ['#00FFFF', '#00CED1', '#FFFF00', '#FFD700', '#FFFFFF', '#87CEEB'];
+                break;
+            case 'confetti':
+                colors = ['#FF6B6B', '#4ECDC4', '#45B7AA', '#FFA07A', '#98D8C8', '#F7DC6F'];
+                break;
         }
         
         for (let i = 0; i < count; i++) {
@@ -1758,7 +1767,8 @@ class IdleClickerGame {
         // Apply selected cosmetic items from settings
         
         // Clear all premium themes first
-        document.body.classList.remove('theme-deep-purple', 'theme-ocean-blue', 'theme-emerald-green', 'theme-sunset-orange');
+        document.body.classList.remove('theme-deep-purple', 'theme-ocean-blue', 'theme-emerald-green', 'theme-sunset-orange',
+            'theme-crimson-red', 'theme-midnight-blue', 'theme-gold-rush', 'theme-halloween', 'theme-winter');
         
         // Apply selected premium theme
         if (this.settings.premiumTheme !== 'none') {

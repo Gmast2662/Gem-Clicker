@@ -2538,6 +2538,66 @@ body.theme-sunset-orange .lucky-event-banner {
     border: 2px solid #ffb74d;
 }
 
+/* Crimson Fire Theme */
+body.theme-crimson-red {
+    background: linear-gradient(135deg, #3d0a0a 0%, #7d1212 100%);
+}
+
+body.theme-crimson-red .main-clicker {
+    background: radial-gradient(circle, #e74c3c, #c0392b);
+    box-shadow: 0 10px 40px rgba(231, 76, 60, 0.6), 0 0 100px rgba(231, 76, 60, 0.3);
+}
+
+/* Midnight Blue Theme */
+body.theme-midnight-blue {
+    background: linear-gradient(135deg, #0a0a3d 0%, #121252 100%);
+}
+
+body.theme-midnight-blue .main-clicker {
+    background: radial-gradient(circle, #3498db, #2980b9);
+    box-shadow: 0 10px 40px rgba(52, 152, 219, 0.6), 0 0 100px rgba(52, 152, 219, 0.3);
+}
+
+/* Gold Rush Theme */
+body.theme-gold-rush {
+    background: linear-gradient(135deg, #3d2d0a 0%, #7d5d12 100%);
+}
+
+body.theme-gold-rush .main-clicker {
+    background: radial-gradient(circle, #f1c40f, #f39c12);
+    box-shadow: 0 10px 40px rgba(241, 196, 15, 0.6), 0 0 100px rgba(241, 196, 15, 0.3);
+}
+
+/* Halloween Theme */
+body.theme-halloween {
+    background: linear-gradient(135deg, #1a0f00 0%, #3d2200 100%);
+}
+
+body.theme-halloween .main-clicker {
+    background: radial-gradient(circle, #ff6b00, #d35400);
+    box-shadow: 0 10px 40px rgba(255, 107, 0, 0.6), 0 0 100px rgba(255, 107, 0, 0.3);
+}
+
+/* Winter Theme */
+body.theme-winter {
+    background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+}
+
+body.theme-winter .text,
+body.theme-winter h1,
+body.theme-winter h2,
+body.theme-winter h3,
+body.theme-winter p,
+body.theme-winter span,
+body.theme-winter div {
+    color: #1a1a2e !important;
+}
+
+body.theme-winter .main-clicker {
+    background: radial-gradient(circle, #81d4fa, #4fc3f7);
+    box-shadow: 0 10px 40px rgba(129, 212, 250, 0.6), 0 0 100px rgba(129, 212, 250, 0.3);
+}
+
 /* ============================================
    COSMETIC CUSTOMIZATION - GEM SKINS
    ============================================ */
