@@ -22,6 +22,7 @@ class IdleClickerGame {
             generatorMultipliers: {},
             autoClickerLevel: 0,
             shopPurchases: {},
+            prestigeShopPurchases: {},
             milestones: {},
             dailyReward: {
                 lastClaim: 0,
@@ -389,6 +390,14 @@ class IdleClickerGame {
             });
         });
         
+        // Shop category buttons
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
+                this.switchShopCategory(category);
+            });
+        });
+        
         // Control buttons
         document.getElementById('save-button').addEventListener('click', () => this.saveGame(true));
         document.getElementById('reset-button').addEventListener('click', () => this.confirmReset());
@@ -548,6 +557,54 @@ class IdleClickerGame {
         if (this.updateInterval) {
             clearInterval(this.updateInterval);
             this.updateInterval = null;
+        }
+    }
+    
+    switchTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Remove active from all tab buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Show selected tab
+        const selectedTab = document.getElementById(`${tabName}-tab`);
+        if (selectedTab) {
+            selectedTab.classList.add('active');
+        }
+        
+        // Activate button
+        const selectedButton = document.querySelector(`[data-tab="${tabName}"]`);
+        if (selectedButton) {
+            selectedButton.classList.add('active');
+        }
+    }
+    
+    switchShopCategory(category) {
+        // Hide all shop categories
+        document.querySelectorAll('.shop-category-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Remove active from all category buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Show selected category
+        const selectedContent = document.getElementById(`shop-${category}`);
+        if (selectedContent) {
+            selectedContent.classList.add('active');
+        }
+        
+        // Activate button
+        const selectedButton = document.querySelector(`[data-category="${category}"]`);
+        if (selectedButton) {
+            selectedButton.classList.add('active');
         }
     }
     
@@ -844,6 +901,12 @@ class IdleClickerGame {
             power *= 2;
         }
         
+        // Apply prestige shop bonuses
+        const prestigeClickBoost = this.gameState.prestigeShopPurchases['prestige_click_boost'] || 0;
+        if (prestigeClickBoost > 0) {
+            power *= (1 + (prestigeClickBoost * 0.5)); // +50% per level
+        }
+        
         this.gameState.clickPower = Math.floor(power);
     }
 
@@ -892,6 +955,12 @@ class IdleClickerGame {
         // Apply Gem Magnet shop upgrade
         if (this.gameState.shopPurchases['gem_magnet']) {
             totalMultiplier *= 1.2;
+        }
+        
+        // Apply prestige shop bonuses
+        const prestigeProductionBoost = this.gameState.prestigeShopPurchases['prestige_production_boost'] || 0;
+        if (prestigeProductionBoost > 0) {
+            totalMultiplier *= (1 + (prestigeProductionBoost * 0.25)); // +25% per level
         }
         
         return totalMultiplier;
@@ -1133,6 +1202,57 @@ class IdleClickerGame {
                 this.updateUI();
                 this.checkAchievements();
             }
+        }
+    }
+
+    buyShopItem(itemId) {
+        const item = this.config.shop.items.find(i => i.id === itemId);
+        if (!item || this.gameState.shopPurchases[itemId]) return;
+        
+        if (this.gameState.currency >= item.cost) {
+            this.gameState.currency -= item.cost;
+            this.gameState.shopPurchases[itemId] = true;
+            
+            this.playSound('achievement');
+            
+            // Recalculate powers/multipliers after shop purchase
+            this.updateClickPower();
+            
+            // Render shop
+            this.renderShop();
+            this.updateUI();
+            
+            // Show purchase notification
+            this.showNotification(`✅ Purchased: ${item.name}!`, 'success');
+        }
+    }
+    
+    buyPrestigeShopItem(itemId) {
+        const item = this.config.prestigeShop.items.find(i => i.id === itemId);
+        if (!item) return;
+        
+        const currentLevel = this.gameState.prestigeShopPurchases[itemId] || 0;
+        const cost = Math.floor(item.baseCost * Math.pow(item.costMultiplier, currentLevel));
+        
+        if (item.maxLevel && currentLevel >= item.maxLevel) return;
+        
+        if (this.gameState.prestigeCount >= cost) {
+            this.gameState.prestigeCount -= cost;
+            this.gameState.prestigeShopPurchases[itemId] = currentLevel + 1;
+            
+            this.playSound('achievement');
+            
+            // Recalculate powers/multipliers
+            this.updateClickPower();
+            
+            // Render prestige shop
+            this.renderPrestigeShop();
+            this.updateUI();
+            
+            // Show purchase notification
+            this.showNotification(`⭐ Upgraded: ${item.name} to Lv.${currentLevel + 1}!`, 'success');
+            
+            console.log(`⭐ Purchased prestige upgrade: ${item.name} Lv.${currentLevel + 1}`);
         }
     }
 
@@ -1588,15 +1708,28 @@ class IdleClickerGame {
     renderShop() {
         if (!this.config.shop?.enabled) return;
         
-        const container = document.getElementById('shop-container');
+        // Render each category
+        this.renderShopCategory('gameplay', 'shop-gameplay');
+        this.renderShopCategory('features', 'shop-features');
+        this.renderShopCategory('automation', 'shop-automation');
+        this.renderPrestigeShop();
+    }
+    
+    renderShopCategory(categoryType, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
         container.innerHTML = '';
         
-        // Filter for gameplay and feature items only
-        const shopItems = this.config.shop.items.filter(item => 
-            item.type === 'gameplay' || item.type === 'feature'
-        );
+        // Filter items by category type
+        const categoryItems = this.config.shop.items.filter(item => item.type === categoryType);
         
-        shopItems.forEach(item => {
+        if (categoryItems.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: #888;">No items in this category yet.</p>';
+            return;
+        }
+        
+        categoryItems.forEach(item => {
             const purchased = this.gameState.shopPurchases[item.id];
             const canAfford = this.gameState.currency >= item.cost;
             
@@ -1621,6 +1754,45 @@ class IdleClickerGame {
             }
             
             container.appendChild(shopItem);
+        });
+    }
+    
+    renderPrestigeShop() {
+        if (!this.config.prestigeShop?.enabled) return;
+        
+        const container = document.getElementById('shop-prestige');
+        if (!container) return;
+        
+        container.innerHTML = '<h3 style="text-align: center; color: #4ecdc4; margin-bottom: 15px;">⭐ Spend Prestige Points on Permanent Upgrades</h3>';
+        
+        this.config.prestigeShop.items.forEach(item => {
+            const currentLevel = this.gameState.prestigeShopPurchases[item.id] || 0;
+            const cost = Math.floor(item.baseCost * Math.pow(item.costMultiplier, currentLevel));
+            const canAfford = this.gameState.prestigeCount >= cost;
+            const maxed = item.maxLevel && currentLevel >= item.maxLevel;
+            
+            const prestigeItem = document.createElement('div');
+            prestigeItem.className = `upgrade-item ${maxed ? 'purchased' : (!canAfford ? 'disabled' : '')}`;
+            prestigeItem.style.cursor = maxed ? 'default' : 'pointer';
+            prestigeItem.innerHTML = `
+                <div class="upgrade-icon">${item.icon}</div>
+                <div class="upgrade-info">
+                    <div class="upgrade-name">${item.name} ${maxed ? '(MAX)' : `Lv.${currentLevel}`}</div>
+                    <div class="upgrade-description">${item.description}</div>
+                    ${currentLevel > 0 ? `<div style="color: #4ecdc4; font-size: 0.9em;">Current Bonus: ${this.formatNumber(item.value * currentLevel)}${item.effect.includes('boost') || item.effect.includes('chance') ? '%' : ''}</div>` : ''}
+                </div>
+                <div class="upgrade-cost">${maxed ? 'MAXED' : cost + ' ⭐'}</div>
+            `;
+            
+            if (!maxed) {
+                prestigeItem.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.buyPrestigeShopItem(item.id);
+                });
+            }
+            
+            container.appendChild(prestigeItem);
         });
     }
     
