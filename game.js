@@ -202,7 +202,7 @@ class IdleClickerGame {
                 this.settings = { ...this.settings, ...JSON.parse(saved) };
             }
         } catch (e) {
-            console.log('Could not load settings');
+            console.error('❌ Could not load settings:', e);
         }
     }
     
@@ -210,7 +210,7 @@ class IdleClickerGame {
         try {
             localStorage.setItem('gemClickerSettings', JSON.stringify(this.settings));
         } catch (e) {
-            console.log('Could not save settings');
+            console.error('❌ Could not save settings:', e);
         }
     }
 
@@ -1017,26 +1017,15 @@ class IdleClickerGame {
 
     buyGenerator(generatorId) {
         const generator = this.config.generators.find(g => g.id === generatorId);
-        if (!generator) {
-            console.log('Generator not found:', generatorId);
-            return;
-        }
+        if (!generator) return;
         
         const currentLevel = this.gameState.generators[generatorId].level;
         const cost = this.calculateCost(generator.baseCost, generator.costMultiplier, currentLevel);
-        
-        console.log(`Attempting to buy ${generator.name}:`, {
-            currentCurrency: this.gameState.currency,
-            cost: cost,
-            canAfford: this.gameState.currency >= cost
-        });
         
         if (this.gameState.currency >= cost) {
             if (generator.maxLevel === null || currentLevel < generator.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.generators[generatorId].level++;
-                
-                console.log(`✅ Purchased ${generator.name}! New level: ${this.gameState.generators[generatorId].level}`);
                 
                 // Play buy sound
                 this.playSound('buy');
@@ -1046,33 +1035,20 @@ class IdleClickerGame {
                 this.updateUI();
                 this.checkAchievements();
             }
-        } else {
-            console.log(`❌ Cannot afford ${generator.name}. Need ${cost - this.gameState.currency} more gems.`);
         }
     }
 
     buyClickUpgrade(upgradeId) {
         const upgrade = this.config.clickUpgrades.find(u => u.id === upgradeId);
-        if (!upgrade) {
-            console.log('Upgrade not found:', upgradeId);
-            return;
-        }
+        if (!upgrade) return;
         
         const currentLevel = this.gameState.clickUpgrades[upgradeId].level;
         const cost = this.calculateCost(upgrade.baseCost, upgrade.costMultiplier, currentLevel);
-        
-        console.log(`Attempting to buy ${upgrade.name}:`, {
-            currentCurrency: this.gameState.currency,
-            cost: cost,
-            canAfford: this.gameState.currency >= cost
-        });
         
         if (this.gameState.currency >= cost) {
             if (upgrade.maxLevel === null || currentLevel < upgrade.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.clickUpgrades[upgradeId].level++;
-                
-                console.log(`✅ Purchased ${upgrade.name}! New level: ${this.gameState.clickUpgrades[upgradeId].level}`);
                 
                 // Play buy sound
                 this.playSound('buy');
@@ -1083,17 +1059,12 @@ class IdleClickerGame {
                 this.updateUI();
                 this.checkAchievements();
             }
-        } else {
-            console.log(`❌ Cannot afford ${upgrade.name}. Need ${cost - this.gameState.currency} more gems.`);
         }
     }
     
     buyClickMultiplier(multiplierId) {
         const multiplier = this.config.clickMultipliers.find(m => m.id === multiplierId);
-        if (!multiplier) {
-            console.log('Click multiplier not found:', multiplierId);
-            return;
-        }
+        if (!multiplier) return;
         
         const currentLevel = this.gameState.clickMultipliers[multiplierId].level;
         const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, currentLevel);
@@ -1102,8 +1073,6 @@ class IdleClickerGame {
             if (multiplier.maxLevel === null || currentLevel < multiplier.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.clickMultipliers[multiplierId].level++;
-                
-                console.log(`✅ Purchased ${multiplier.name}! New level: ${this.gameState.clickMultipliers[multiplierId].level}`);
                 
                 // Play buy sound
                 this.playSound('buy');
@@ -1114,17 +1083,12 @@ class IdleClickerGame {
                 this.updateUI();
                 this.checkAchievements();
             }
-        } else {
-            console.log(`❌ Cannot afford ${multiplier.name}. Need ${cost - this.gameState.currency} more gems.`);
         }
     }
     
     buyGeneratorMultiplier(multiplierId) {
         const multiplier = this.config.generatorMultipliers.find(m => m.id === multiplierId);
-        if (!multiplier) {
-            console.log('Generator multiplier not found:', multiplierId);
-            return;
-        }
+        if (!multiplier) return;
         
         const currentLevel = this.gameState.generatorMultipliers[multiplierId].level;
         const cost = this.calculateCost(multiplier.baseCost, multiplier.costMultiplier, currentLevel);
@@ -1133,8 +1097,6 @@ class IdleClickerGame {
             if (multiplier.maxLevel === null || currentLevel < multiplier.maxLevel) {
                 this.gameState.currency -= cost;
                 this.gameState.generatorMultipliers[multiplierId].level++;
-                
-                console.log(`✅ Purchased ${multiplier.name}! New level: ${this.gameState.generatorMultipliers[multiplierId].level}`);
                 
                 // Play buy sound
                 this.playSound('buy');
@@ -1145,8 +1107,6 @@ class IdleClickerGame {
                 this.updateUI();
                 this.checkAchievements();
             }
-        } else {
-            console.log(`❌ Cannot afford ${multiplier.name}. Need ${cost - this.gameState.currency} more gems.`);
         }
     }
 
@@ -1386,8 +1346,11 @@ class IdleClickerGame {
                 case 'total_earned':
                     unlocked = this.gameState.totalEarned >= req.value;
                     break;
+                case 'generator_level':
+                    unlocked = this.gameState.generators[req.generatorId]?.level >= req.value;
+                    break;
                 case 'generator_owned':
-                    unlocked = this.gameState.generators[req.id]?.level >= req.value;
+                    unlocked = this.gameState.generators[req.generatorId]?.level >= req.value;
                     break;
                 case 'currency':
                     unlocked = this.gameState.currency >= req.value;
@@ -1724,8 +1687,6 @@ class IdleClickerGame {
                 popup.classList.add('fade-out');
                 setTimeout(() => popup.remove(), 500);
             }, 3000);
-            
-            console.log(`✅ Purchased cosmetic: ${item.name}`);
         }
     }
     
@@ -1768,8 +1729,6 @@ class IdleClickerGame {
                 popup.classList.add('fade-out');
                 setTimeout(() => popup.remove(), 500);
             }, 3000);
-            
-            console.log(`✅ Purchased: ${item.name}`);
             
             // Apply shop effects
             this.applyShopEffects();
@@ -2555,7 +2514,6 @@ class IdleClickerGame {
                 // Handle offline progress
                 const offlineTime = (Date.now() - saveData.timestamp) / 1000; // seconds
                 
-                console.log(`Time since last save: ${offlineTime.toFixed(1)} seconds`);
                 
                 // Merge saved state with current state
                 this.gameState = {
@@ -2588,8 +2546,6 @@ class IdleClickerGame {
                         
                         // Show offline earnings popup
                         this.showOfflineEarningsPopup(offlineEarnings, offlineTime);
-                        
-                        console.log(`Welcome back! You earned ${this.formatNumber(offlineEarnings)} while away!`);
                     }
                 }
                 
@@ -2611,7 +2567,6 @@ class IdleClickerGame {
             this.gameState.luckyEvent.active = false;
             this.gameState.luckyEvent.type = null;
             document.getElementById('lucky-event-banner').style.display = 'none';
-            console.log('Lucky event ended!');
         }
         
         // Update event timer and info display (even if triggered by admin)
@@ -2728,13 +2683,10 @@ class IdleClickerGame {
     confirmReset() {
         const confirmed = confirm('⚠️ FINAL WARNING ⚠️\n\nReset ALL progress?\n\nThis will DELETE:\n✗ All gems\n✗ All generators\n✗ All upgrades\n✗ All prestige/rebirth\n✗ All achievements\n✗ ALL progress\n\nThis CANNOT be undone!\n\nClick OK to PERMANENTLY DELETE everything.');
         
-        if (!confirmed) {
-            console.log('Reset cancelled');
-            return;
-        }
+        if (!confirmed) return;
         
         try {
-            console.log('🔄 RESET INITIATED...');
+            console.log('🔄 RESETTING GAME...');
             
             // Flag to prevent auto-save during reset
             this.isResetting = true;
