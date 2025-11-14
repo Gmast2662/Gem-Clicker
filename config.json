@@ -454,7 +454,7 @@
         "name": "Retro Sound Pack",
         "description": "Classic 8-bit sound effects",
         "icon": "🎮",
-        "cost": 500000,
+        "cost": 400000,
         "purchased": false,
         "value": "retro"
       },
@@ -463,7 +463,7 @@
         "name": "Soft Sound Pack",
         "description": "Gentle and soothing sounds",
         "icon": "🔔",
-        "cost": 750000,
+        "cost": 500000,
         "purchased": false,
         "value": "soft"
       },
@@ -472,7 +472,7 @@
         "name": "Epic Sound Pack",
         "description": "Powerful and dramatic sound effects",
         "icon": "⚔️",
-        "cost": 1000000,
+        "cost": 900000,
         "purchased": false,
         "value": "epic"
       },
@@ -481,9 +481,45 @@
         "name": "Nature Sound Pack",
         "description": "Calming natural ambient sounds",
         "icon": "🌿",
-        "cost": 850000,
+        "cost": 550000,
         "purchased": false,
         "value": "nature"
+      },
+      {
+        "id": "sound_pack_industrial",
+        "name": "Industrial Sound Pack",
+        "description": "Industrial sounds for a modern feel",
+        "icon": "🏭",
+        "cost": 1000000,
+        "purchased": false,
+        "value": "industrial"
+      },
+      {
+        "id": "sound_pack_crystal",
+        "name": "Crystal Sound Pack",
+        "description": "Sharp electronic crystal sounds",
+        "icon": "💎",
+        "cost": 1250000,
+        "purchased": false,
+        "value": "crystal"
+      },
+      {
+        "id": "sound_pack_chime",
+        "name": "Chime Sound Pack",
+        "description": "Elegant chime and bell tones",
+        "icon": "🔔",
+        "cost": 1400000,
+        "purchased": false,
+        "value": "chime"
+      },
+      {
+        "id": "sound_pack_zen",
+        "name": "Zen Sound Pack",
+        "description": "Peaceful zen meditation tones",
+        "icon": "🧘",
+        "cost": 600000,
+        "purchased": false,
+        "value": "zen"
       }
     ]
   },
