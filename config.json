@@ -346,6 +346,28 @@
         "maxLevel": 5,
         "effect": "lucky_chance",
         "value": 0.1
+      },
+      {
+        "id": "prestige_offline_boost",
+        "name": "Eternal Earnings",
+        "description": "+25% offline production per level",
+        "icon": "🌙",
+        "baseCost": 8,
+        "costMultiplier": 2,
+        "maxLevel": 10,
+        "effect": "offline_boost",
+        "value": 0.25
+      },
+      {
+        "id": "prestige_milestone_power",
+        "name": "Milestone Master",
+        "description": "Milestone bonuses are 50% stronger per level",
+        "icon": "🏆",
+        "baseCost": 25,
+        "costMultiplier": 3,
+        "maxLevel": 5,
+        "effect": "milestone_boost",
+        "value": 0.5
       }
     ]
   },
@@ -805,6 +827,72 @@
         "effect": "automation",
         "value": "auto_claim",
         "type": "automation"
+      },
+      {
+        "id": "quick_save",
+        "name": "Quick Save",
+        "description": "Add a manual save button for instant saves",
+        "icon": "💾",
+        "cost": 100000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "quick_save",
+        "type": "feature"
+      },
+      {
+        "id": "dark_mode_pro",
+        "name": "Pro Themes",
+        "description": "Unlock 5 premium color themes (Ocean, Emerald, Sunset, Crimson, Midnight)",
+        "icon": "🎨",
+        "cost": 500000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "premium_themes",
+        "type": "feature"
+      },
+      {
+        "id": "statistics_expanded",
+        "name": "Expanded Statistics",
+        "description": "Show detailed per-generator stats and efficiency metrics",
+        "icon": "📊",
+        "cost": 350000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "expanded_stats",
+        "type": "feature"
+      },
+      {
+        "id": "click_combo",
+        "name": "Click Combo System",
+        "description": "Rapid clicking builds a combo multiplier (up to 5x)",
+        "icon": "⚡",
+        "cost": 1000000,
+        "purchased": false,
+        "effect": "click_combo",
+        "value": 5,
+        "type": "gameplay"
+      },
+      {
+        "id": "generator_synergy",
+        "name": "Generator Synergy",
+        "description": "Each generator type boosts the next by 10%",
+        "icon": "🔗",
+        "cost": 7500000,
+        "purchased": false,
+        "effect": "generator_synergy",
+        "value": 0.1,
+        "type": "gameplay"
+      },
+      {
+        "id": "critical_clicks",
+        "name": "Critical Clicks",
+        "description": "10% chance for clicks to deal 5x damage",
+        "icon": "💥",
+        "cost": 3000000,
+        "purchased": false,
+        "effect": "critical_chance",
+        "value": 0.1,
+        "type": "gameplay"
       }
     ]
   },

@@ -1582,12 +1582,12 @@ class IdleClickerGame {
             const canAfford = this.gameState.currency >= cost;
             const production = level * generator.baseProduction;
             
-            const prestigeBonus = this.config.prestige.enabled ? 
-                (1 + (this.gameState.prestigePoints * this.config.prestige.bonusPerPoint)) : 1;
-            const actualProduction = production * prestigeBonus;
+            // Calculate actual production with multipliers
+            const generatorMultiplier = this.calculateGeneratorMultiplier();
+            const actualProduction = production * generatorMultiplier;
             
-            // Show base production (what you get with 1 level) if not owned yet
-            const baseProductionDisplay = generator.baseProduction * prestigeBonus;
+            // Show TRUE base production (just the raw number from config) if not owned yet
+            const baseProductionDisplay = generator.baseProduction;
             
             const item = document.createElement('div');
             item.className = `upgrade-item ${!canAfford ? 'disabled' : ''}`;
@@ -3824,30 +3824,9 @@ class IdleClickerGame {
             return;
         }
         
-        // Handle instant events (like meteor shower)
-        if (event.effect === 'instant_gems') {
-            const instantGems = this.gameState.totalEarned * event.value; // 5% of total earned
-            this.gameState.currency += instantGems;
-            this.gameState.totalEarned += instantGems;
-            this.gameState.generatorEarned += instantGems;
-            
-            // Show popup notification
-            const popup = document.createElement('div');
-            popup.className = 'achievement-popup';
-            popup.innerHTML = `
-                <div class="achievement-popup-header">${event.icon} ${event.name}!</div>
-                <div class="achievement-popup-icon">${event.icon}</div>
-                <div class="achievement-popup-name">+${this.formatNumber(instantGems)} gems!</div>
-                <div class="achievement-popup-desc">Meteor shower bonus</div>
-            `;
-            document.body.appendChild(popup);
-            setTimeout(() => {
-                popup.classList.add('fade-out');
-                setTimeout(() => popup.remove(), 500);
-            }, 3000);
-            
-            this.gameState.luckyEvent.active = false;
-            this.playSound('achievement');
+        // Handle instant events (like meteor shower, treasure chest)
+        if (event.effect === 'instant_gems' || event.effect === 'goblin_visit') {
+            this.handleInstantEvent(event);
             return;
         }
         

@@ -1,9 +1,22 @@
 {
-  "currentVersion": "v1.7.0",
-  "currentDescription": "Major UX improvements: decimal numbers, native share dialog, Lucky Fortune requirements!",
+  "currentVersion": "v1.7.1",
+  "currentDescription": "Critical bug fixes + 9 new shop items!",
   "versions": [
     {
-      "version": "v1.7.0 (Latest)",
+      "version": "v1.7.1 (Latest)",
+      "title": "Bug Fixes & New Shop Items! 🛍️",
+      "date": "November 14, 2025",
+      "changes": [
+        "🛠️ FIXED: Generator base production no longer affected by click power upgrades!",
+        "🛠️ FIXED: Treasure Chest now shows correct event text (not meteor shower)",
+        "🛠️ FIXED: Gem Goblin notification should display properly",
+        "🛍️ NEW: 6 new regular shop items (Quick Save, Pro Themes, Expanded Stats, Click Combo, Generator Synergy, Critical Clicks)",
+        "⭐ NEW: 2 new prestige shop items (Eternal Earnings, Milestone Master)",
+        "🎯 Base generator production now always shows true config value (0.10/s stays 0.10/s)"
+      ]
+    },
+    {
+      "version": "v1.7.0",
       "title": "UX & Share Improvements! ✨",
       "date": "November 14, 2025",
       "changes": [
