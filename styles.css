@@ -2625,8 +2625,12 @@ body.theme-winter .main-clicker {
 }
 
 body.skin-ruby .main-clicker {
-    /* Diamond shape: top facets, middle, bottom point */
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+    /* Sharp spiky star/burst shape - aggressive and bold */
+    clip-path: polygon(
+        50% 0%, 58% 20%, 75% 15%, 65% 35%, 85% 45%, 60% 50%,
+        100% 70%, 65% 65%, 50% 100%, 35% 65%, 0% 70%, 40% 50%,
+        15% 45%, 35% 35%, 25% 15%, 42% 20%
+    );
     background: 
         /* Animated shimmer */
         linear-gradient(120deg, transparent 30%, rgba(255, 150, 150, 0.8) 50%, transparent 70%),
@@ -2663,7 +2667,11 @@ body.skin-ruby .main-clicker::before {
         linear-gradient(135deg, rgba(255, 200, 200, 0.5) 0%, transparent 25%),
         linear-gradient(-135deg, rgba(255, 200, 200, 0.5) 0%, transparent 25%),
         linear-gradient(180deg, transparent 40%, rgba(139, 0, 0, 0.4) 80%);
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+    clip-path: polygon(
+        50% 0%, 58% 20%, 75% 15%, 65% 35%, 85% 45%, 60% 50%,
+        100% 70%, 65% 65%, 50% 100%, 35% 65%, 0% 70%, 40% 50%,
+        15% 45%, 35% 35%, 25% 15%, 42% 20%
+    );
     pointer-events: none;
 }
 
@@ -2721,7 +2729,9 @@ body.skin-ruby .floating-number {
 }
 
 body.skin-sapphire .main-clicker {
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+    /* Smooth oval/ellipse shape - elegant and flowing */
+    clip-path: ellipse(45% 48% at 50% 50%);
+    border-radius: 50%;
     background: 
         linear-gradient(120deg, transparent 30%, rgba(150, 200, 255, 0.9) 50%, transparent 70%),
         linear-gradient(160deg, #5dade2 0%, #3498db 20%, transparent 40%),
@@ -2750,10 +2760,11 @@ body.skin-sapphire .main-clicker::before {
     right: 0;
     bottom: 0;
     background: 
-        linear-gradient(135deg, rgba(200, 230, 255, 0.5) 0%, transparent 25%),
-        linear-gradient(-135deg, rgba(200, 230, 255, 0.5) 0%, transparent 25%),
+        radial-gradient(ellipse at 30% 30%, rgba(200, 230, 255, 0.7) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(200, 230, 255, 0.4) 0%, transparent 50%),
         linear-gradient(180deg, transparent 40%, rgba(26, 84, 144, 0.4) 80%);
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+    clip-path: ellipse(45% 48% at 50% 50%);
+    border-radius: 50%;
     pointer-events: none;
 }
 
@@ -2809,7 +2820,8 @@ body.skin-sapphire .floating-number {
 }
 
 body.skin-emerald .main-clicker {
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+    /* Octagonal shape - geometric and precise */
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     background: 
         linear-gradient(120deg, transparent 30%, rgba(150, 255, 180, 0.9) 50%, transparent 70%),
         linear-gradient(160deg, #58d68d 0%, #28b463 20%, transparent 40%),
@@ -2838,10 +2850,10 @@ body.skin-emerald .main-clicker::before {
     right: 0;
     bottom: 0;
     background: 
-        linear-gradient(135deg, rgba(200, 255, 220, 0.5) 0%, transparent 25%),
-        linear-gradient(-135deg, rgba(200, 255, 220, 0.5) 0%, transparent 25%),
+        linear-gradient(135deg, rgba(200, 255, 220, 0.5) 0%, transparent 35%),
+        linear-gradient(225deg, rgba(200, 255, 220, 0.5) 0%, transparent 35%),
         linear-gradient(180deg, transparent 40%, rgba(20, 90, 50, 0.4) 80%);
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
     pointer-events: none;
 }
 
@@ -2897,7 +2909,8 @@ body.skin-emerald .floating-number {
 }
 
 body.skin-amethyst .main-clicker {
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+    /* Hexagonal crystal shape - mystical and magical */
+    clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
     background: 
         linear-gradient(120deg, transparent 30%, rgba(220, 180, 255, 0.9) 50%, transparent 70%),
         linear-gradient(160deg, #bb8fce 0%, #9b59b6 20%, transparent 40%),
@@ -2926,10 +2939,10 @@ body.skin-amethyst .main-clicker::before {
     right: 0;
     bottom: 0;
     background: 
-        linear-gradient(135deg, rgba(230, 200, 255, 0.5) 0%, transparent 25%),
-        linear-gradient(-135deg, rgba(230, 200, 255, 0.5) 0%, transparent 25%),
-        linear-gradient(180deg, transparent 40%, rgba(91, 44, 111, 0.4) 80%);
-    clip-path: polygon(50% 0%, 75% 15%, 100% 40%, 75% 55%, 50% 100%, 25% 55%, 0% 40%, 25% 15%);
+        linear-gradient(60deg, rgba(230, 200, 255, 0.6) 0%, transparent 40%),
+        linear-gradient(120deg, rgba(230, 200, 255, 0.6) 0%, transparent 40%),
+        linear-gradient(180deg, transparent 40%, rgba(91, 44, 111, 0.5) 80%);
+    clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
     pointer-events: none;
 }
 
