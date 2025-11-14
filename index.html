@@ -656,6 +656,42 @@
 
     <script src="game.js"></script>
     <script>
+        // Direct version check (bypasses service worker for immediate detection)
+        async function checkVersionDirectly() {
+            try {
+                // Get current version from the page's version.json (cached)
+                const currentVersion = window.game?.version || { version: '1.6.0', buildNumber: 106 };
+                
+                // Fetch latest version from server (bypassing cache)
+                const response = await fetch(`version.json?v=${Date.now()}`);
+                const latestVersion = await response.json();
+                
+                console.log(`📊 Current: v${currentVersion.version} (build ${currentVersion.buildNumber})`);
+                console.log(`📊 Server: v${latestVersion.version} (build ${latestVersion.buildNumber})`);
+                
+                // Compare build numbers
+                if (latestVersion.buildNumber > currentVersion.buildNumber) {
+                    console.log('🎉 NEW VERSION AVAILABLE! Showing notification...');
+                    showUpdateNotification();
+                    return true;
+                } else {
+                    console.log('✅ Already on latest version');
+                    return false;
+                }
+            } catch (error) {
+                console.log('⚠️ Version check failed:', error);
+                return false;
+            }
+        }
+        
+        // Check for updates immediately on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('🔍 Direct version check starting...');
+                checkVersionDirectly();
+            }, 2000); // 2 second delay to let game initialize
+        });
+        
         // Register service worker for offline support and PWA
         if ('serviceWorker' in navigator) {
             let newWorker;
