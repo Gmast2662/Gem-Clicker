@@ -1259,8 +1259,8 @@ class IdleClickerGame {
         
         if (item.maxLevel && currentLevel >= item.maxLevel) return;
         
-        if (this.gameState.prestigeCount >= cost) {
-            this.gameState.prestigeCount -= cost;
+        if (this.gameState.prestigePoints >= cost) {
+            this.gameState.prestigePoints -= cost;
             this.gameState.prestigeShopPurchases[itemId] = currentLevel + 1;
             
             this.playSound('achievement');
@@ -1792,7 +1792,7 @@ class IdleClickerGame {
         this.config.prestigeShop.items.forEach(item => {
             const currentLevel = this.gameState.prestigeShopPurchases[item.id] || 0;
             const cost = Math.floor(item.baseCost * Math.pow(item.costMultiplier, currentLevel));
-            const canAfford = this.gameState.prestigeCount >= cost;
+            const canAfford = this.gameState.prestigePoints >= cost;
             const maxed = item.maxLevel && currentLevel >= item.maxLevel;
             
             const prestigeItem = document.createElement('div');
@@ -2166,35 +2166,64 @@ class IdleClickerGame {
     }
     
     updateShopAffordability() {
-        // Update affordability of all shop items without re-rendering
+        // Only update if shop tab is active to prevent unnecessary work
+        const shopTab = document.getElementById('shop-tab');
+        if (!shopTab || shopTab.style.display === 'none') return;
+        
+        // Update regular shop items (gems)
         const allShopItems = document.querySelectorAll('#shop-gameplay .upgrade-item, #shop-features .upgrade-item, #shop-automation .upgrade-item');
         
         allShopItems.forEach(itemElement => {
+            if (itemElement.classList.contains('purchased')) return; // Skip purchased items
+            
             const costText = itemElement.querySelector('.upgrade-cost')?.textContent;
             if (!costText || costText === 'OWNED') return;
             
-            // Extract cost from text (remove currency icon)
-            const costStr = costText.replace(/[^0-9.KMBTQaSxpOcNoDe]/g, '');
-            // This is a simple check - if it says "OWNED" it stays owned, otherwise we check affordability class
-            const isDisabled = itemElement.classList.contains('disabled');
-            const isPurchased = itemElement.classList.contains('purchased');
+            // Parse cost from text (rough estimate - won't be perfect but good enough)
+            const costMatch = costText.match(/[\d.]+([KMBTQ])?/);
+            if (!costMatch) return;
             
-            if (isPurchased) return; // Don't update purchased items
+            let cost = parseFloat(costMatch[0]);
+            const suffix = costMatch[1];
             
-            // Get item ID from the click handler or re-check affordability
-            // For now, just re-render shop categories periodically
+            // Convert suffix to actual number
+            if (suffix) {
+                const multipliers = { 'K': 1e3, 'M': 1e6, 'B': 1e9, 'T': 1e12, 'Q': 1e15 };
+                cost *= multipliers[suffix] || 1;
+            }
+            
+            // Update affordability
+            const canAfford = this.gameState.currency >= cost;
+            if (canAfford) {
+                itemElement.classList.remove('disabled');
+            } else {
+                itemElement.classList.add('disabled');
+            }
         });
         
-        // Better approach: Just re-render the active shop category
-        const activeCategory = document.querySelector('.category-btn.active');
-        if (activeCategory) {
-            const category = activeCategory.getAttribute('data-category');
-            if (category === 'prestige') {
-                this.renderPrestigeShop();
+        // Update prestige shop items (prestige points)
+        const prestigeShopItems = document.querySelectorAll('#shop-prestige .upgrade-item');
+        
+        prestigeShopItems.forEach(itemElement => {
+            if (itemElement.classList.contains('purchased')) return; // Skip maxed items
+            
+            const costText = itemElement.querySelector('.upgrade-cost')?.textContent;
+            if (!costText || costText.includes('MAXED')) return;
+            
+            // Parse cost from text
+            const costMatch = costText.match(/(\d+)/);
+            if (!costMatch) return;
+            
+            const cost = parseInt(costMatch[1]);
+            
+            // Update affordability
+            const canAfford = this.gameState.prestigePoints >= cost;
+            if (canAfford) {
+                itemElement.classList.remove('disabled');
             } else {
-                this.renderShopCategory(category === 'gameplay' ? 'gameplay' : category === 'features' ? 'features' : 'automation', `shop-${category}`);
+                itemElement.classList.add('disabled');
             }
-        }
+        });
     }
     
     renderAchievements() {

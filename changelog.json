@@ -1,9 +1,22 @@
 {
-  "currentVersion": "v1.6.6",
-  "currentDescription": "Automation, prestige shop, 9 random events, more cosmetics, and tons of new features!",
+  "currentVersion": "v1.6.7",
+  "currentDescription": "Fixed prestige shop spending and shop UI flickering!",
   "versions": [
     {
-      "version": "v1.6.6 (Latest - Was v1.6.5)",
+      "version": "v1.6.7 (Latest)",
+      "title": "Prestige Shop & UI Fixes 🛠️",
+      "date": "November 13, 2025",
+      "changes": [
+        "🛠️ FIXED: Prestige shop now spends prestige points (not prestige count)!",
+        "🛠️ FIXED: Shop items now light up when affordable",
+        "🛠️ FIXED: Shop tabs no longer flicker/refresh constantly",
+        "✨ Shop affordability updates smoothly every second",
+        "⭐ You can now actually spend your prestige points!",
+        "🎯 UI performance improved - no more annoying refreshes"
+      ]
+    },
+    {
+      "version": "v1.6.6 (Was v1.6.5)",
       "title": "Automation & Prestige Shop Update 🤖⭐",
       "date": "November 13, 2025",
       "changes": [
