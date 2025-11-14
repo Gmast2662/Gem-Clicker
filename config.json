@@ -13,7 +13,7 @@
       "name": "Iron Pickaxe",
       "description": "Increases click power",
       "icon": "⛏️",
-      "baseCost": 150,
+      "baseCost": 50,
       "costMultiplier": 2,
       "powerIncrease": 1,
       "maxLevel": null
