@@ -64,7 +64,8 @@ class IdleClickerGame {
             premiumTheme: 'none',
             gemSkin: 'default',
             particleEffect: 'default',
-            soundPack: 'default'
+            soundPack: 'default',
+            numberNotation: 'suffix'
         };
         this.loadSettings();
     }
@@ -514,6 +515,16 @@ class IdleClickerGame {
                 // Play test sound with new pack
                 this.playSound('achievement');
             });
+        }
+        
+        const numberNotationSelect = document.getElementById('number-notation-select');
+        if (numberNotationSelect) {
+            numberNotationSelect.addEventListener('change', (e) => {
+                this.settings.numberNotation = e.target.value;
+                this.saveSettings();
+                this.updateUI(); // Refresh all numbers with new format
+            });
+            numberNotationSelect.value = this.settings.numberNotation;
         }
         
         // Keyboard shortcuts
@@ -2377,27 +2388,46 @@ class IdleClickerGame {
     }
 
     formatNumber(num) {
-        if (!this.config.ui.numberFormat.useShortFormat) {
-            return num.toFixed(this.config.ui.numberFormat.decimalPlaces);
-        }
+        const notation = this.settings?.numberNotation || 'suffix';
+        const decimals = this.config.ui.numberFormat.decimalPlaces;
         
+        // Handle small numbers
         if (num < 1000) {
             return Math.floor(num).toString();
         }
         
-        const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
-        const tier = Math.floor(Math.log10(num) / 3);
-        
-        if (tier <= 0) return Math.floor(num).toString();
-        if (tier >= suffixes.length) {
-            return num.toExponential(2);
+        switch (notation) {
+            case 'scientific':
+                // Scientific notation: 1.23e6
+                return num.toExponential(decimals);
+                
+            case 'engineering':
+                // Engineering notation: 1.23E6 (powers of 3)
+                const exponent = Math.floor(Math.log10(num) / 3) * 3;
+                const mantissa = num / Math.pow(10, exponent);
+                return `${mantissa.toFixed(decimals)}E${exponent}`;
+                
+            case 'full':
+                // Full number with commas: 1,000,000
+                return Math.floor(num).toLocaleString('en-US');
+                
+            case 'suffix':
+            default:
+                // Suffix notation: 1.23M
+                const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+                const tier = Math.floor(Math.log10(num) / 3);
+                
+                if (tier <= 0) return Math.floor(num).toString();
+                if (tier >= suffixes.length) {
+                    return num.toExponential(2);
+                }
+                
+                const suffix = suffixes[tier];
+                const scale = Math.pow(10, tier * 3);
+                const scaled = num / scale;
+                
+                return scaled.toFixed(decimals) + suffix;
         }
-        
-        const suffix = suffixes[tier];
-        const scale = Math.pow(10, tier * 3);
-        const scaled = num / scale;
-        
-        return scaled.toFixed(this.config.ui.numberFormat.decimalPlaces) + suffix;
     }
 
     formatPlayTime(seconds) {
