@@ -394,8 +394,8 @@ class IdleClickerGame {
             // Don't set prestige-currency-name here - it's already in HTML
         }
         
-        // Show rebirth UI if enabled and unlocked
-        if (this.config.rebirth?.enabled && this.gameState.prestigeCount >= this.config.rebirth.requirement) {
+        // Show rebirth UI if enabled and (unlocked OR already rebirthed before)
+        if (this.config.rebirth?.enabled && (this.gameState.prestigeCount >= this.config.rebirth.requirement || this.gameState.rebirthPoints > 0)) {
             document.getElementById('rebirth-section').style.display = 'block';
         }
     }
@@ -1322,14 +1322,15 @@ class IdleClickerGame {
         return this.config.prestige.requirement * Math.pow(1.5, this.gameState.prestigeCount);
     }
 
-    handlePrestige() {
+    handlePrestige(skipConfirmation = false) {
         if (!this.config.prestige.enabled) return;
         
         const gain = this.calculatePrestigeGain();
         
         if (gain <= 0) return;
         
-        if (this.config.prestige.confirmationRequired) {
+        // Skip confirmation if called from automation
+        if (!skipConfirmation && this.config.prestige.confirmationRequired) {
             const confirmed = confirm(
                 `Are you sure you want to prestige?\n\n` +
                 `You will gain ${gain}⭐\n` +
@@ -1429,11 +1430,12 @@ class IdleClickerGame {
             if (!confirmed) return;
         }
         
-        // Reset EVERYTHING but keep rebirth, milestones, shop, achievements, daily rewards
+        // Reset EVERYTHING but keep rebirth, milestones, shop, prestige shop, achievements, daily rewards
         const newRebirthPoints = this.gameState.rebirthPoints + gain;
         const newRebirthCount = this.gameState.rebirthCount + 1;
         const milestones = this.gameState.milestones;
         const shopPurchases = this.gameState.shopPurchases;
+        const prestigeShopPurchases = this.gameState.prestigeShopPurchases || {}; // PRESERVE PRESTIGE SHOP!
         const achievements = this.gameState.achievements;
         const dailyReward = this.gameState.dailyReward;
         
@@ -1454,7 +1456,8 @@ class IdleClickerGame {
             clickMultipliers: {},
             generatorMultipliers: {},
             autoClickerLevel: 0,
-            shopPurchases: shopPurchases,
+            shopPurchases: shopPurchases, // Regular shop is permanent
+            prestigeShopPurchases: prestigeShopPurchases, // Prestige shop is permanent too!
             milestones: milestones,
             dailyReward: dailyReward,
             luckyEvent: {
@@ -2160,7 +2163,7 @@ class IdleClickerGame {
         if (this.gameState.shopPurchases['auto_prestige']) {
             const prestigeGain = this.calculatePrestigeGain();
             if (prestigeGain >= 5) { // Only auto-prestige when gaining 5+ stars
-                this.handlePrestige();
+                this.handlePrestige(true); // Skip confirmation for automation
                 console.log(`🤖 Auto-Prestige: Prestiged for +${prestigeGain}⭐!`);
             }
         }
@@ -2859,10 +2862,8 @@ class IdleClickerGame {
                 this.runAutomation();
             }
             
-            // Update shop affordability (every 300ms for faster response)
-            if (Math.random() < 0.03) { // ~3% chance per 100ms = once every ~300ms
-                this.updateShopAffordability();
-            }
+            // Update shop affordability every frame for instant feedback
+            this.updateShopAffordability();
             
             // Update admin panel if open
             const adminPanel = document.getElementById('admin-panel');
@@ -3262,6 +3263,10 @@ class IdleClickerGame {
         
         navigator.clipboard.writeText(shareText).then(() => {
             this.showNotification('🏆 Achievements copied to clipboard!', 'success');
+            console.log('✅ Achievements copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+            alert('✅ Achievements copied to clipboard!');
         });
     }
     
@@ -3282,6 +3287,10 @@ class IdleClickerGame {
         
         navigator.clipboard.writeText(shareText).then(() => {
             this.showNotification('📊 Stats copied to clipboard!', 'success');
+            console.log('✅ Stats copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+            alert('✅ Stats copied to clipboard!');
         });
     }
 

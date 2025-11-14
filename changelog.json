@@ -1,9 +1,23 @@
 {
-  "currentVersion": "v1.6.8",
-  "currentDescription": "Prestige shop now fully working with all upgrades!",
+  "currentVersion": "v1.6.9",
+  "currentDescription": "Critical fixes: shop persistence, instant affordability updates, auto-prestige improvements!",
   "versions": [
     {
-      "version": "v1.6.8 (Latest)",
+      "version": "v1.6.9 (Latest)",
+      "title": "Critical Bug Fixes! 🛠️",
+      "date": "November 14, 2025",
+      "changes": [
+        "🛠️ FIXED: Prestige shop purchases now PERSIST through rebirth!",
+        "🛠️ FIXED: Regular shop purchases are permanent (persist through prestige AND rebirth)",
+        "🛠️ FIXED: Rebirth button now always visible after first rebirth",
+        "⚡ Shop items light up INSTANTLY when affordable (no delay!)",
+        "✅ Share buttons show improved feedback",
+        "🤖 Auto-prestige no longer asks for confirmation",
+        "🔧 Fixed console errors after rebirth"
+      ]
+    },
+    {
+      "version": "v1.6.8",
       "title": "Prestige Shop Complete! 🎯",
       "date": "November 13, 2025",
       "changes": [
