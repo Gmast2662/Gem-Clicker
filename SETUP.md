@@ -42,15 +42,28 @@ A fully customizable idle/incremental clicker game built with vanilla JavaScript
 
 ```
 idle-clicker-game/
-├── index.html          # Main game file
-├── styles.css          # All styling
-├── game.js            # Game logic
-├── config.json        # Game configuration (customize here!)
-├── README.md          # Player documentation
-├── SETUP.md           # Developer guide (this file)
-├── COSMETICS_GUIDE.md # Guide for adding cosmetics
-├── TODO.md            # Feature tracking
-└── favicon.svg        # Game icon
+├── index.html                  # Main game file
+├── styles.css                  # All styling
+├── game.js                    # Game logic
+├── config.json                # Game configuration (customize here!)
+├── tips.json                  # Game tips (editable)
+├── changelog.json             # Patch notes (editable)
+├── version.json               # Version tracking
+├── manifest.json              # PWA manifest
+├── service-worker.js          # PWA offline support
+├── favicon.svg                # Game icon
+├── sound-tester.html          # Sound testing tool
+├── sounds/                    # Audio files folder
+│   ├── arcade click.mp3
+│   ├── arcade buy.mp3
+│   └── arcade achievement.mp3
+├── README.md                  # Player documentation
+├── SETUP.md                   # Developer guide (this file)
+├── TODO.md                    # Feature tracking
+├── COSMETICS_GUIDE.md         # Adding cosmetics
+├── EDITING_GUIDE.md           # Editing tips/changelog
+├── SOUND_GUIDE.md             # Custom sounds guide
+└── HOW_TO_UPDATE_VERSION.md   # Version updating guide
 ```
 
 ## ⚙️ Customization Guide

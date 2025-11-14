@@ -5,7 +5,82 @@ This document tracks planned features, improvements, and ideas for future update
 ---
 
 ## **To do: (by me)**
-*All current requests completed!*
+
+### **🎵 Pending Implementation**
+- [ ] Music tracks (background music system)
+- [ ] Per-sound-type volume controls (separate sliders for click/buy/achievement)
+
+### **💡 Future Feature Ideas**
+- [ ] Combo system (rapid clicking multiplier)
+- [ ] Challenge mode (special runs with restrictions)
+- [ ] Achievement tiers (Bronze/Silver/Gold/Platinum)
+- [ ] Production graphs (visual chart of gems/second over time)
+- [ ] Lore/story system (unlock story snippets at milestones)
+
+---
+
+## ✅ Recently Completed (v1.6.5 - November 14, 2024)
+
+### **🎲 4 New Random Event Types**
+- [x] Time Warp (⏰) - 3x everything for 15s
+- [x] Treasure Chest (💰) - Instant 10% of total earned
+- [x] Black Hole (🌀) - 10x production for 12s
+- [x] Gem Goblin (👺) - Steals 5%, gives 15% back
+
+### **🤖 Automation System**
+- [x] Auto-Buy Generators (2.5M) - Buys cheapest generator
+- [x] Auto-Prestige (5M) - Prestiges at +5 stars
+- [x] Auto-Claim Daily (750K) - Claims daily rewards
+
+### **🔢 Number Format Options**
+- [x] Suffix format (1.23M) - default
+- [x] Scientific notation (1.23e6)
+- [x] Engineering notation (1.23E6)
+- [x] Full numbers with commas (1,230,000)
+- [x] Settings dropdown to switch formats
+
+### **🎨 More Cosmetics**
+- [x] 5 new themes (Crimson Fire, Midnight Blue, Gold Rush, Halloween, Winter)
+- [x] 3 new particle effects (Cosmic, Electric, Confetti)
+- [x] Total: 10 themes, 10 particles, 4 gem skins, 9 sound packs
+
+### **📤 Export/Share Features**
+- [x] Share Achievements button - copies formatted text to clipboard
+- [x] Share Stats button - copies full stats to clipboard
+- [x] Includes play link for sharing
+
+### **🏪 Shop Organization**
+- [x] Organized into 4 categories (Gameplay, Features, Automation, Prestige)
+- [x] Tab navigation between categories
+- [x] Clear organization and visual separation
+
+### **⭐ Prestige Shop System**
+- [x] Spend prestige points on permanent upgrades
+- [x] Eternal Click Power (+50% per level, max 10)
+- [x] Eternal Production (+25% per level, max 10)
+- [x] Head Start (1K starting gems per level, max 20)
+- [x] Passive Clicking (+1 auto-click/s per level, max 5)
+- [x] Lucky Fortune (+10% event chance per level, max 5)
+- [x] Upgrades persist through prestige
+
+### **🐛 Bug Fixes & Polish**
+- [x] Fixed generator achievements not working
+- [x] Cleaned console logs (52 → 35, only important ones)
+- [x] Version display shows correct build number
+- [x] Update notifications appear immediately
+- [x] Sound pack system fully functional
+
+### **📱 PWA Improvements**
+- [x] Version display in bottom-left corner
+- [x] Update checks every 30 seconds (not 5 min)
+- [x] Direct version checking (bypasses service worker)
+- [x] Auto-update notification without refresh
+
+### **🎵 Premium Sound Pack**
+- [x] Support for real MP3 audio files
+- [x] Integrated arcade sounds from Mixkit
+- [x] Sound tester tool (sound-tester.html)
+- [x] SOUND_GUIDE.md documentation
 
 ## ✅ Recently Completed (v1.6.0 - November 14, 2024)
 

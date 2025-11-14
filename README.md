@@ -14,24 +14,38 @@ Gem Clicker is an incremental idle game where your goal is to mine as many gems 
 
 ## ✨ Features
 
+### **Core Gameplay**
 - 💎 **Click to Mine** - Every click mines precious gems
 - ⛏️ **Tool Upgrades** - Upgrade from pickaxes to laser drills
 - 👷 **Automated Mining** - Hire miners and build advanced facilities
 - ✨ **Multiplier System** - Powerful click & generator multipliers
 - ⭐ **Prestige System** - Reset for permanent bonuses (scaling difficulty)
 - 🔮 **Rebirth System** - Ultimate prestige for massive multipliers
-- 🏆 **Achievements** - 16+ achievements to unlock
+- ⭐ **Prestige Shop** - Spend prestige points on permanent upgrades!
+
+### **Content & Progression**
+- 🏆 **Achievements** - 16+ achievements to unlock with progress bars
 - 🌟 **Milestones** - Permanent bonuses at major thresholds
-- 🎰 **Lucky Events** - Random golden gems & gem rush events
-- 🏪 **Shop System** - Permanent one-time power-ups
-- 🎨 **Cosmetics** - 4 themes, 4 gem skins, 6 particle effects
-- 🤖 **Auto-Clicker** - Automated clicking system
+- 🎰 **Lucky Events** - 9 random event types (Golden Gem, Time Warp, Gem Goblin, etc.)
+- 🏪 **Shop System** - Organized into Gameplay/Features/Automation categories
+- 🤖 **Automation** - Auto-buy generators, auto-prestige, auto-claim rewards
+
+### **Customization**
+- 🎨 **Themes** - 10 premium themes (Ocean, Emerald, Halloween, Winter, etc.)
+- 💎 **Gem Skins** - 4 faceted gem designs (Ruby, Sapphire, Emerald, Amethyst)
+- ✨ **Particles** - 10 particle effects (Rainbow, Fire, Cosmic, Electric, etc.)
+- 🎵 **Sound Packs** - 9 sound packs + Premium pack with real audio files
+- 🔢 **Number Formats** - Choose Suffix, Scientific, Engineering, or Full display
+
+### **Quality of Life**
 - 💾 **Auto-Save** - Progress saved every 5 seconds
 - 🌙 **Offline Progress** - Earn gems while away (up to 48 hours!)
-- 📱 **Mobile Optimized** - Full touch support
-- ⌨️ **Keyboard Shortcuts** - Quick navigation (0-9 keys)
-- 🔔 **Smart Notifications** - Get notified of important events
-- 🎵 **Sound Effects** - Satisfying audio feedback
+- 📱 **Mobile Optimized** - Full touch support with responsive design
+- ⌨️ **Keyboard Shortcuts** - Quick navigation (0-9 keys, Space to click)
+- 🔔 **Smart Notifications** - Get notified of prestige/upgrades
+- 📤 **Share Features** - Share achievements & stats to clipboard
+- 🎮 **Tips System** - In-game strategy guide
+- 📋 **Changelog** - Track all updates in-game
 
 ---
 
@@ -61,9 +75,10 @@ Gem Clicker is an incremental idle game where your goal is to mine as many gems 
 ### Late Game & Prestige
 
 - When progress slows down, consider **Prestiging**
-- Prestige requires 1 million total gems earned
+- Prestige requires 1 million total gems earned (scales up each time!)
 - You'll lose all gems and generators BUT gain **Prestige Points**
-- Each Prestige Point gives a permanent **+1% bonus** to ALL gem production
+- Each Prestige Point gives a permanent **+5% bonus** to ALL gem production
+- **NEW:** Spend prestige points in the Prestige Shop for permanent upgrades!
 - Your first prestige is the biggest boost - don't be afraid to reset!
 
 ---
