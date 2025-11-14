@@ -1948,12 +1948,11 @@ class IdleClickerGame {
             const canAfford = this.gameState.currency >= item.cost;
             const costDisplay = item.cost === 0 ? 'FREE' : `${this.formatNumber(item.cost)} ${this.config.game.currencyIcon}`;
             
+            const showTooltips = this.gameState.shopPurchases['advanced_tooltips'];
+            const effectDescription = this.getShopEffectDescription(item);
             let extraInfo = '';
-            if (this.gameState.shopPurchases['advanced_tooltips']) {
-                const effectDescription = this.getShopEffectDescription(item);
-                if (effectDescription) {
-                    extraInfo = `<div class="upgrade-tooltip">${effectDescription}</div>`;
-                }
+            if (showTooltips && effectDescription) {
+                extraInfo = `<div class="upgrade-tooltip">${effectDescription}</div>`;
             }
             
             const shopItem = document.createElement('div');
@@ -1975,6 +1974,11 @@ class IdleClickerGame {
                     e.stopPropagation();
                     this.buyShopItem(item.id);
                 });
+            }
+            
+            if (showTooltips && effectDescription) {
+                shopItem.classList.add('has-tooltip');
+                shopItem.setAttribute('data-tooltip', effectDescription);
             }
             
             container.appendChild(shopItem);
@@ -2149,15 +2153,15 @@ class IdleClickerGame {
             // Recalculate powers/multipliers after shop purchase
             this.updateClickPower();
             
-            // Render both shop and cosmetics
+            // Render UI impacted by shop unlocks
             this.renderShop();
             this.renderCosmetics();
-            
-            // Update settings dropdowns with newly purchased item
+            this.applyShopEffects();
             this.updateSettingsDropdowns();
-            
-            // Apply cosmetics based on settings
             this.applyCosmetics();
+            this.renderGenerators();
+            this.renderAchievements();
+            this.handleFeatureUnlockRewards(itemId);
             
             this.updateUI();
             
@@ -2186,10 +2190,9 @@ class IdleClickerGame {
     updateFeatureLocks() {
         const numberNotationSelect = document.getElementById('number-notation-select');
         if (numberNotationSelect) {
-            const unlocked = this.gameState.shopPurchases['number_notation'];
             numberNotationSelect.disabled = false;
             numberNotationSelect.title = '';
-            if (!unlocked) {
+            if (!this.gameState.shopPurchases['number_notation']) {
                 this.gameState.shopPurchases['number_notation'] = true;
             }
         }
@@ -2217,6 +2220,46 @@ class IdleClickerGame {
                 this.saveSettings();
                 this.applyCosmetics();
             }
+        }
+    }
+    
+    handleFeatureUnlockRewards(itemId) {
+        switch (itemId) {
+            case 'achievement_hunter':
+                this.renderAchievements();
+                break;
+            case 'statistics_expanded':
+                this.renderGenerators();
+                break;
+            case 'advanced_tooltips':
+                this.renderShop();
+                break;
+            case 'dark_mode_pro':
+                const themeIds = (this.config.cosmetics?.themes || []).map(theme => theme.id);
+                this.unlockCosmeticBundle(themeIds, 'Unlocked premium themes!');
+                break;
+            case 'particle_effects':
+                this.unlockCosmeticBundle(
+                    ['rainbow_particles', 'golden_particles', 'ice_particles', 'fire_particles'],
+                    'Unlocked particle pack!'
+                );
+                break;
+        }
+    }
+    
+    unlockCosmeticBundle(ids, message) {
+        let unlockedAny = false;
+        ids.forEach(id => {
+            if (!this.gameState.shopPurchases[id]) {
+                this.gameState.shopPurchases[id] = true;
+                unlockedAny = true;
+            }
+        });
+        
+        if (unlockedAny) {
+            this.renderCosmetics();
+            this.updateSettingsDropdowns();
+            this.showNotification(message, 'success', true);
         }
     }
     

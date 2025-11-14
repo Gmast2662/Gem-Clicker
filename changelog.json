@@ -1,9 +1,25 @@
 {
-  "currentVersion": "v1.7.5",
-  "currentDescription": "Progress bars, advanced tooltips, premium themes, and stats polish.",
+  "currentVersion": "v1.7.6",
+  "currentDescription": "Achievements, tooltips, premium themes, and particles now behave correctly.",
   "versions": [
     {
-      "version": "v1.7.5 (Latest)",
+      "version": "v1.7.6 (Latest)",
+      "title": "Achievements & Premium Themes Fixes 🎨",
+      "date": "November 14, 2025",
+      "changes": [
+        "🏆 Achievement progress bars re-render immediately after buying Achievement Hunter",
+        "💡 Advanced Tooltips now show actual hover cards with effect descriptions",
+        "📋 Feature tab reliably lists all feature upgrades",
+        "🎨 Buying Pro Themes instantly unlocks all premium theme cosmetics",
+        "✨ Buying Particle Effects grants a starter particle pack",
+        "🔐 Particles/premium themes unlock if you own the cosmetics OR the feature",
+        "📊 Expanded Statistics shows precise numbers + ROI even before buying the generator",
+        "🛍️ Generator cards refresh as soon as you buy the stats upgrade",
+        "📎 Sharing still opens the native dialog but also copies to clipboard with a toast"
+      ]
+    },
+    {
+      "version": "v1.7.5",
       "title": "Progress Bars & Premium Themes Fix 🎯",
       "date": "November 14, 2025",
       "changes": [

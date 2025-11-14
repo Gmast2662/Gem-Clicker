@@ -408,6 +408,36 @@ body {
     border-color: rgba(78, 205, 196, 0.1);
 }
 
+.upgrade-item.has-tooltip {
+    position: relative;
+}
+
+.upgrade-item.has-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translate(-50%, -10px);
+    width: 220px;
+    max-width: 80vw;
+    padding: 8px 12px;
+    background: rgba(10, 10, 10, 0.9);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 0.85em;
+    line-height: 1.3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    z-index: 10000;
+}
+
+.upgrade-item.has-tooltip:hover::after {
+    opacity: 1;
+    transform: translate(-50%, -14px);
+}
+
 .upgrade-icon {
     font-size: 3em;
     min-width: 60px;
