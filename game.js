@@ -333,11 +333,17 @@ class IdleClickerGame {
         document.getElementById('admin-unlock-cosmetics').addEventListener('click', () => this.adminUnlockAllCosmetics());
         document.getElementById('admin-reset-cosmetics').addEventListener('click', () => this.adminResetCosmetics());
         
-        // Lucky event triggers (with null check for safety)
-        const goldenBtn = document.getElementById('admin-trigger-golden');
-        const rushBtn = document.getElementById('admin-trigger-rush');
-        if (goldenBtn) goldenBtn.addEventListener('click', () => this.adminTriggerEvent('golden_gem'));
-        if (rushBtn) rushBtn.addEventListener('click', () => this.adminTriggerEvent('gem_rush'));
+        // Populate event dropdown
+        this.populateEventDropdown();
+        
+        // Lucky event trigger
+        const triggerEventBtn = document.getElementById('admin-trigger-event');
+        if (triggerEventBtn) {
+            triggerEventBtn.addEventListener('click', () => {
+                const eventId = document.getElementById('admin-event-select').value;
+                this.adminTriggerEvent(eventId);
+            });
+        }
         
         // Quick gem buttons
         document.querySelectorAll('.admin-quick-btn').forEach(btn => {
@@ -512,6 +518,19 @@ class IdleClickerGame {
         });
         document.querySelector(`[data-theme="${this.settings.theme}"]`)?.classList.add('active');
     }
+    
+    populateEventDropdown() {
+        const eventSelect = document.getElementById('admin-event-select');
+        if (!eventSelect || !this.config.luckyEvents?.events) return;
+        
+        eventSelect.innerHTML = '';
+        this.config.luckyEvents.events.forEach(event => {
+            const option = document.createElement('option');
+            option.value = event.id;
+            option.textContent = `${event.icon} ${event.name}`;
+            eventSelect.appendChild(option);
+        });
+    }
 
     handleClick(e) {
         // Resume audio context on first interaction (browser requirement)
@@ -519,11 +538,14 @@ class IdleClickerGame {
             this.audioContext.resume();
         }
         
-        // Calculate earn amount (with golden gem bonus if active)
+        // Calculate earn amount (with lucky event bonus if active)
         let earnAmount = this.gameState.clickPower;
         
-        if (this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'golden_gem') {
-            earnAmount *= this.config.luckyEvents.goldenGemMultiplier;
+        if (this.gameState.luckyEvent.active) {
+            const event = this.config.luckyEvents.events.find(e => e.id === this.gameState.luckyEvent.type);
+            if (event && (event.effect === 'click_multiplier' || event.effect === 'all_multiplier')) {
+                earnAmount *= event.value;
+            }
         }
         
         // Add currency
@@ -2218,7 +2240,16 @@ class IdleClickerGame {
             this.gameState.playTime += deltaTime;
             
             // Generate currency from generators
-            const production = this.calculateProductionPerSecond();
+            let production = this.calculateProductionPerSecond();
+            
+            // Apply lucky event effects to production
+            if (this.gameState.luckyEvent.active) {
+                const event = this.config.luckyEvents.events.find(e => e.id === this.gameState.luckyEvent.type);
+                if (event && (event.effect === 'production_multiplier' || event.effect === 'all_multiplier')) {
+                    production *= event.value;
+                }
+            }
+            
             const earned = production * deltaTime;
             
             // Safety check: prevent infinity and NaN
@@ -2239,9 +2270,16 @@ class IdleClickerGame {
                 const autoClicks = clicksPerSec * deltaTime;
                 let autoEarned = autoClicks * this.gameState.clickPower;
                 
-                // Apply golden gem multiplier to auto-clicker too
-                if (this.gameState.luckyEvent.active && this.gameState.luckyEvent.type === 'golden_gem') {
-                    autoEarned *= this.config.luckyEvents.goldenGemMultiplier;
+                // Apply lucky event effects to auto-clicker
+                if (this.gameState.luckyEvent.active) {
+                    const event = this.config.luckyEvents.events.find(e => e.id === this.gameState.luckyEvent.type);
+                    if (event) {
+                        if (event.effect === 'click_multiplier' || event.effect === 'all_multiplier') {
+                            autoEarned *= event.value;
+                        } else if (event.effect === 'auto_clicker_boost') {
+                            autoEarned *= event.value;
+                        }
+                    }
                 }
                 
                 this.gameState.currency += autoEarned;
@@ -2391,21 +2429,19 @@ class IdleClickerGame {
         if (this.gameState.luckyEvent.active) {
             const remaining = Math.ceil((this.gameState.luckyEvent.endTime - now) / 1000);
             const eventTextContainer = document.getElementById('event-text-container');
+            const eventIcon = document.getElementById('event-icon');
             
             if (!eventTextContainer) {
                 console.error('❌ Event text container not found!');
                 return;
             }
             
-            if (this.gameState.luckyEvent.type === 'golden_gem') {
+            const event = this.config.luckyEvents.events.find(e => e.id === this.gameState.luckyEvent.type);
+            if (event) {
+                if (eventIcon) eventIcon.textContent = event.icon;
                 eventTextContainer.innerHTML = `
-                    <div class="event-name">🌟 Golden Gem Active!</div>
-                    <div class="event-timer">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! ${remaining}s remaining</div>
-                `;
-            } else if (this.gameState.luckyEvent.type === 'gem_rush') {
-                eventTextContainer.innerHTML = `
-                    <div class="event-name">🎊 Gem Rush Active!</div>
-                    <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${remaining}s remaining</div>
+                    <div class="event-name">${event.icon} ${event.name} Active!</div>
+                    <div class="event-timer">${event.description} ${event.duration > 0 ? `${remaining}s remaining` : ''}</div>
                 `;
             }
         }
@@ -2420,8 +2456,21 @@ class IdleClickerGame {
     }
     
     triggerLuckyEvent() {
-        // Randomly choose event type
-        const eventType = Math.random() < 0.6 ? 'golden_gem' : 'gem_rush';
+        // Randomly choose event type weighted by chance
+        const events = this.config.luckyEvents.events;
+        const totalChance = events.reduce((sum, e) => sum + e.chance, 0);
+        let random = Math.random() * totalChance;
+        
+        let selectedEvent = events[0];
+        for (const event of events) {
+            random -= event.chance;
+            if (random <= 0) {
+                selectedEvent = event;
+                break;
+            }
+        }
+        
+        const eventType = selectedEvent.id;
         
         this.gameState.luckyEvent.active = true;
         this.gameState.luckyEvent.type = eventType;
@@ -2959,33 +3008,57 @@ class IdleClickerGame {
         this.gameState.luckyEvent.active = true;
         this.gameState.luckyEvent.type = eventType;
         
+        const event = this.config.luckyEvents.events.find(e => e.id === eventType);
+        if (!event) {
+            console.error(`Event ${eventType} not found in config!`);
+            return;
+        }
+        
+        // Handle instant events (like meteor shower)
+        if (event.effect === 'instant_gems') {
+            const instantGems = this.gameState.totalEarned * event.value; // 5% of total earned
+            this.gameState.currency += instantGems;
+            this.gameState.totalEarned += instantGems;
+            this.gameState.generatorEarned += instantGems;
+            
+            // Show popup notification
+            const popup = document.createElement('div');
+            popup.className = 'achievement-popup';
+            popup.innerHTML = `
+                <div class="achievement-popup-header">${event.icon} ${event.name}!</div>
+                <div class="achievement-popup-icon">${event.icon}</div>
+                <div class="achievement-popup-name">+${this.formatNumber(instantGems)} gems!</div>
+                <div class="achievement-popup-desc">Meteor shower bonus</div>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                popup.classList.add('fade-out');
+                setTimeout(() => popup.remove(), 500);
+            }, 3000);
+            
+            this.gameState.luckyEvent.active = false;
+            this.playSound('achievement');
+            return;
+        }
+        
+        // Duration-based events
+        const duration = event.duration;
+        this.gameState.luckyEvent.endTime = Date.now() + (duration * 1000);
+        
         const banner = document.getElementById('lucky-event-banner');
         const eventIcon = document.getElementById('event-icon');
         const eventTextContainer = document.getElementById('event-text-container');
         
         if (!banner || !eventIcon || !eventTextContainer) {
             console.error('❌ Lucky event elements not found!');
-            alert('Error: Event banner elements not found. Please refresh the page.');
             return;
         }
         
-        if (eventType === 'golden_gem') {
-            const duration = 15;
-            this.gameState.luckyEvent.endTime = Date.now() + (duration * 1000);
-            eventIcon.textContent = '🌟';
-            eventTextContainer.innerHTML = `
-                <div class="event-name">🌟 Golden Gem Active!</div>
-                <div class="event-timer">Click for ${this.config.luckyEvents.goldenGemMultiplier}x gems! ${duration}s remaining</div>
-            `;
-        } else {
-            const duration = this.config.luckyEvents.gemRushDuration;
-            this.gameState.luckyEvent.endTime = Date.now() + (duration * 1000);
-            eventIcon.textContent = '🎊';
-            eventTextContainer.innerHTML = `
-                <div class="event-name">🎊 Gem Rush Active!</div>
-                <div class="event-timer">${this.config.luckyEvents.gemRushMultiplier}x production! ${duration}s remaining</div>
-            `;
-        }
+        eventIcon.textContent = event.icon;
+        eventTextContainer.innerHTML = `
+            <div class="event-name">${event.icon} ${event.name} Active!</div>
+            <div class="event-timer">${event.description} ${duration}s remaining</div>
+        `;
         
         banner.style.display = 'flex';
         this.playSound('achievement');

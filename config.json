@@ -495,11 +495,58 @@
   },
   "luckyEvents": {
     "enabled": true,
-    "goldenGemChance": 0.01,
-    "goldenGemMultiplier": 10,
-    "gemRushChance": 0.005,
-    "gemRushDuration": 30,
-    "gemRushMultiplier": 2
+    "events": [
+      {
+        "id": "golden_gem",
+        "name": "Golden Gem",
+        "icon": "🌟",
+        "description": "Clicks give 10x gems!",
+        "chance": 0.01,
+        "duration": 15,
+        "effect": "click_multiplier",
+        "value": 10
+      },
+      {
+        "id": "gem_rush",
+        "name": "Gem Rush",
+        "icon": "🎊",
+        "description": "2x production!",
+        "chance": 0.005,
+        "duration": 30,
+        "effect": "production_multiplier",
+        "value": 2
+      },
+      {
+        "id": "meteor_shower",
+        "name": "Meteor Shower",
+        "icon": "☄️",
+        "description": "Instant gem rain!",
+        "chance": 0.003,
+        "duration": 0,
+        "effect": "instant_gems",
+        "value": 0.05
+      },
+      {
+        "id": "lucky_streak",
+        "name": "Lucky Streak",
+        "icon": "🍀",
+        "description": "5x all production!",
+        "chance": 0.002,
+        "duration": 20,
+        "effect": "all_multiplier",
+        "value": 5
+      },
+      {
+        "id": "gem_tornado",
+        "name": "Gem Tornado",
+        "icon": "🌪️",
+        "description": "Auto-clicker goes crazy!",
+        "chance": 0.004,
+        "duration": 10,
+        "effect": "auto_clicker_boost",
+        "value": 20
+      }
+    ]
   },
   "achievements": {
     "enabled": true,

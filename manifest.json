@@ -1,0 +1,25 @@
+{
+  "name": "Gem Clicker - Idle Mining Game",
+  "short_name": "Gem Clicker",
+  "description": "An addictive idle mining game where you click to mine gems, upgrade your tools, and build an automated gem empire!",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#4ecdc4",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "scope": "./",
+  "screenshots": []
+}
+
