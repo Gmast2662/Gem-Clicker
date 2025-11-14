@@ -473,6 +473,8 @@ class IdleClickerGame {
         document.getElementById('admin-reset-achievements').addEventListener('click', () => this.adminResetAchievements());
         document.getElementById('admin-unlock-shop').addEventListener('click', () => this.adminUnlockAllShop());
         document.getElementById('admin-reset-shop').addEventListener('click', () => this.adminResetShop());
+        document.getElementById('admin-max-prestige-shop').addEventListener('click', () => this.adminMaxPrestigeShop());
+        document.getElementById('admin-reset-prestige-shop').addEventListener('click', () => this.adminResetPrestigeShop());
         document.getElementById('admin-unlock-cosmetics').addEventListener('click', () => this.adminUnlockAllCosmetics());
         document.getElementById('admin-reset-cosmetics').addEventListener('click', () => this.adminResetCosmetics());
         
@@ -1342,11 +1344,15 @@ class IdleClickerGame {
         const newPrestigeCount = this.gameState.prestigeCount + 1;
         const playTime = this.gameState.playTime;
         
+        // Calculate starting gems from prestige shop
+        const startingGemsLevel = this.gameState.prestigeShopPurchases['prestige_starting_gems'] || 0;
+        const startingGems = startingGemsLevel * 1000; // 1000 gems per level
+        
         this.gameState = {
-            currency: 0,
+            currency: startingGems,
             clickPower: 0,
             totalClicks: 0,
-            totalEarned: 0,
+            totalEarned: startingGems,
             clickEarned: 0,
             generatorEarned: 0,
             prestigePoints: newPrestigePoints,
@@ -1795,6 +1801,22 @@ class IdleClickerGame {
             const canAfford = this.gameState.prestigePoints >= cost;
             const maxed = item.maxLevel && currentLevel >= item.maxLevel;
             
+            // Calculate current bonus display
+            let bonusDisplay = '';
+            if (currentLevel > 0) {
+                const totalBonus = item.value * currentLevel;
+                if (item.effect.includes('boost') || item.effect.includes('chance')) {
+                    // Show as percentage
+                    bonusDisplay = `<div style="color: #4ecdc4; font-size: 0.9em;">Current Bonus: ${(totalBonus * 100).toFixed(0)}%</div>`;
+                } else if (item.effect === 'starting_gems') {
+                    bonusDisplay = `<div style="color: #4ecdc4; font-size: 0.9em;">Current Bonus: ${this.formatNumber(totalBonus)} gems</div>`;
+                } else if (item.effect === 'free_auto_clicks') {
+                    bonusDisplay = `<div style="color: #4ecdc4; font-size: 0.9em;">Current Bonus: ${totalBonus} clicks/s</div>`;
+                } else {
+                    bonusDisplay = `<div style="color: #4ecdc4; font-size: 0.9em;">Current Bonus: ${this.formatNumber(totalBonus)}</div>`;
+                }
+            }
+            
             const prestigeItem = document.createElement('div');
             prestigeItem.className = `upgrade-item ${maxed ? 'purchased' : (!canAfford ? 'disabled' : '')}`;
             prestigeItem.style.cursor = maxed ? 'default' : 'pointer';
@@ -1803,7 +1825,7 @@ class IdleClickerGame {
                 <div class="upgrade-info">
                     <div class="upgrade-name">${item.name} ${maxed ? '(MAX)' : `Lv.${currentLevel}`}</div>
                     <div class="upgrade-description">${item.description}</div>
-                    ${currentLevel > 0 ? `<div style="color: #4ecdc4; font-size: 0.9em;">Current Bonus: ${this.formatNumber(item.value * currentLevel)}${item.effect.includes('boost') || item.effect.includes('chance') ? '%' : ''}</div>` : ''}
+                    ${bonusDisplay}
                 </div>
                 <div class="upgrade-cost">${maxed ? 'MAXED' : cost + ' ⭐'}</div>
             `;
@@ -2499,6 +2521,12 @@ class IdleClickerGame {
             autoClickerPerSecond = clicksPerSec * this.gameState.clickPower;
         }
         
+        // Add free auto clicks from prestige shop
+        const prestigeAutoClick = this.gameState.prestigeShopPurchases['prestige_auto_click'] || 0;
+        if (prestigeAutoClick > 0) {
+            autoClickerPerSecond += prestigeAutoClick * this.gameState.clickPower;
+        }
+        
         // Calculate per second from manual clicking
         const now = Date.now();
         this.recentClicks = this.recentClicks.filter(time => now - time < this.clickRateWindow);
@@ -2759,11 +2787,22 @@ class IdleClickerGame {
                 this.gameState.generatorEarned += earned;
             }
             
-            // Auto clicker
+            // Auto clicker (from purchased auto-clicker + prestige shop)
+            let totalAutoClicks = 0;
             if (this.config.autoClicker.enabled && this.gameState.autoClickerLevel > 0) {
-                const clicksPerSec = this.config.autoClicker.clicksPerSecond + 
+                totalAutoClicks += this.config.autoClicker.clicksPerSecond + 
                     (this.gameState.autoClickerLevel - 1) * this.config.autoClicker.clicksIncreasePerLevel;
-                const autoClicks = clicksPerSec * deltaTime;
+            }
+            
+            // Add free auto clicks from prestige shop
+            const prestigeAutoClick = this.gameState.prestigeShopPurchases['prestige_auto_click'] || 0;
+            if (prestigeAutoClick > 0) {
+                totalAutoClicks += prestigeAutoClick;
+            }
+            
+            // Calculate earnings from all auto-clicks
+            if (totalAutoClicks > 0) {
+                const autoClicks = totalAutoClicks * deltaTime;
                 let autoEarned = autoClicks * this.gameState.clickPower;
                 
                 // Apply lucky event effects to auto-clicker
@@ -2955,6 +2994,12 @@ class IdleClickerGame {
         let baseChance = 0.001; // 0.1% base chance per check
         if (this.gameState.shopPurchases['lucky_boost']) {
             baseChance *= 2; // Lucky Charm doubles chance
+        }
+        
+        // Add prestige shop lucky boost (+10% per level)
+        const prestigeLuckyBoost = this.gameState.prestigeShopPurchases['prestige_lucky_boost'] || 0;
+        if (prestigeLuckyBoost > 0) {
+            baseChance *= (1 + (prestigeLuckyBoost * 0.1));
         }
         
         // Chance to trigger new event (only if no event active)
@@ -3546,6 +3591,41 @@ class IdleClickerGame {
         this.updateUI();
         this.playSound('achievement');
         console.log('✅ Admin: Reset all shop purchases');
+    }
+    
+    adminMaxPrestigeShop() {
+        if (!confirm('Max all prestige shop upgrades?')) return;
+        
+        this.config.prestigeShop.items.forEach(item => {
+            this.gameState.prestigeShopPurchases[item.id] = item.maxLevel || 10;
+        });
+        
+        // Recalculate all bonuses
+        this.updateClickPower();
+        
+        this.renderPrestigeShop();
+        this.updateUI();
+        this.playSound('achievement');
+        console.log('✅ Admin: Maxed all prestige shop upgrades');
+        this.updateAdminDisplay();
+    }
+    
+    adminResetPrestigeShop() {
+        if (!confirm('Reset all prestige shop purchases?')) return;
+        
+        this.gameState.prestigeShopPurchases = {};
+        this.config.prestigeShop.items.forEach(item => {
+            this.gameState.prestigeShopPurchases[item.id] = 0;
+        });
+        
+        // Recalculate all bonuses
+        this.updateClickPower();
+        
+        this.renderPrestigeShop();
+        this.updateUI();
+        this.playSound('click');
+        console.log('✅ Admin: Reset prestige shop');
+        this.updateAdminDisplay();
     }
     
     adminUnlockAllCosmetics() {

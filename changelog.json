@@ -1,9 +1,23 @@
 {
-  "currentVersion": "v1.6.7",
-  "currentDescription": "Fixed prestige shop spending and shop UI flickering!",
+  "currentVersion": "v1.6.8",
+  "currentDescription": "Prestige shop now fully working with all upgrades!",
   "versions": [
     {
-      "version": "v1.6.7 (Latest)",
+      "version": "v1.6.8 (Latest)",
+      "title": "Prestige Shop Complete! 🎯",
+      "date": "November 13, 2025",
+      "changes": [
+        "🛠️ FIXED: Prestige shop display now shows correct percentages (50% not 0%)",
+        "⚡ IMPLEMENTED: Passive Clicking - Free auto-clicks without buying auto-clicker!",
+        "💎 IMPLEMENTED: Head Start - Start each prestige with bonus gems!",
+        "🍀 IMPLEMENTED: Lucky Fortune - Increase lucky event chances!",
+        "🛠️ FIXED: Update notification no longer re-appears after clicking update",
+        "⚙️ NEW: Admin commands for prestige shop (Max All, Reset All)",
+        "✨ All 5 prestige shop upgrades now work perfectly!"
+      ]
+    },
+    {
+      "version": "v1.6.7",
       "title": "Prestige Shop & UI Fixes 🛠️",
       "date": "November 13, 2025",
       "changes": [

@@ -665,6 +665,14 @@
         </div>
 
         <div class="admin-section">
+            <h4>⭐ Prestige Shop</h4>
+            <div class="admin-buttons">
+                <button class="admin-btn" id="admin-max-prestige-shop">Max All</button>
+                <button class="admin-btn" id="admin-reset-prestige-shop">Reset All</button>
+            </div>
+        </div>
+
+        <div class="admin-section">
             <h4>🎨 Cosmetics</h4>
             <div class="admin-buttons">
                 <button class="admin-btn" id="admin-unlock-cosmetics">Unlock All</button>
@@ -697,6 +705,16 @@
         // Direct version check (bypasses service worker for immediate detection)
         async function checkVersionDirectly() {
             try {
+                // Check if user just updated (skip check for 5 minutes after update)
+                const lastUpdateTime = localStorage.getItem('lastUpdateTime');
+                if (lastUpdateTime) {
+                    const timeSinceUpdate = Date.now() - parseInt(lastUpdateTime);
+                    if (timeSinceUpdate < 5 * 60 * 1000) { // 5 minutes
+                        console.log('⏭️ Skipping version check (recently updated)');
+                        return false;
+                    }
+                }
+                
                 // Get current version from the page's version.json (cached)
                 const currentVersion = window.game?.version || { version: '1.6.0', buildNumber: 106 };
                 
@@ -714,11 +732,21 @@
                     return true;
                 } else {
                     console.log('✅ Already on latest version');
+                    // Clear the notification if it's showing
+                    hideUpdateNotification();
                     return false;
                 }
             } catch (error) {
                 console.log('⚠️ Version check failed:', error);
                 return false;
+            }
+        }
+        
+        function hideUpdateNotification() {
+            const notification = document.getElementById('update-notification');
+            if (notification && !notification.classList.contains('hidden')) {
+                notification.classList.add('hidden');
+                console.log('🔕 Update notification hidden');
             }
         }
         
@@ -811,9 +839,15 @@
             if (updateButton) {
                 updateButton.addEventListener('click', () => {
                     console.log('🔄 User clicked update button');
+                    // Mark that user just updated (prevents re-showing notification)
+                    localStorage.setItem('lastUpdateTime', Date.now().toString());
+                    // Hide notification immediately
+                    hideUpdateNotification();
+                    // Tell service worker to skip waiting and activate
                     if (newWorker) {
                         newWorker.postMessage({ type: 'SKIP_WAITING' });
                     }
+                    // Reload to get new version
                     window.location.reload();
                 });
             }
