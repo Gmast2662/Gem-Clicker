@@ -289,6 +289,66 @@
     "bonusPerPoint": 2,
     "confirmationRequired": true
   },
+  "prestigeShop": {
+    "enabled": true,
+    "items": [
+      {
+        "id": "prestige_click_boost",
+        "name": "Eternal Click Power",
+        "description": "Permanent +50% click power per level",
+        "icon": "👆",
+        "baseCost": 5,
+        "costMultiplier": 2,
+        "maxLevel": 10,
+        "effect": "click_boost",
+        "value": 0.5
+      },
+      {
+        "id": "prestige_production_boost",
+        "name": "Eternal Production",
+        "description": "Permanent +25% generator production per level",
+        "icon": "⚡",
+        "baseCost": 10,
+        "costMultiplier": 2.5,
+        "maxLevel": 10,
+        "effect": "production_boost",
+        "value": 0.25
+      },
+      {
+        "id": "prestige_starting_gems",
+        "name": "Head Start",
+        "description": "Start each prestige with more gems (+1000 per level)",
+        "icon": "💎",
+        "baseCost": 3,
+        "costMultiplier": 1.8,
+        "maxLevel": 20,
+        "effect": "starting_gems",
+        "value": 1000
+      },
+      {
+        "id": "prestige_auto_click",
+        "name": "Passive Clicking",
+        "description": "+1 auto-click per second per level (without buying auto-clicker)",
+        "icon": "🤖",
+        "baseCost": 15,
+        "costMultiplier": 3,
+        "maxLevel": 5,
+        "effect": "free_auto_clicks",
+        "value": 1
+      },
+      {
+        "id": "prestige_lucky_boost",
+        "name": "Lucky Fortune",
+        "description": "+10% lucky event chance per level",
+        "icon": "🍀",
+        "baseCost": 20,
+        "costMultiplier": 2.5,
+        "maxLevel": 5,
+        "effect": "lucky_chance",
+        "value": 0.1
+      }
+    ]
+  },
   "transcendence": {
     "enabled": true,
     "currencyName": "Transcendence Point",
