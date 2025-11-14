@@ -72,14 +72,58 @@ class IdleClickerGame {
     initAudio() {
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.audioBuffers = {}; // Store loaded audio files
         } catch (e) {
             console.log('Web Audio API not supported');
         }
     }
     
+    async loadAudioFile(url) {
+        try {
+            const response = await fetch(url);
+            const arrayBuffer = await response.arrayBuffer();
+            const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+            return audioBuffer;
+        } catch (e) {
+            console.log(`Could not load audio file: ${url}`);
+            return null;
+        }
+    }
+    
+    async loadAudioFiles() {
+        console.log('🎵 Loading audio files...');
+        this.audioBuffers.click = await this.loadAudioFile('sounds/click.mp3');
+        this.audioBuffers.buy = await this.loadAudioFile('sounds/buy.mp3');
+        this.audioBuffers.achievement = await this.loadAudioFile('sounds/achievement.mp3');
+        console.log('✅ Audio files loaded!');
+    }
+    
+    playAudioFile(buffer) {
+        if (!buffer || !this.audioContext) return;
+        
+        const source = this.audioContext.createBufferSource();
+        const gainNode = this.audioContext.createGain();
+        
+        source.buffer = buffer;
+        source.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        gainNode.gain.value = this.settings.soundVolume;
+        source.start(0);
+    }
+    
     playSound(type) {
         if (!this.audioContext || !this.settings.soundEnabled) return;
         
+        const soundPack = this.settings.soundPack || 'default';
+        
+        // Check if this sound pack uses audio files
+        if (soundPack === 'premium' && this.audioBuffers[type]) {
+            this.playAudioFile(this.audioBuffers[type]);
+            return;
+        }
+        
+        // Otherwise use oscillator
         const oscillator = this.audioContext.createOscillator();
         const gainNode = this.audioContext.createGain();
         
@@ -87,7 +131,6 @@ class IdleClickerGame {
         gainNode.connect(this.audioContext.destination);
         
         const volume = this.settings.soundVolume;
-        const soundPack = this.settings.soundPack || 'default';
         
         // Get sound parameters based on pack and type
         const soundParams = this.getSoundParams(type, soundPack);
@@ -197,6 +240,11 @@ class IdleClickerGame {
             
             // Apply cosmetics from shop purchases
             this.applyCosmetics();
+            
+            // Load audio files for premium sound pack (if purchased)
+            if (this.gameState.shopPurchases['sound_pack_premium']) {
+                this.loadAudioFiles();
+            }
             
             // Start game loop
             this.startGameLoop();
