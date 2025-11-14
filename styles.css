@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 body {
@@ -10,6 +12,9 @@ body {
     color: #eaeaea;
     min-height: 100vh;
     overflow-x: hidden;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .container {

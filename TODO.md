@@ -19,7 +19,7 @@ This document tracks planned features, improvements, and ideas for future update
 
 ---
 
-## ✅ Recently Completed (v1.6.5 - November 14, 2024)
+## ✅ Recently Completed (v1.6.5 - November 13, 2025)
 
 ### **🎲 4 New Random Event Types**
 - [x] Time Warp (⏰) - 3x everything for 15s

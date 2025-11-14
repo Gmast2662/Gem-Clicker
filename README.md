@@ -180,10 +180,11 @@ Unlock achievements to show off your mining prowess:
 
 ### On Mobile (Android/iOS):
 1. Visit https://gmast2662.github.io/Gem-Clicker/
-2. Tap the **"Add to Home Screen"** button
-3. App installs like a native app!
-4. Opens in fullscreen (no browser UI)
-5. Works offline!
+2. Tap the **"Share"** button
+3. Tap the **"Add to Home Screen"** button
+4. App installs like a native app!
+5. Opens in fullscreen (no browser UI)
+6. Works offline!
 
 ### On Desktop (Chrome/Edge):
 1. Visit the game
@@ -297,6 +298,44 @@ Gem Clicker works on all modern browsers:
 
 ---
 
+## 🆕 What's New in v1.6.5
+
+**Latest update brings TONS of new content!**
+
+### **⭐ Prestige Shop**
+Spend prestige points on permanent upgrades that persist through prestige:
+- Eternal Click Power (+50% per level)
+- Eternal Production (+25% per level)
+- Head Start (1K starting gems per level)
+- Passive Clicking (+1 auto-click/s per level)
+- Lucky Fortune (+10% event chance per level)
+
+### **🤖 Automation System**
+Set it and forget it:
+- Auto-Buy Generators (buys cheapest when affordable)
+- Auto-Prestige (when you can gain 5+ stars)
+- Auto-Claim Daily (claims rewards automatically)
+
+### **🎲 More Random Events**
+9 event types now including:
+- Time Warp (3x everything!)
+- Treasure Chest (instant gems)
+- Black Hole (10x production)
+- Gem Goblin (steals then gives more back)
+
+### **🎨 More Customization**
+- 10 premium themes (added Halloween, Winter, Crimson, etc.)
+- 10 particle effects (added Cosmic, Electric, Confetti)
+- 9 sound packs + Premium pack with real MP3 files
+- 4 number format options (Suffix, Scientific, Engineering, Full)
+
+### **📤 Share Your Progress**
+- Share Achievements button
+- Share Stats button
+- Copy to clipboard and show off!
+
+---
+
 ## 🛠️ For Developers
 
 Want to customize the game or understand how it works?
@@ -318,7 +357,6 @@ Built with:
 - Vanilla JavaScript
 - CSS3
 - HTML5
-- Lots of coffee ☕
 
 ---
 

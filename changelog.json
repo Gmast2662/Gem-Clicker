@@ -1,11 +1,30 @@
 {
-  "currentVersion": "v1.6.3",
-  "currentDescription": "PWA support, configurable events, achievement progress, and new cosmetics!",
+  "currentVersion": "v1.6.5",
+  "currentDescription": "Automation, prestige shop, 9 random events, more cosmetics, and tons of new features!",
   "versions": [
+    {
+      "version": "v1.6.5",
+      "title": "Automation & Prestige Shop Update 🤖⭐",
+      "date": "November 13, 2025",
+      "changes": [
+        "⭐ Prestige Shop - Spend prestige points on permanent upgrades!",
+        "🤖 Automation - Auto-buy generators, auto-prestige, auto-claim daily",
+        "🎲 4 New Events - Time Warp, Treasure Chest, Black Hole, Gem Goblin",
+        "🏪 Shop Categories - Organized into Gameplay/Features/Automation/Prestige",
+        "🎨 5 New Themes - Crimson Fire, Midnight Blue, Gold Rush, Halloween, Winter",
+        "✨ 3 New Particles - Cosmic, Electric, Confetti",
+        "🔢 Number Formats - Suffix, Scientific, Engineering, or Full display",
+        "📤 Share Features - Share achievements & stats to clipboard",
+        "🎵 Premium Sound Pack - Real MP3 audio files support",
+        "🐛 Fixed generator achievements not unlocking",
+        "🧹 Cleaned console logs - Only show important messages",
+        "📱 Auto-update improvements - Check every 30s, immediate detection"
+      ]
+    },
     {
       "version": "v1.6.3",
       "title": "New Sound Packs 🎵",
-      "date": "November 13, 2024",
+      "date": "November 13, 2025",
       "changes": [
         "🎵 Sound packs - Industrial, Crystal, Chime, Zen, Premium"
       ]
@@ -13,7 +32,7 @@
     {
       "version": "v1.6.1",
       "title": "Bug Fixes & New Items 🐛",
-      "date": "November 13, 2024",
+      "date": "November 13, 2025",
       "changes": [
         "🎵 Sound packs - Retro 8-bit, Soft sounds, Epic sounds, Nature sounds",
         "Fixed bugs with update notifications",
@@ -23,7 +42,7 @@
     {
       "version": "v1.6.0",
       "title": "PWA & Advanced Features 📱",
-      "date": "November 13, 2024",
+      "date": "November 13, 2025",
       "changes": [
         "📱 Progressive Web App - Install on mobile & desktop!",
         "🌐 Offline support - Play without internet after first load",
