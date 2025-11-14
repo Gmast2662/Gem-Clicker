@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 Sound Tester - Gem Clicker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eaeaea;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(22, 33, 62, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4ecdc4;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .sound-type {
+            background: rgba(78, 205, 196, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .sound-type h2 {
+            color: #4ecdc4;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #aaa;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(78, 205, 196, 0.2);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #4ecdc4;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(78, 205, 196, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #4ecdc4;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(78, 205, 196, 0.5);
+            border: none;
+        }
+
+        select {
+            padding: 10px;
+            background: rgba(26, 26, 46, 0.8);
+            color: #eaeaea;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .value-display {
+            color: #4ecdc4;
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 0.95em;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #4ecdc4, #45b7aa);
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.5);
+        }
+
+        .play-btn:active {
+            transform: translateY(0);
+        }
+
+        .code-output {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .code-output h3 {
+            color: #4ecdc4;
+            margin-bottom: 10px;
+        }
+
+        .code-output pre {
+            color: #aaa;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background: rgba(78, 205, 196, 0.2);
+            color: #4ecdc4;
+            border: 2px solid rgba(78, 205, 196, 0.5);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(78, 205, 196, 0.3);
+        }
+
+        .presets {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .preset-btn {
+            background: rgba(255, 107, 107, 0.2);
+            border: 2px solid rgba(255, 107, 107, 0.5);
+            color: #ff6b6b;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .preset-btn:hover {
+            background: rgba(255, 107, 107, 0.3);
+        }
+
+        .info-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .info-box p {
+            color: #ddd;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Sound Tester</h1>
+        <p class="subtitle">Test and preview your custom sounds before adding them to the game!</p>
+
+        <div class="info-box">
+            <p><strong>How to use:</strong> Adjust the sliders to customize your sound, click "Play Sound" to hear it, then copy the code to use in your game!</p>
+        </div>
+
+        <!-- Click Sound -->
+        <div class="sound-type">
+            <h2>🖱️ Click Sound</h2>
+            <div class="controls">
+                <div class="control">
+                    <label>Frequency (Hz)</label>
+                    <input type="range" id="click-freq" min="200" max="1500" value="800" step="10">
+                    <div class="value-display"><span id="click-freq-val">800</span> Hz</div>
+                </div>
+                <div class="control">
+                    <label>Volume</label>
+                    <input type="range" id="click-vol" min="0.05" max="0.30" value="0.10" step="0.01">
+                    <div class="value-display"><span id="click-vol-val">0.10</span></div>
+                </div>
+                <div class="control">
+                    <label>Duration (seconds)</label>
+                    <input type="range" id="click-dur" min="0.05" max="0.60" value="0.10" step="0.01">
+                    <div class="value-display"><span id="click-dur-val">0.10</span> s</div>
+                </div>
+                <div class="control">
+                    <label>Wave Type</label>
+                    <select id="click-wave">
+                        <option value="sine">Sine (Smooth)</option>
+                        <option value="square">Square (8-bit)</option>
+                        <option value="triangle">Triangle (Soft)</option>
+                        <option value="sawtooth">Sawtooth (Harsh)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="play-btn" onclick="playSound('click')">▶️ Play Click Sound</button>
+            <div class="presets">
+                <button class="preset-btn" onclick="loadPreset('click', 'default')">Default</button>
+                <button class="preset-btn" onclick="loadPreset('click', 'retro')">Retro</button>
+                <button class="preset-btn" onclick="loadPreset('click', 'soft')">Soft</button>
+                <button class="preset-btn" onclick="loadPreset('click', 'epic')">Epic</button>
+            </div>
+        </div>
+
+        <!-- Buy Sound -->
+        <div class="sound-type">
+            <h2>🛒 Buy Sound</h2>
+            <div class="controls">
+                <div class="control">
+                    <label>Frequency (Hz)</label>
+                    <input type="range" id="buy-freq" min="200" max="1500" value="523" step="10">
+                    <div class="value-display"><span id="buy-freq-val">523</span> Hz</div>
+                </div>
+                <div class="control">
+                    <label>Volume</label>
+                    <input type="range" id="buy-vol" min="0.05" max="0.30" value="0.15" step="0.01">
+                    <div class="value-display"><span id="buy-vol-val">0.15</span></div>
+                </div>
+                <div class="control">
+                    <label>Duration (seconds)</label>
+                    <input type="range" id="buy-dur" min="0.05" max="0.60" value="0.20" step="0.01">
+                    <div class="value-display"><span id="buy-dur-val">0.20</span> s</div>
+                </div>
+                <div class="control">
+                    <label>Wave Type</label>
+                    <select id="buy-wave">
+                        <option value="sine" selected>Sine (Smooth)</option>
+                        <option value="square">Square (8-bit)</option>
+                        <option value="triangle">Triangle (Soft)</option>
+                        <option value="sawtooth">Sawtooth (Harsh)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="play-btn" onclick="playSound('buy')">▶️ Play Buy Sound</button>
+            <div class="presets">
+                <button class="preset-btn" onclick="loadPreset('buy', 'default')">Default</button>
+                <button class="preset-btn" onclick="loadPreset('buy', 'retro')">Retro</button>
+                <button class="preset-btn" onclick="loadPreset('buy', 'soft')">Soft</button>
+                <button class="preset-btn" onclick="loadPreset('buy', 'epic')">Epic</button>
+            </div>
+        </div>
+
+        <!-- Achievement Sound -->
+        <div class="sound-type">
+            <h2>🏆 Achievement Sound</h2>
+            <div class="controls">
+                <div class="control">
+                    <label>Frequency (Hz)</label>
+                    <input type="range" id="achievement-freq" min="200" max="1500" value="880" step="10">
+                    <div class="value-display"><span id="achievement-freq-val">880</span> Hz</div>
+                </div>
+                <div class="control">
+                    <label>Volume</label>
+                    <input type="range" id="achievement-vol" min="0.05" max="0.30" value="0.20" step="0.01">
+                    <div class="value-display"><span id="achievement-vol-val">0.20</span></div>
+                </div>
+                <div class="control">
+                    <label>Duration (seconds)</label>
+                    <input type="range" id="achievement-dur" min="0.05" max="0.60" value="0.50" step="0.01">
+                    <div class="value-display"><span id="achievement-dur-val">0.50</span> s</div>
+                </div>
+                <div class="control">
+                    <label>Wave Type</label>
+                    <select id="achievement-wave">
+                        <option value="sine" selected>Sine (Smooth)</option>
+                        <option value="square">Square (8-bit)</option>
+                        <option value="triangle">Triangle (Soft)</option>
+                        <option value="sawtooth">Sawtooth (Harsh)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="play-btn" onclick="playSound('achievement')">▶️ Play Achievement Sound</button>
+            <div class="presets">
+                <button class="preset-btn" onclick="loadPreset('achievement', 'default')">Default</button>
+                <button class="preset-btn" onclick="loadPreset('achievement', 'retro')">Retro</button>
+                <button class="preset-btn" onclick="loadPreset('achievement', 'soft')">Soft</button>
+                <button class="preset-btn" onclick="loadPreset('achievement', 'epic')">Epic</button>
+            </div>
+        </div>
+
+        <!-- Code Output -->
+        <div class="code-output">
+            <h3>📋 Copy this code to game.js:</h3>
+            <pre id="code-output"></pre>
+            <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+        </div>
+    </div>
+
+    <script>
+        let audioContext;
+        
+        // Initialize audio context on first user interaction
+        document.addEventListener('click', function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('Audio context initialized');
+            }
+        }, { once: true });
+
+        // Presets
+        const presets = {
+            click: {
+                default: { frequency: 800, volume: 0.10, duration: 0.10, waveType: 'sine' },
+                retro: { frequency: 1000, volume: 0.12, duration: 0.05, waveType: 'square' },
+                soft: { frequency: 600, volume: 0.08, duration: 0.15, waveType: 'triangle' },
+                epic: { frequency: 900, volume: 0.15, duration: 0.12, waveType: 'sawtooth' }
+            },
+            buy: {
+                default: { frequency: 523, volume: 0.15, duration: 0.20, waveType: 'sine' },
+                retro: { frequency: 600, volume: 0.18, duration: 0.15, waveType: 'square' },
+                soft: { frequency: 400, volume: 0.12, duration: 0.25, waveType: 'triangle' },
+                epic: { frequency: 650, volume: 0.20, duration: 0.25, waveType: 'sawtooth' }
+            },
+            achievement: {
+                default: { frequency: 880, volume: 0.20, duration: 0.50, waveType: 'sine' },
+                retro: { frequency: 1200, volume: 0.25, duration: 0.30, waveType: 'square' },
+                soft: { frequency: 700, volume: 0.15, duration: 0.60, waveType: 'triangle' },
+                epic: { frequency: 1000, volume: 0.30, duration: 0.40, waveType: 'sawtooth' }
+            }
+        };
+
+        // Update value displays
+        function updateDisplays() {
+            ['click', 'buy', 'achievement'].forEach(type => {
+                document.getElementById(`${type}-freq-val`).textContent = document.getElementById(`${type}-freq`).value;
+                document.getElementById(`${type}-vol-val`).textContent = document.getElementById(`${type}-vol`).value;
+                document.getElementById(`${type}-dur-val`).textContent = document.getElementById(`${type}-dur`).value;
+            });
+            updateCode();
+        }
+
+        // Add event listeners
+        ['click', 'buy', 'achievement'].forEach(type => {
+            document.getElementById(`${type}-freq`).addEventListener('input', updateDisplays);
+            document.getElementById(`${type}-vol`).addEventListener('input', updateDisplays);
+            document.getElementById(`${type}-dur`).addEventListener('input', updateDisplays);
+            document.getElementById(`${type}-wave`).addEventListener('change', updateDisplays);
+        });
+
+        // Play sound
+        function playSound(type) {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const frequency = parseFloat(document.getElementById(`${type}-freq`).value);
+            const volume = parseFloat(document.getElementById(`${type}-vol`).value);
+            const duration = parseFloat(document.getElementById(`${type}-dur`).value);
+            const waveType = document.getElementById(`${type}-wave`).value;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.type = waveType;
+            oscillator.frequency.value = frequency;
+            gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Load preset
+        function loadPreset(type, preset) {
+            const params = presets[type][preset];
+            document.getElementById(`${type}-freq`).value = params.frequency;
+            document.getElementById(`${type}-vol`).value = params.volume;
+            document.getElementById(`${type}-dur`).value = params.duration;
+            document.getElementById(`${type}-wave`).value = params.waveType;
+            updateDisplays();
+        }
+
+        // Update code output
+        function updateCode() {
+            const packName = "your_pack_name";
+            const code = `${packName}: {
+    click: { frequency: ${document.getElementById('click-freq').value}, volume: ${document.getElementById('click-vol').value}, duration: ${document.getElementById('click-dur').value}, waveType: '${document.getElementById('click-wave').value}' },
+    buy: { frequency: ${document.getElementById('buy-freq').value}, volume: ${document.getElementById('buy-vol').value}, duration: ${document.getElementById('buy-dur').value}, waveType: '${document.getElementById('buy-wave').value}' },
+    achievement: { frequency: ${document.getElementById('achievement-freq').value}, volume: ${document.getElementById('achievement-vol').value}, duration: ${document.getElementById('achievement-dur').value}, waveType: '${document.getElementById('achievement-wave').value}' }
+},`;
+            document.getElementById('code-output').textContent = code;
+        }
+
+        // Copy code
+        function copyCode() {
+            const code = document.getElementById('code-output').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Code';
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        updateDisplays();
+    </script>
+</body>
+</html>
+
