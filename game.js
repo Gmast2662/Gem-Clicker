@@ -414,6 +414,10 @@ class IdleClickerGame {
         document.getElementById('import-confirm').addEventListener('click', () => this.importSave());
         document.getElementById('import-cancel').addEventListener('click', () => this.hideImportModal());
         
+        // Share buttons
+        document.getElementById('share-achievements-btn')?.addEventListener('click', () => this.shareAchievements());
+        document.getElementById('share-stats-btn')?.addEventListener('click', () => this.shareStats());
+        
         // Daily reward
         if (this.config.dailyRewards?.enabled) {
             document.getElementById('claim-daily-reward').addEventListener('click', () => this.claimDailyReward());
@@ -2918,6 +2922,44 @@ class IdleClickerGame {
 
     hideImportModal() {
         document.getElementById('import-modal').classList.remove('active');
+    }
+    
+    shareAchievements() {
+        const unlockedCount = Object.values(this.gameState.achievements).filter(a => a === true).length;
+        const totalCount = this.config.achievements.list.length;
+        const percentage = ((unlockedCount / totalCount) * 100).toFixed(1);
+        
+        const shareText = `🏆 My Gem Clicker Achievements 🏆\n\n` +
+            `✅ Unlocked: ${unlockedCount}/${totalCount} (${percentage}%)\n` +
+            `💎 Total Gems Mined: ${this.formatNumber(this.gameState.totalEarned)}\n` +
+            `⭐ Prestige Count: ${this.gameState.prestigeCount}\n` +
+            `🔮 Rebirth Points: ${this.gameState.rebirthPoints}\n` +
+            `⏱️ Play Time: ${this.formatPlayTime(this.gameState.playTime)}\n\n` +
+            `Play now: https://gmast2662.github.io/Gem-Clicker/`;
+        
+        navigator.clipboard.writeText(shareText).then(() => {
+            this.showNotification('🏆 Achievements copied to clipboard!', 'success');
+        });
+    }
+    
+    shareStats() {
+        const perSecond = this.calculateProductionPerSecond();
+        const perHour = perSecond * 3600;
+        
+        const shareText = `📊 My Gem Clicker Stats 📊\n\n` +
+            `💎 Current Gems: ${this.formatNumber(this.gameState.currency)}\n` +
+            `📈 Total Mined: ${this.formatNumber(this.gameState.totalEarned)}\n` +
+            `⚡ Per Second: ${this.formatNumber(perSecond)}\n` +
+            `🕐 Per Hour: ${this.formatNumber(perHour)}\n` +
+            `🖱️ Total Clicks: ${this.formatNumber(this.gameState.totalClicks)}\n` +
+            `⭐ Prestige Points: ${this.gameState.prestigeCount}\n` +
+            `🔮 Rebirth Points: ${this.gameState.rebirthPoints}\n` +
+            `⏱️ Play Time: ${this.formatPlayTime(this.gameState.playTime)}\n\n` +
+            `Play now: https://gmast2662.github.io/Gem-Clicker/`;
+        
+        navigator.clipboard.writeText(shareText).then(() => {
+            this.showNotification('📊 Stats copied to clipboard!', 'success');
+        });
     }
 
     importSave() {
