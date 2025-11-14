@@ -1,8 +1,8 @@
 // Gem Clicker - Service Worker for Offline Support
 // ⚠️ IMPORTANT: Update this version number when releasing new versions!
 // Match this with version.json for consistency
-const CACHE_VERSION = '1.6.0';
-const BUILD_NUMBER = 106;
+const CACHE_VERSION = '1.6.1';
+const BUILD_NUMBER = 107;
 const CACHE_NAME = `gem-clicker-v${CACHE_VERSION}-b${BUILD_NUMBER}`;
 
 const urlsToCache = [
@@ -20,7 +20,7 @@ const urlsToCache = [
 
 // Install event - cache all resources
 self.addEventListener('install', event => {
-    console.log('📦 Service Worker installing - v1.6.0');
+    console.log(`📦 Service Worker installing - v${CACHE_VERSION} (build ${BUILD_NUMBER})`);
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
@@ -28,7 +28,7 @@ self.addEventListener('install', event => {
                 return cache.addAll(urlsToCache);
             })
             .then(() => {
-                console.log('✅ New version cached, activating...');
+                console.log(`✅ Version v${CACHE_VERSION} cached, activating...`);
                 return self.skipWaiting();
             })
     );
