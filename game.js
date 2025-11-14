@@ -2330,6 +2330,36 @@ class IdleClickerGame {
         }
     }
     
+    applyImportedSave(parsed) {
+        this.gameState = {
+            ...this.gameState,
+            ...parsed.gameState
+        };
+        
+        if (parsed.settings) {
+            this.settings = { ...this.settings, ...parsed.settings };
+        }
+        
+        this.grantFeatureUnlocksFromExistingPurchases();
+        
+        this.updateClickPower();
+        this.renderShop();
+        this.renderCosmetics();
+        this.applyShopEffects();
+        this.updateSettingsDropdowns();
+        this.applyCosmetics();
+        this.renderGenerators();
+        this.renderClickUpgrades();
+        this.renderMultiplierUpgrades();
+        this.renderAchievements();
+        if (this.renderMilestones) {
+            this.renderMilestones();
+        }
+        this.updateUI();
+        this.saveSettings();
+        this.saveGame();
+    }
+    
     hasCosmeticOfType(type) {
         const list = this.config.cosmetics?.[type];
         if (!Array.isArray(list)) return false;
@@ -3635,7 +3665,7 @@ class IdleClickerGame {
                 return;
             }
             
-            const encodedSave = btoa(saveData);
+            const encodedSave = this.encodeSaveString(saveData);
             
             // Copy to clipboard with fallback prompt
             this.copyToClipboard(encodedSave, '💾 Save exported to clipboard!', true);
@@ -3667,23 +3697,19 @@ class IdleClickerGame {
             `⏱️ Play Time: ${this.formatPlayTime(this.gameState.playTime)}\n\n` +
             `Play now: https://gmast2662.github.io/Gem-Clicker/`;
         
-        // Try native share API first (mobile/desktop)
+        // Always attempt to copy so it's ready to paste anywhere
+        this.copyToClipboard(shareText, '📋 Achievement text copied to clipboard!', true);
+        
+        // Try native share API as a secondary action
         if (navigator.share) {
             navigator.share({
                 title: 'My Gem Clicker Achievements',
                 text: shareText
-            }).then(() => {
-                this.copyToClipboard(shareText, '🏆 Achievements shared & copied to clipboard!', true);
-                console.log('✅ Achievements shared');
             }).catch(err => {
-                // User cancelled or error - fallback to clipboard
                 if (err.name !== 'AbortError') {
-                    this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!', true);
+                    console.warn('Share failed (text already copied):', err);
                 }
             });
-        } else {
-            // Fallback to clipboard for desktop
-            this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!', true);
         }
     }
     
@@ -3702,23 +3728,19 @@ class IdleClickerGame {
             `⏱️ Play Time: ${this.formatPlayTime(this.gameState.playTime)}\n\n` +
             `Play now: https://gmast2662.github.io/Gem-Clicker/`;
         
-        // Try native share API first (mobile/desktop)
+        // Always copy the stats summary for convenience
+        this.copyToClipboard(shareText, '📋 Stats text copied to clipboard!', true);
+        
+        // Attempt native share if supported
         if (navigator.share) {
             navigator.share({
                 title: 'My Gem Clicker Stats',
                 text: shareText
-            }).then(() => {
-                this.copyToClipboard(shareText, '📊 Stats shared & copied to clipboard!', true);
-                console.log('✅ Stats shared');
             }).catch(err => {
-                // User cancelled or error - fallback to clipboard
                 if (err.name !== 'AbortError') {
-                    this.copyToClipboard(shareText, '📊 Stats copied to clipboard!', true);
+                    console.warn('Share failed (text already copied):', err);
                 }
             });
-        } else {
-            // Fallback to clipboard for desktop
-            this.copyToClipboard(shareText, '📊 Stats copied to clipboard!', true);
         }
     }
     
@@ -3760,6 +3782,23 @@ class IdleClickerGame {
             fallbackCopy();
         }
     }
+    
+    encodeSaveString(str) {
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(str);
+        let binary = '';
+        bytes.forEach(byte => {
+            binary += String.fromCharCode(byte);
+        });
+        return btoa(binary);
+    }
+    
+    decodeSaveString(encoded) {
+        const binary = atob(encoded);
+        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+        const decoder = new TextDecoder();
+        return decoder.decode(bytes);
+    }
 
     importSave() {
         try {
@@ -3769,10 +3808,9 @@ class IdleClickerGame {
                 return;
             }
             
-            const saveData = atob(encodedSave);
+            const saveData = this.decodeSaveString(encodedSave);
             const parsed = JSON.parse(saveData);
             
-            // Validate save data
             if (!parsed.gameState) {
                 throw new Error('Invalid save data');
             }
@@ -3781,8 +3819,10 @@ class IdleClickerGame {
             if (parsed.settings) {
                 localStorage.setItem('gemClickerSettings', JSON.stringify(parsed.settings));
             }
-            alert('Save imported successfully! Reloading game...');
-            location.reload();
+            
+            this.applyImportedSave(parsed);
+            this.hideImportModal();
+            this.showNotification('✅ Save imported successfully!', 'success', true);
         } catch (error) {
             console.error('Error importing save:', error);
             alert('Error importing save! Make sure the data is correct.');

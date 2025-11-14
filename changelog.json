@@ -1,9 +1,23 @@
 {
-  "currentVersion": "v1.7.7",
-  "currentDescription": "Exclusive cosmetics bundles, faster autosaves, and rock-solid exports.",
+  "currentVersion": "v1.7.8",
+  "currentDescription": "Imports now apply instantly & share buttons auto-copy text.",
   "versions": [
     {
-      "version": "v1.7.7 (Latest)",
+      "version": "v1.7.8 (Latest)",
+      "title": "Instant Imports & Share QoL 🚀",
+      "date": "November 14, 2025",
+      "changes": [
+        "📥 Importing a save now applies immediately (no reload needed) and updates every panel/UI live",
+        "💾 Export/import uses UTF-8 safe Base64 so emoji-heavy saves round-trip perfectly",
+        "🔁 Imported saves re-run feature unlock checks so Pro Themes / Particle Effects bundles stay consistent",
+        "📋 Share buttons auto-copy their text before opening the native share sheet, covering desktop + mobile",
+        "🧠 Clipboard helper has a resilient fallback prompt if permissions are denied",
+        "⚙️ Import modal closes itself after a successful restore with a toast confirmation",
+        "🛠️ Version bumped to v1.7.8 build 130 for reliable update detection"
+      ]
+    },
+    {
+      "version": "v1.7.7",
       "title": "Exclusive Bundles & Clipboard Fixes 💾",
       "date": "November 14, 2025",
       "changes": [
