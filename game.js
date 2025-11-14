@@ -1932,8 +1932,9 @@ class IdleClickerGame {
         
         container.innerHTML = '';
         
-        // Filter items by category type
-        const categoryItems = this.config.shop.items.filter(item => item.type === categoryType);
+        // Filter items by category type (config uses singular 'feature')
+        const normalizedType = categoryType === 'features' ? 'feature' : categoryType;
+        const categoryItems = this.config.shop.items.filter(item => item.type === normalizedType);
         
         if (categoryItems.length === 0) {
             container.innerHTML = '<p style="text-align: center; color: #888;">No items in this category yet.</p>';
@@ -3526,7 +3527,7 @@ class IdleClickerGame {
                 title: 'My Gem Clicker Achievements',
                 text: shareText
             }).then(() => {
-                this.showNotification('🏆 Achievements shared!', 'success', true);
+                this.copyToClipboard(shareText, '🏆 Achievements shared & copied to clipboard!', true);
                 console.log('✅ Achievements shared');
             }).catch(err => {
                 // User cancelled or error - fallback to clipboard
@@ -3561,7 +3562,7 @@ class IdleClickerGame {
                 title: 'My Gem Clicker Stats',
                 text: shareText
             }).then(() => {
-                this.showNotification('📊 Stats shared!', 'success', true);
+                this.copyToClipboard(shareText, '📊 Stats shared & copied to clipboard!', true);
                 console.log('✅ Stats shared');
             }).catch(err => {
                 // User cancelled or error - fallback to clipboard

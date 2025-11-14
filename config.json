@@ -866,8 +866,8 @@
         "name": "Number Format Options",
         "description": "Choose between Suffix, Scientific, Engineering, or Full number display",
         "icon": "🔢",
-        "cost": 250000,
-        "purchased": false,
+        "cost": 0,
+        "purchased": true,
         "effect": "feature",
         "value": "number_format",
         "type": "feature"

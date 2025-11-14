@@ -1,9 +1,21 @@
 {
-  "currentVersion": "v1.7.3",
-  "currentDescription": "Feature gating, advanced stats, and instant-event fixes!",
+  "currentVersion": "v1.7.4",
+  "currentDescription": "Feature tab restored, sharing copies to clipboard, and polishing locks.",
   "versions": [
     {
-      "version": "v1.7.3 (Latest)",
+      "version": "v1.7.4 (Latest)",
+      "title": "Features Tab & Share Copy Fixes 📋",
+      "date": "November 14, 2025",
+      "changes": [
+        "🔁 Sharing now ALSO copies to clipboard and shows a confirmation toast",
+        "📋 Features tab shows all items again (type filtering fixed)",
+        "🔓 Number format options are free/unlocked by default",
+        "⚙️ Feature locks re-run after load to disable controls until purchased",
+        "✨ Particles/Pro themes selectors stay disabled until you buy the upgrade"
+      ]
+    },
+    {
+      "version": "v1.7.3",
       "title": "Feature Gating & Combo Polish ⚙️",
       "date": "November 14, 2025",
       "changes": [
