@@ -1,11 +1,21 @@
 {
-  "currentVersion": "v1.6.0",
+  "currentVersion": "v1.6.1",
   "currentDescription": "PWA support, configurable events, achievement progress, and new cosmetics!",
   "versions": [
     {
+      "version": "v1.6.1",
+      "title": "Bug Fixes & New Items 🐛",
+      "date": "November 13, 2024",
+      "changes": [
+        "🎵 Sound packs - Retro 8-bit, Soft sounds, Epic sounds, Nature sounds",
+        "Fixed bugs with update notifications",
+        "More items in the shop"
+      ]
+    },
+    {
       "version": "v1.6.0",
       "title": "PWA & Advanced Features 📱",
-      "date": "November 14, 2024",
+      "date": "November 13, 2024",
       "changes": [
         "📱 Progressive Web App - Install on mobile & desktop!",
         "🌐 Offline support - Play without internet after first load",
