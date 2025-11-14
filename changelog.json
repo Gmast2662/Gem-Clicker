@@ -1,9 +1,28 @@
 {
-  "currentVersion": "v1.7.2",
-  "currentDescription": "MASSIVE UPDATE: 14 new shop items with full implementation!",
+  "currentVersion": "v1.7.3",
+  "currentDescription": "Feature gating, advanced stats, and instant-event fixes!",
   "versions": [
     {
-      "version": "v1.7.2 (Latest)",
+      "version": "v1.7.3 (Latest)",
+      "title": "Feature Gating & Combo Polish ⚙️",
+      "date": "November 14, 2025",
+      "changes": [
+        "⚠️ Lucky Fortune now warns you if Lucky Events aren’t unlocked",
+        "👺 Gem Goblin / Treasure Chest / Meteor banners always appear (5s, high z-index)",
+        "💥 Critical hits now show red \"CRIT\" popups",
+        "⚡ Combo indicator with animated badge and pulse effect",
+        "📊 Expanded Stats upgrade shows ROI, totals, and next gain per generator",
+        "🧠 Advanced Tooltips add effect details inside shop cards",
+        "🔒 Feature locks: number formats, particles, pro themes gated until purchased",
+        "✨ Particle effects require purchase; selectors disable until unlocked",
+        "🌙 Eternal Earnings prestige upgrade now buffs offline earnings",
+        "🧮 Generator Synergy implemented (each generator boosts the next)",
+        "📱 Share dialog uses native share API, shows notifications even without Smart Notifications",
+        "💾 Quick Save / Export / Hotkeys listed as free features"
+      ]
+    },
+    {
+      "version": "v1.7.2",
       "title": "14 New Shop Items Implemented! 🎮",
       "date": "November 14, 2025",
       "changes": [

@@ -338,8 +338,11 @@ class IdleClickerGame {
         // Initialize shop purchases
         if (this.config.shop?.enabled) {
             this.config.shop.items.forEach(item => {
+                const defaultPurchased = item.purchased === true || item.cost === 0;
                 if (this.gameState.shopPurchases[item.id] === undefined) {
-                    this.gameState.shopPurchases[item.id] = false;
+                    this.gameState.shopPurchases[item.id] = defaultPurchased;
+                } else if (defaultPurchased) {
+                    this.gameState.shopPurchases[item.id] = true;
                 }
             });
         }
@@ -384,6 +387,7 @@ class IdleClickerGame {
         this.renderTips();
         this.renderChangelog();
         this.updateSettingsDropdowns();
+        this.applyShopEffects();
         this.updateUI();
         
         // Show prestige UI if enabled
@@ -575,6 +579,7 @@ class IdleClickerGame {
         
         // Apply saved settings
         this.applySettings();
+        this.updateFeatureLocks();
     }
     
     pauseGame() {
@@ -744,6 +749,57 @@ class IdleClickerGame {
             eventSelect.appendChild(option);
         });
     }
+    
+    getShopEffectDescription(item) {
+        switch (item.effect) {
+            case 'click_multiplier':
+                return `Click power x${item.value}`;
+            case 'production_multiplier':
+                return `Generators x${item.value}`;
+            case 'prestige_multiplier':
+                return `Prestige rewards x${item.value}`;
+            case 'cost_reduction':
+                return `Upgrades cost ${(1 - item.value) * 100}% less`;
+            case 'automation':
+                if (item.value === 'auto_buy_gen') return 'Automatically buys the cheapest generator';
+                if (item.value === 'auto_prestige') return 'Automatically prestiges for +5⭐ or more';
+                if (item.value === 'auto_claim') return 'Automatically claims daily rewards';
+                return '';
+            case 'feature':
+                switch (item.value) {
+                    case 'number_format':
+                        return 'Unlock number format options in Settings';
+                    case 'tooltips':
+                        return 'Show detailed stats on hover';
+                    case 'particles':
+                        return 'Unlock click particle effects';
+                    case 'premium_themes':
+                        return 'Unlock premium theme selector';
+                    case 'expanded_stats':
+                        return 'Show per-generator efficiency stats';
+                    default:
+                        return '';
+                }
+            case 'critical_chance':
+                return 'Adds 10% chance for 5x critical clicks';
+            case 'click_combo':
+                return `Rapid clicking builds up to ${item.value}x combo`;
+            case 'generator_synergy':
+                return 'Each generator boosts the next by 0.1% per level';
+            case 'lucky_chance':
+                return `Lucky event chance +${item.value * 100}% per level`;
+            case 'free_auto_clicks':
+                return `Adds ${item.value} free auto-clicks per level`;
+            case 'starting_gems':
+                return `Start each prestige with +${this.formatNumber(item.value)} gems per level`;
+            case 'offline_boost':
+                return `Offline earnings +${item.value * 100}% per level`;
+            case 'milestone_boost':
+                return `Milestone bonuses +${item.value * 100}% per level`;
+            default:
+                return '';
+        }
+    }
 
     handleClick(e) {
         // Resume audio context on first interaction (browser requirement)
@@ -782,8 +838,8 @@ class IdleClickerGame {
         
         // Apply click combo system (rapid clicking builds multiplier)
         if (this.gameState.shopPurchases['click_combo']) {
-            const now = Date.now();
-            const timeSinceLastClick = now - this.clickCombo.lastClickTime;
+            const comboNow = Date.now();
+            const timeSinceLastClick = comboNow - this.clickCombo.lastClickTime;
             
             if (timeSinceLastClick < 500) { // Less than 500ms = combo continues
                 this.clickCombo.count = Math.min(this.clickCombo.count + 1, 50); // Max 50 hits
@@ -794,7 +850,7 @@ class IdleClickerGame {
                 this.clickCombo.multiplier = 1;
             }
             
-            this.clickCombo.lastClickTime = now;
+            this.clickCombo.lastClickTime = comboNow;
             earnAmount *= this.clickCombo.multiplier;
             
             // Show combo multiplier
@@ -839,6 +895,8 @@ class IdleClickerGame {
     }
     
     createParticles(x, y, count) {
+        if (!this.gameState.shopPurchases['particle_effects']) return;
+        
         // Get particle colors based on selected particle effect in settings
         let colors = ['#4ecdc4', '#9b59b6', '#3498db', '#f39c12', '#e74c3c']; // Default
         
@@ -896,22 +954,20 @@ class IdleClickerGame {
         }
     }
     
-    showNotification(message, type = 'info') {
-        // Only show if notifications are enabled
-        if (!this.gameState.shopPurchases['notifications']) return;
+    showNotification(message, type = 'info', force = false) {
+        if (!force && !this.gameState.shopPurchases['notifications']) return;
         
         const notification = document.createElement('div');
-        notification.className = `toast-notification toast-${type}`;
-        notification.textContent = message;
+        notification.className = 'achievement-popup';
+        notification.innerHTML = `
+            <div class="achievement-popup-header">${type === 'success' ? '✅ Success' : '🔔 Notification'}</div>
+            <div class="achievement-popup-name">${message}</div>
+        `;
         
         document.body.appendChild(notification);
         
-        // Animate in
-        setTimeout(() => notification.classList.add('show'), 10);
-        
-        // Remove after 3 seconds
         setTimeout(() => {
-            notification.classList.remove('show');
+            notification.classList.add('fade-out');
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
@@ -1682,6 +1738,7 @@ class IdleClickerGame {
     renderGenerators() {
         const container = document.getElementById('generators-container');
         container.innerHTML = '';
+        const generatorMultiplier = this.calculateGeneratorMultiplier();
         
         this.config.generators.forEach(generator => {
             const level = this.gameState.generators[generator.id].level;
@@ -1690,7 +1747,6 @@ class IdleClickerGame {
             const production = level * generator.baseProduction;
             
             // Calculate actual production with multipliers
-            const generatorMultiplier = this.calculateGeneratorMultiplier();
             const actualProduction = production * generatorMultiplier;
             
             // Show TRUE base production (just the raw number from config) if not owned yet
@@ -1710,6 +1766,7 @@ class IdleClickerGame {
                             ? `<span class="upgrade-production">+${this.formatNumber(actualProduction)}/s</span>` 
                             : `<span class="upgrade-production" style="opacity: 0.7;">Base: ${this.formatNumber(baseProductionDisplay)}/s</span>`
                         }
+                        ${this.getGeneratorExtraStats(generator, level, cost, generatorMultiplier)}
                     </div>
                 </div>
                 <div class="upgrade-cost">${this.formatNumber(cost)} ${this.config.game.currencyIcon}</div>
@@ -1724,6 +1781,20 @@ class IdleClickerGame {
             
             container.appendChild(item);
         });
+    }
+    
+    getGeneratorExtraStats(generator, level, cost, generatorMultiplier) {
+        if (!this.gameState.shopPurchases['statistics_expanded']) return '';
+        
+        const perLevelGain = generator.baseProduction * generatorMultiplier;
+        const totalGain = level * perLevelGain;
+        const roiSeconds = perLevelGain > 0 ? cost / perLevelGain : 0;
+        
+        return `
+            <div class="upgrade-extra">
+                Next: +${this.formatNumber(perLevelGain)}/s • Total: ${this.formatNumber(totalGain)}/s ${perLevelGain > 0 ? `• ROI: ${this.formatShortTime(roiSeconds)}` : ''}
+            </div>
+        `;
     }
 
     renderClickUpgrades() {
@@ -1872,6 +1943,15 @@ class IdleClickerGame {
         categoryItems.forEach(item => {
             const purchased = this.gameState.shopPurchases[item.id];
             const canAfford = this.gameState.currency >= item.cost;
+            const costDisplay = item.cost === 0 ? 'FREE' : `${this.formatNumber(item.cost)} ${this.config.game.currencyIcon}`;
+            
+            let extraInfo = '';
+            if (this.gameState.shopPurchases['advanced_tooltips']) {
+                const effectDescription = this.getShopEffectDescription(item);
+                if (effectDescription) {
+                    extraInfo = `<div class="upgrade-tooltip">${effectDescription}</div>`;
+                }
+            }
             
             const shopItem = document.createElement('div');
             shopItem.className = `upgrade-item ${purchased ? 'purchased' : (!canAfford ? 'disabled' : '')}`;
@@ -1881,8 +1961,9 @@ class IdleClickerGame {
                 <div class="upgrade-info">
                     <div class="upgrade-name">${item.name}${purchased ? ' ✓' : ''}</div>
                     <div class="upgrade-description">${item.description}</div>
+                    ${extraInfo}
                 </div>
-                <div class="upgrade-cost">${purchased ? 'OWNED' : this.formatNumber(item.cost) + ' ' + this.config.game.currencyIcon}</div>
+                <div class="upgrade-cost">${purchased ? 'OWNED' : costDisplay}</div>
             `;
             
             if (!purchased) {
@@ -2025,6 +2106,7 @@ class IdleClickerGame {
             // Render both shop and cosmetics
             this.renderShop();
             this.renderCosmetics();
+            this.applyShopEffects();
             
             // Update settings dropdowns with newly purchased item
             this.updateSettingsDropdowns();
@@ -2091,15 +2173,51 @@ class IdleClickerGame {
                 setTimeout(() => popup.remove(), 500);
             }, 3000);
             
-            // Apply shop effects
-            this.applyShopEffects();
         }
     }
     
     applyShopEffects() {
-        // Shop effects are now applied directly in calculation methods
-        // (updateClickPower, calculateGeneratorMultiplier, calculatePrestigeGain, etc.)
-        // This function is kept for future shop items that need immediate application
+        this.updateFeatureLocks();
+    }
+
+    updateFeatureLocks() {
+        const numberNotationSelect = document.getElementById('number-notation-select');
+        if (numberNotationSelect) {
+            const unlocked = this.gameState.shopPurchases['number_notation'];
+            numberNotationSelect.disabled = !unlocked;
+            numberNotationSelect.title = unlocked ? '' : 'Unlock Number Format Options in the Features shop tab';
+            if (!unlocked && this.settings.numberNotation !== 'suffix') {
+                this.settings.numberNotation = 'suffix';
+                numberNotationSelect.value = 'suffix';
+                this.saveSettings();
+                this.updateUI();
+            }
+        }
+        
+        const particleSelect = document.getElementById('particle-effect-select');
+        if (particleSelect) {
+            const particlesUnlocked = this.gameState.shopPurchases['particle_effects'];
+            particleSelect.disabled = !particlesUnlocked;
+            particleSelect.title = particlesUnlocked ? '' : 'Unlock Particle Effects in the Features shop tab';
+            if (!particlesUnlocked) {
+                particleSelect.value = 'default';
+                this.settings.particleEffect = 'default';
+                this.saveSettings();
+            }
+        }
+        
+        const premiumThemeSelect = document.getElementById('premium-theme-select');
+        if (premiumThemeSelect) {
+            const themesUnlocked = this.gameState.shopPurchases['dark_mode_pro'];
+            premiumThemeSelect.disabled = !themesUnlocked;
+            premiumThemeSelect.title = themesUnlocked ? '' : 'Unlock Pro Themes in the Features shop tab';
+            if (!themesUnlocked) {
+                premiumThemeSelect.value = 'none';
+                this.settings.premiumTheme = 'none';
+                this.saveSettings();
+                this.applyCosmetics();
+            }
+        }
     }
     
     applyCosmetics() {
@@ -2873,6 +2991,14 @@ class IdleClickerGame {
         }
     }
 
+    formatShortTime(seconds) {
+        if (!isFinite(seconds) || seconds <= 0) return 'Instant';
+        if (seconds < 60) return `${Math.max(1, Math.round(seconds))}s`;
+        if (seconds < 3600) return `${Math.round(seconds / 60)}m`;
+        const hours = Math.round(seconds / 3600);
+        return `${hours}h`;
+    }
+
     switchTab(tabName) {
         // Remove active class from all tabs
         document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -3250,6 +3376,8 @@ class IdleClickerGame {
         }, 5000);
         
         console.log(`🎰 ${event.name}: +${this.formatNumber(amount)} gems!`);
+        this.gameState.luckyEvent.active = false;
+        this.gameState.luckyEvent.type = null;
         this.updateUI();
     }
     
@@ -3398,47 +3526,18 @@ class IdleClickerGame {
                 title: 'My Gem Clicker Achievements',
                 text: shareText
             }).then(() => {
-                this.showNotification('🏆 Achievements shared!');
+                this.showNotification('🏆 Achievements shared!', 'success', true);
                 console.log('✅ Achievements shared');
             }).catch(err => {
                 // User cancelled or error - fallback to clipboard
                 if (err.name !== 'AbortError') {
-                    this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!');
+                    this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!', true);
                 }
             });
         } else {
             // Fallback to clipboard for desktop
-            this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!');
+            this.copyToClipboard(shareText, '🏆 Achievements copied to clipboard!', true);
         }
-    }
-    
-    showNotification(message) {
-        // Create notification popup
-        const notification = document.createElement('div');
-        notification.className = 'achievement-popup';
-        notification.style.cssText = `
-            position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 10000;
-            animation: slideDown 0.3s ease-out;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-        `;
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideUp 0.3s ease-out';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
     }
     
     shareStats() {
@@ -3462,23 +3561,23 @@ class IdleClickerGame {
                 title: 'My Gem Clicker Stats',
                 text: shareText
             }).then(() => {
-                this.showNotification('📊 Stats shared!');
+                this.showNotification('📊 Stats shared!', 'success', true);
                 console.log('✅ Stats shared');
             }).catch(err => {
                 // User cancelled or error - fallback to clipboard
                 if (err.name !== 'AbortError') {
-                    this.copyToClipboard(shareText, '📊 Stats copied to clipboard!');
+                    this.copyToClipboard(shareText, '📊 Stats copied to clipboard!', true);
                 }
             });
         } else {
             // Fallback to clipboard for desktop
-            this.copyToClipboard(shareText, '📊 Stats copied to clipboard!');
+            this.copyToClipboard(shareText, '📊 Stats copied to clipboard!', true);
         }
     }
     
-    copyToClipboard(text, successMessage) {
+    copyToClipboard(text, successMessage, force = false) {
         navigator.clipboard.writeText(text).then(() => {
-            this.showNotification(successMessage);
+            this.showNotification(successMessage, 'success', force);
             console.log('✅', successMessage);
         }).catch(err => {
             console.error('Failed to copy:', err);
