@@ -92,9 +92,9 @@ class IdleClickerGame {
     
     async loadAudioFiles() {
         console.log('🎵 Loading audio files...');
-        this.audioBuffers.click = await this.loadAudioFile('sounds/click.mp3');
-        this.audioBuffers.buy = await this.loadAudioFile('sounds/buy.mp3');
-        this.audioBuffers.achievement = await this.loadAudioFile('sounds/achievement.mp3');
+        this.audioBuffers.click = await this.loadAudioFile('sounds/mixkit-game-click-1114.wav');
+        this.audioBuffers.buy = await this.loadAudioFile('sounds/mixkit-arcade-game-jump-coin-216.wav');
+        this.audioBuffers.achievement = await this.loadAudioFile('sounds/mixkit-unlock-new-item-game-notification-254.wav');
         console.log('✅ Audio files loaded!');
     }
     
@@ -169,6 +169,26 @@ class IdleClickerGame {
                 click: { frequency: 700, volume: 0.09, duration: 0.13, waveType: 'sine' },
                 buy: { frequency: 450, volume: 0.14, duration: 0.22, waveType: 'sine' },
                 achievement: { frequency: 800, volume: 0.18, duration: 0.55, waveType: 'sine' }
+            },
+            industrial: {
+                click: { frequency: 500, volume: 0.14, duration: 0.06, waveType: 'square' },
+                buy: { frequency: 400, volume: 0.19, duration: 0.20, waveType: 'sawtooth' },
+                achievement: { frequency: 600, volume: 0.27, duration: 0.35, waveType: 'square' }
+            },
+            crystal: {
+                click: { frequency: 820, volume: 0.15, duration: 0.12, waveType: 'square' },
+                buy: { frequency: 900, volume: 0.18, duration: 0.15, waveType: 'sawtooth' },
+                achievement: { frequency: 1200, volume: 0.2, duration: 0.45, waveType: 'square' }
+            },
+            chime: {
+                click: { frequency: 1000, volume: 0.17, duration: 0.13, waveType: 'triangle' },
+                buy: { frequency: 900, volume: 0.15, duration: 0.2, waveType: 'triangle' },
+                achievement: { frequency: 1250, volume: 0.18, duration: 0.5, waveType: 'triangle' }
+            },
+            zen: {
+                click: { frequency: 500, volume: 0.1, duration: 0.09, waveType: 'sine' },
+                buy: { frequency: 560, volume: 0.22, duration: 0.3, waveType: 'sine' },
+                achievement: { frequency: 600, volume: 0.2, duration: 0.5, waveType: 'triangle' }
             }
         };
         
