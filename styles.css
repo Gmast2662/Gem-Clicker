@@ -378,6 +378,12 @@ body {
     margin-top: 5px;
 }
 
+.upgrade-extra-hint {
+    font-size: 0.75em;
+    color: #a5b1c2;
+    margin-top: 2px;
+}
+
 .upgrade-tooltip {
     font-size: 0.85em;
     color: #c8d6e5;

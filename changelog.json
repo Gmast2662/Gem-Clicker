@@ -1,9 +1,25 @@
 {
-  "currentVersion": "v1.7.4",
-  "currentDescription": "Feature tab restored, sharing copies to clipboard, and polishing locks.",
+  "currentVersion": "v1.7.5",
+  "currentDescription": "Progress bars, advanced tooltips, premium themes, and stats polish.",
   "versions": [
     {
-      "version": "v1.7.4 (Latest)",
+      "version": "v1.7.5 (Latest)",
+      "title": "Progress Bars & Premium Themes Fix 🎯",
+      "date": "November 14, 2025",
+      "changes": [
+        "🏆 Achievement progress bars show again after buying Achievement Hunter",
+        "💡 Advanced tooltips appear after purchasing the new feature (and now show exact effects)",
+        "🎨 Premium theme selector unlocks if you either buy Pro Themes or own premium themes",
+        "✨ Particle selector unlocks if you buy the feature or own particle cosmetics",
+        "🔢 Number formats unlocked by default; dropdown stays enabled",
+        "📊 Generator stats show precise \"Next\" values with ROI explanations (time to earn cost back)",
+        "📈 Stats visible even before buying the generator once you purchase Expanded Statistics",
+        "🔁 Share dialog still opens natively but ALSO copies to clipboard with a toast",
+        "⚙️ Feature tab filter fixed so items always show up"
+      ]
+    },
+    {
+      "version": "v1.7.4",
       "title": "Features Tab & Share Copy Fixes 📋",
       "date": "November 14, 2025",
       "changes": [

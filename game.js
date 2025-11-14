@@ -1789,11 +1789,13 @@ class IdleClickerGame {
         const perLevelGain = generator.baseProduction * generatorMultiplier;
         const totalGain = level * perLevelGain;
         const roiSeconds = perLevelGain > 0 ? cost / perLevelGain : 0;
+        const roiText = perLevelGain > 0 ? this.formatShortTime(roiSeconds) : 'N/A';
         
         return `
             <div class="upgrade-extra">
-                Next: +${this.formatNumber(perLevelGain)}/s • Total: ${this.formatNumber(totalGain)}/s ${perLevelGain > 0 ? `• ROI: ${this.formatShortTime(roiSeconds)}` : ''}
+                Next: +${this.formatStatNumber(perLevelGain)}/s • Total: ${this.formatStatNumber(totalGain)}/s • ROI ≈ ${roiText}
             </div>
+            <div class="upgrade-extra-hint">ROI = time to earn the cost back</div>
         `;
     }
 
@@ -2185,19 +2187,16 @@ class IdleClickerGame {
         const numberNotationSelect = document.getElementById('number-notation-select');
         if (numberNotationSelect) {
             const unlocked = this.gameState.shopPurchases['number_notation'];
-            numberNotationSelect.disabled = !unlocked;
-            numberNotationSelect.title = unlocked ? '' : 'Unlock Number Format Options in the Features shop tab';
-            if (!unlocked && this.settings.numberNotation !== 'suffix') {
-                this.settings.numberNotation = 'suffix';
-                numberNotationSelect.value = 'suffix';
-                this.saveSettings();
-                this.updateUI();
+            numberNotationSelect.disabled = false;
+            numberNotationSelect.title = '';
+            if (!unlocked) {
+                this.gameState.shopPurchases['number_notation'] = true;
             }
         }
         
         const particleSelect = document.getElementById('particle-effect-select');
         if (particleSelect) {
-            const particlesUnlocked = this.gameState.shopPurchases['particle_effects'];
+            const particlesUnlocked = this.gameState.shopPurchases['particle_effects'] || this.hasCosmeticOfType('particles');
             particleSelect.disabled = !particlesUnlocked;
             particleSelect.title = particlesUnlocked ? '' : 'Unlock Particle Effects in the Features shop tab';
             if (!particlesUnlocked) {
@@ -2209,7 +2208,7 @@ class IdleClickerGame {
         
         const premiumThemeSelect = document.getElementById('premium-theme-select');
         if (premiumThemeSelect) {
-            const themesUnlocked = this.gameState.shopPurchases['dark_mode_pro'];
+            const themesUnlocked = this.gameState.shopPurchases['dark_mode_pro'] || this.hasCosmeticOfType('themes');
             premiumThemeSelect.disabled = !themesUnlocked;
             premiumThemeSelect.title = themesUnlocked ? '' : 'Unlock Pro Themes in the Features shop tab';
             if (!themesUnlocked) {
@@ -2219,6 +2218,12 @@ class IdleClickerGame {
                 this.applyCosmetics();
             }
         }
+    }
+    
+    hasCosmeticOfType(type) {
+        const list = this.config.cosmetics?.[type];
+        if (!Array.isArray(list)) return false;
+        return list.some(item => this.gameState.shopPurchases[item.id]);
     }
     
     applyCosmetics() {
@@ -2976,6 +2981,15 @@ class IdleClickerGame {
                 
                 return scaled.toFixed(decimals) + suffix;
         }
+    }
+
+    formatStatNumber(num) {
+        const abs = Math.abs(num);
+        if (abs >= 1000) return this.formatNumber(num);
+        if (abs >= 100) return num.toFixed(1);
+        if (abs >= 10) return num.toFixed(2);
+        if (abs >= 1) return num.toFixed(3);
+        return num.toFixed(4);
     }
 
     formatPlayTime(seconds) {
