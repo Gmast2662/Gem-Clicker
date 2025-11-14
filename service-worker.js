@@ -1,5 +1,10 @@
 // Gem Clicker - Service Worker for Offline Support
-const CACHE_NAME = 'gem-clicker-v1.6.0';
+// ⚠️ IMPORTANT: Update this version number when releasing new versions!
+// Match this with version.json for consistency
+const CACHE_VERSION = '1.6.0';
+const BUILD_NUMBER = 106;
+const CACHE_NAME = `gem-clicker-v${CACHE_VERSION}-b${BUILD_NUMBER}`;
+
 const urlsToCache = [
     './',
     './index.html',
@@ -8,6 +13,7 @@ const urlsToCache = [
     './config.json',
     './tips.json',
     './changelog.json',
+    './version.json',
     './favicon.svg',
     './manifest.json'
 ];

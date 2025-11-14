@@ -514,6 +514,11 @@
         </div>
     </div>
 
+    <!-- Version Display -->
+    <div id="version-display" class="version-display">
+        <span id="version-text">v1.6.0</span>
+    </div>
+
     <!-- Admin Panel Toggle -->
     <button id="admin-toggle" class="admin-toggle">🔧 Admin</button>
 
@@ -658,10 +663,11 @@
                             });
                         });
                         
-                        // Check for updates every hour
+                        // Check for updates every 5 minutes
                         setInterval(() => {
                             registration.update();
-                        }, 3600000); // 1 hour
+                            console.log('🔍 Checking for updates...');
+                        }, 300000); // 5 minutes
                     })
                     .catch(error => {
                         console.log('❌ Service Worker registration failed:', error);

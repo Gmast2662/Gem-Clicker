@@ -137,6 +137,21 @@ class IdleClickerGame {
             const response = await fetch(`config.json?v=${Date.now()}`);
             this.config = await response.json();
             
+            // Load version info
+            try {
+                const versionResponse = await fetch(`version.json?v=${Date.now()}`);
+                this.version = await versionResponse.json();
+                // Update version display
+                const versionText = document.getElementById('version-text');
+                if (versionText) {
+                    versionText.textContent = `v${this.version.version}`;
+                    versionText.title = `Build ${this.version.buildNumber} - ${this.version.buildDate}`;
+                }
+            } catch (e) {
+                console.log('Version.json not found, using default');
+                this.version = { version: '1.6.0', buildNumber: 106, buildDate: '2024-11-14' };
+            }
+            
             // Load tips and changelog
             try {
                 const tipsResponse = await fetch(`tips.json?v=${Date.now()}`);
