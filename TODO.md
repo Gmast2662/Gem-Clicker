@@ -7,6 +7,56 @@ This document tracks planned features, improvements, and ideas for future update
 ## **To do: (by me)**
 *All current requests completed!*
 
+## ✅ Recently Completed (v1.6.0 - November 14, 2024)
+
+### **🎰 Configurable Lucky Events**
+- [x] 5 event types (Golden Gem, Gem Rush, Meteor Shower, Lucky Streak, Gem Tornado)
+- [x] Events fully configurable in config.json
+- [x] Admin panel dropdown to trigger any event
+- [x] Instant events (Meteor Shower gives 5% of total earned)
+- [x] All events apply to relevant systems (clicks, production, auto-clicker)
+
+### **📱 PWA - Progressive Web App**
+- [x] Created manifest.json for installability
+- [x] Service worker for offline caching
+- [x] Install button on mobile (Add to Home Screen)
+- [x] Install button on desktop (Chrome/Edge)
+- [x] Works offline after first visit
+- [x] Fullscreen app mode
+
+### **🏪 New Shop Items**
+- [x] Achievement Hunter (300K) - Shows progress bars for achievements
+- [x] Lucky Charm (2M) - 2x chance for lucky events
+- [x] Gem Magnet (4M) - 20% more generator production
+
+### **🎨 New Cosmetics**
+- [x] Star Particles (900K) - Sparkling stars
+- [x] Heart Particles (650K) - Pink hearts
+- [x] Retro Sound Pack (500K) - 8-bit sounds
+- [x] Soft Sound Pack (750K) - Gentle sounds
+
+### **💎 Gem Visual Improvements**
+- [x] Classic diamond cut shape (pointed top/bottom)
+- [x] 5-layer animated backgrounds
+- [x] Rotating sparkle star effects
+- [x] Shimmer animations (4s loops)
+- [x] Massive glowing auras
+
+### **📊 UI Improvements**
+- [x] Generators show base production at level 0
+- [x] Admin panel updates live (no close/reopen needed)
+- [x] Achievement progress bars (with shop unlock)
+- [x] Average clicks/sec shows real rate
+
+### **📝 Easy Editing System**
+- [x] tips.json - Edit all tips without HTML
+- [x] changelog.json - Edit patch notes easily
+- [x] EDITING_GUIDE.md - Complete editing instructions
+
+### **🔧 Advanced Systems**
+- [x] Transcendence layer (requires 5 rebirths, 5x multiplier)
+- [x] Ascension layer (requires 3 transcendence, 10x multiplier)
+
 ## ✅ Recently Completed (v1.5.0)
 
 ### **🎨 Cosmetics System**

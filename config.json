@@ -289,6 +289,22 @@
     "bonusPerPoint": 2,
     "confirmationRequired": true
   },
+  "transcendence": {
+    "enabled": true,
+    "currencyName": "Transcendence Point",
+    "currencyIcon": "✨",
+    "requirement": 5,
+    "bonusPerPoint": 5,
+    "confirmationRequired": true
+  },
+  "ascension": {
+    "enabled": true,
+    "currencyName": "Ascension Point",
+    "currencyIcon": "👼",
+    "requirement": 3,
+    "bonusPerPoint": 10,
+    "confirmationRequired": true
+  },
   "cosmetics": {
     "enabled": true,
     "themes": [
@@ -412,6 +428,44 @@
         "cost": 700000,
         "purchased": false,
         "value": "nature"
+      },
+      {
+        "id": "star_particles",
+        "name": "Star Particles",
+        "description": "Sparkling stars and cosmic dust",
+        "icon": "⭐",
+        "cost": 900000,
+        "purchased": false,
+        "value": "star"
+      },
+      {
+        "id": "heart_particles",
+        "name": "Heart Particles",
+        "description": "Lovely pink heart effects",
+        "icon": "💖",
+        "cost": 650000,
+        "purchased": false,
+        "value": "heart"
+      }
+    ],
+    "sounds": [
+      {
+        "id": "sound_pack_retro",
+        "name": "Retro Sound Pack",
+        "description": "Classic 8-bit sound effects",
+        "icon": "🎮",
+        "cost": 500000,
+        "purchased": false,
+        "value": "retro"
+      },
+      {
+        "id": "sound_pack_soft",
+        "name": "Soft Sound Pack",
+        "description": "Gentle and soothing sounds",
+        "icon": "🔔",
+        "cost": 750000,
+        "purchased": false,
+        "value": "soft"
       }
     ]
   },
@@ -489,6 +543,39 @@
         "purchased": false,
         "effect": "cost_reduction",
         "value": 0.9,
+        "type": "gameplay"
+      },
+      {
+        "id": "achievement_hunter",
+        "name": "Achievement Hunter",
+        "description": "Show progress bars for achievements",
+        "icon": "🎯",
+        "cost": 300000,
+        "purchased": false,
+        "effect": "feature",
+        "value": "achievement_progress",
+        "type": "feature"
+      },
+      {
+        "id": "lucky_boost",
+        "name": "Lucky Charm",
+        "description": "2x chance for lucky events to trigger",
+        "icon": "🍀",
+        "cost": 2000000,
+        "purchased": false,
+        "effect": "lucky_chance_multiplier",
+        "value": 2,
+        "type": "gameplay"
+      },
+      {
+        "id": "gem_magnet",
+        "name": "Gem Magnet",
+        "description": "Generators produce 20% more gems",
+        "icon": "🧲",
+        "cost": 4000000,
+        "purchased": false,
+        "effect": "production_boost",
+        "value": 1.2,
         "type": "gameplay"
       }
     ]

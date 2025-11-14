@@ -159,9 +159,51 @@ Unlock achievements to show off your mining prowess:
 
 ---
 
+## 📲 Install as App (NEW!)
+
+**Gem Clicker is now a Progressive Web App (PWA)!**
+
+### On Mobile (Android/iOS):
+1. Visit https://gmast2662.github.io/Gem-Clicker/
+2. Tap the **"Add to Home Screen"** button
+3. App installs like a native app!
+4. Opens in fullscreen (no browser UI)
+5. Works offline!
+
+### On Desktop (Chrome/Edge):
+1. Visit the game
+2. Click the **⊕ Install** icon in address bar
+3. App installs as standalone window!
+4. Works offline!
+
+### Benefits:
+- ✅ Works completely offline after first load
+- ✅ Faster loading (cached resources)
+- ✅ Fullscreen experience
+- ✅ App icon on home screen
+- ✅ No browser UI clutter
+
+---
+
 ## 📋 Changelog
 
-### Version 1.5.0 (Latest) - November 13, 2024
+### Version 1.6.0 (Latest) - November 14, 2024
+- 📱 **Progressive Web App** - Install on mobile & desktop, play offline!
+- 🎰 **5 Lucky Event Types** - Golden Gem, Gem Rush, Meteor Shower, Lucky Streak, Gem Tornado
+- ⚙️ **Configurable Events** - Add custom events in config.json
+- 🔧 **Admin Event Controls** - Dropdown to trigger any event
+- 🏪 **3 New Shop Items** - Achievement Hunter (progress bars), Lucky Charm (2x event chance), Gem Magnet (+20% production)
+- ✨ **Transcendence System** - Beyond rebirth (5x multiplier per point)
+- 👼 **Ascension System** - Beyond transcendence (10x multiplier per point)
+- 🎯 **Achievement Progress Bars** - See your progress toward each achievement
+- ⭐ **2 New Particles** - Star particles, Heart particles
+- 🎵 **Sound Packs** - Retro 8-bit sounds, Soft gentle sounds (cosmetic)
+- 💎 **Improved Gem Shapes** - Classic diamond cut with pointed top/bottom
+- 📝 **Easy Editing** - tips.json & changelog.json for simple updates
+- 🔧 **Live Admin Updates** - Panel updates in real-time
+- 🏭 **Better Generator Display** - Shows base production before purchase
+
+### Version 1.5.0 - November 13, 2024
 - 🎨 **NEW: Cosmetics System** - Separate tab for themes, skins, and particle effects
 - 💎 **Animated Gem Skins** - 4 octagonal diamond-shaped gems with shimmering effects
 - ✦ **Sparkle Effects** - Pulsing star animations on all gem skins

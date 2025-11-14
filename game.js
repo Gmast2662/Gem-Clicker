@@ -603,6 +603,12 @@ class IdleClickerGame {
             case 'nature':
                 colors = ['#228B22', '#32CD32', '#90EE90', '#00FF00', '#ADFF2F', '#7FFF00'];
                 break;
+            case 'star':
+                colors = ['#FFD700', '#FFFF00', '#FFFFFF', '#FFF8DC', '#F0E68C', '#FFFACD'];
+                break;
+            case 'heart':
+                colors = ['#FF69B4', '#FFB6C1', '#FFC0CB', '#FF1493', '#DB7093', '#C71585'];
+                break;
         }
         
         for (let i = 0; i < count; i++) {
@@ -739,6 +745,11 @@ class IdleClickerGame {
         // Apply Overdrive shop upgrade (production boost)
         if (this.gameState.shopPurchases['production_boost']) {
             totalMultiplier *= 1.5;
+        }
+        
+        // Apply Gem Magnet shop upgrade
+        if (this.gameState.shopPurchases['gem_magnet']) {
+            totalMultiplier *= 1.2;
         }
         
         return totalMultiplier;
@@ -1518,7 +1529,8 @@ class IdleClickerGame {
         const allCosmetics = [
             ...(this.config.cosmetics.themes || []),
             ...(this.config.cosmetics.skins || []),
-            ...(this.config.cosmetics.particles || [])
+            ...(this.config.cosmetics.particles || []),
+            ...(this.config.cosmetics.sounds || [])
         ];
         
         allCosmetics.forEach(item => {
@@ -1557,7 +1569,8 @@ class IdleClickerGame {
         const allCosmetics = [
             ...(this.config.cosmetics.themes || []),
             ...(this.config.cosmetics.skins || []),
-            ...(this.config.cosmetics.particles || [])
+            ...(this.config.cosmetics.particles || []),
+            ...(this.config.cosmetics.sounds || [])
         ];
         
         const item = allCosmetics.find(i => i.id === itemId);
@@ -1795,15 +1808,54 @@ class IdleClickerGame {
         const container = document.getElementById('achievements-container');
         container.innerHTML = '';
         
+        // Check if progress bars are unlocked
+        const showProgress = this.gameState.shopPurchases['achievement_hunter'];
+        
         this.config.achievements.list.forEach(achievement => {
             const unlocked = this.gameState.achievements[achievement.id];
+            
+            // Calculate progress if not unlocked and progress bars enabled
+            let progressHTML = '';
+            if (!unlocked && showProgress && achievement.requirement) {
+                let currentValue = 0;
+                const targetValue = achievement.requirement.value;
+                
+                switch (achievement.requirement.type) {
+                    case 'total_clicks':
+                        currentValue = this.gameState.totalClicks;
+                        break;
+                    case 'total_earned':
+                        currentValue = this.gameState.totalEarned;
+                        break;
+                    case 'currency':
+                        currentValue = this.gameState.currency;
+                        break;
+                    case 'generator_level':
+                        const genLevel = this.gameState.generators[achievement.requirement.generator]?.level || 0;
+                        currentValue = genLevel;
+                        break;
+                    case 'prestige_count':
+                        currentValue = this.gameState.prestigeCount;
+                        break;
+                }
+                
+                const progress = Math.min((currentValue / targetValue) * 100, 100);
+                progressHTML = `
+                    <div class="achievement-progress-bar" style="width: 100%; height: 4px; background: rgba(78, 205, 196, 0.2); border-radius: 2px; margin-top: 8px; overflow: hidden;">
+                        <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, #4ecdc4, #45b7aa); transition: width 0.3s ease;"></div>
+                    </div>
+                    <div style="font-size: 0.75em; color: #4ecdc4; margin-top: 4px;">
+                        ${this.formatNumber(currentValue)} / ${this.formatNumber(targetValue)} (${progress.toFixed(1)}%)
+                    </div>
+                `;
+            }
             
             const item = document.createElement('div');
             item.className = `achievement-item ${unlocked ? 'unlocked' : 'locked'}`;
             item.innerHTML = `
                 <div class="achievement-icon">${achievement.icon}</div>
                 <div class="achievement-name">${achievement.name}</div>
-                <div class="achievement-description">${achievement.description}</div>
+                <div class="achievement-description">${achievement.description}${progressHTML}</div>
             `;
             
             container.appendChild(item);
@@ -1989,7 +2041,8 @@ class IdleClickerGame {
             const allCosmetics = [
                 ...(this.config.cosmetics.themes || []),
                 ...(this.config.cosmetics.skins || []),
-                ...(this.config.cosmetics.particles || [])
+                ...(this.config.cosmetics.particles || []),
+                ...(this.config.cosmetics.sounds || [])
             ];
             
             allCosmetics.forEach((item, index) => {
@@ -2449,8 +2502,14 @@ class IdleClickerGame {
         // Only randomly trigger events if shop item is unlocked
         if (!this.gameState.shopPurchases['lucky_events']) return;
         
+        // Calculate chance with Lucky Charm bonus
+        let baseChance = 0.001; // 0.1% base chance per check
+        if (this.gameState.shopPurchases['lucky_boost']) {
+            baseChance *= 2; // Lucky Charm doubles chance
+        }
+        
         // Chance to trigger new event (only if no event active)
-        if (!this.gameState.luckyEvent.active && Math.random() < 0.001) { // 0.1% chance per check
+        if (!this.gameState.luckyEvent.active && Math.random() < baseChance) {
             this.triggerLuckyEvent();
         }
     }

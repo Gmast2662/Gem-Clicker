@@ -1,7 +1,29 @@
 {
-  "currentVersion": "v1.5.0",
-  "currentDescription": "Massive cosmetics update with rebalanced economy! Gems now look amazing!",
+  "currentVersion": "v1.6.0",
+  "currentDescription": "PWA support, configurable events, achievement progress, and new cosmetics!",
   "versions": [
+    {
+      "version": "v1.6.0",
+      "title": "PWA & Advanced Features 📱",
+      "date": "November 14, 2024",
+      "changes": [
+        "📱 Progressive Web App - Install on mobile & desktop!",
+        "🌐 Offline support - Play without internet after first load",
+        "🎰 5 Lucky Event types - Golden Gem, Gem Rush, Meteor, Lucky Streak, Tornado",
+        "⚙️ Configurable events - Add your own in config.json",
+        "🔧 Admin event dropdown - Trigger any event from panel",
+        "🏪 3 New shop items - Achievement Hunter, Lucky Charm, Gem Magnet",
+        "✨ Transcendence layer - 5x multiplier (requires 5 rebirths)",
+        "👼 Ascension layer - 10x multiplier (requires 3 transcendence)",
+        "🎯 Achievement progress bars - See progress to next achievement",
+        "⭐ 2 New particles - Star particles, Heart particles",
+        "🎵 Sound packs - Retro 8-bit, Soft sounds",
+        "💎 Improved gem shapes - Classic diamond cut with sparkles",
+        "📝 Easy editing - tips.json & changelog.json for quick updates",
+        "🔧 Live admin panel updates - No close/reopen needed",
+        "🏭 Generator display - Shows base production even at level 0"
+      ]
+    },
     {
       "version": "v1.5.0",
       "title": "Cosmetics & Balance 🎨",
