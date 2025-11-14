@@ -438,6 +438,19 @@ body {
     transform: translate(-50%, -14px);
 }
 
+.exclusive-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 10px;
+    font-size: 0.75em;
+    border-radius: 999px;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    color: #ffeaa7;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
 .upgrade-icon {
     font-size: 3em;
     min-width: 60px;
@@ -2679,6 +2692,56 @@ body.theme-winter div {
 body.theme-winter .main-clicker {
     background: radial-gradient(circle, #81d4fa, #4fc3f7);
     box-shadow: 0 10px 40px rgba(129, 212, 250, 0.6), 0 0 100px rgba(129, 212, 250, 0.3);
+}
+
+/* Neon Dream Theme */
+body.theme-neon-dream {
+    background: radial-gradient(circle at top, #0f0c29 0%, #302b63 45%, #24243e 100%);
+}
+
+body.theme-neon-dream .main-clicker {
+    background: linear-gradient(135deg, #08F7FE, #FE53BB);
+    box-shadow: 0 12px 45px rgba(8, 247, 254, 0.5), 0 0 120px rgba(254, 83, 187, 0.35);
+}
+
+/* Sakura Blossom Theme */
+body.theme-sakura-blossom {
+    background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+}
+
+body.theme-sakura-blossom .main-clicker {
+    background: radial-gradient(circle, #FFB7C5, #FF9A9E);
+    box-shadow: 0 12px 45px rgba(255, 154, 158, 0.45), 0 0 100px rgba(255, 222, 233, 0.5);
+}
+
+/* Cosmic Void Theme */
+body.theme-cosmic-void {
+    background: radial-gradient(circle at top, #070A1B 0%, #120C2B 50%, #050608 100%);
+}
+
+body.theme-cosmic-void .main-clicker {
+    background: radial-gradient(circle, #7209B7, #3A0CA3);
+    box-shadow: 0 14px 50px rgba(247, 37, 133, 0.5), 0 0 140px rgba(114, 9, 183, 0.4);
+}
+
+/* Arcade Glow Theme */
+body.theme-arcade-glow {
+    background: linear-gradient(135deg, #040308 0%, #0b0631 40%, #12005e 100%);
+}
+
+body.theme-arcade-glow .main-clicker {
+    background: linear-gradient(135deg, #09FBD3, #F5D300);
+    box-shadow: 0 12px 45px rgba(9, 251, 211, 0.45), 0 0 110px rgba(245, 211, 0, 0.4);
+}
+
+/* Crystalline Ice Theme */
+body.theme-crystalline-ice {
+    background: linear-gradient(135deg, #00111e 0%, #002747 50%, #004d7a 100%);
+}
+
+body.theme-crystalline-ice .main-clicker {
+    background: linear-gradient(135deg, #8EC5FC, #E0C3FC);
+    box-shadow: 0 12px 45px rgba(142, 197, 252, 0.45), 0 0 110px rgba(224, 195, 252, 0.4);
 }
 
 /* ============================================

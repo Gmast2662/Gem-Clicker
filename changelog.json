@@ -1,9 +1,25 @@
 {
-  "currentVersion": "v1.7.6",
-  "currentDescription": "Achievements, tooltips, premium themes, and particles now behave correctly.",
+  "currentVersion": "v1.7.7",
+  "currentDescription": "Exclusive cosmetics bundles, faster autosaves, and rock-solid exports.",
   "versions": [
     {
-      "version": "v1.7.6 (Latest)",
+      "version": "v1.7.7 (Latest)",
+      "title": "Exclusive Bundles & Clipboard Fixes 💾",
+      "date": "November 14, 2025",
+      "changes": [
+        "🎨 Pro Themes now grant 5 shop-only theme skins (Neon Dream, Sakura Blossom, Cosmic Void, Arcade Glow, Crystalline Ice)",
+        "✨ Particle Effects unlocks 5 exclusive particle packs (Aurora, Crystal, Blossom, Void, Arcade)",
+        "🛍️ Exclusive cosmetics stay hidden until their feature is owned and show a badge once unlocked",
+        "♻️ Existing saves retroactively receive the new theme/particle bundles if the features were already purchased",
+        "📋 Export/Import now serializes EVERYTHING (game + settings) so restores are exact",
+        "📎 Sharing/exporting uses a more reliable clipboard helper with native fallback prompts",
+        "💾 Autosave interval reduced from 5s to 3s for tighter offline tracking",
+        "🎆 Particle selector + settings menus immediately list the new unlocks once features are bought",
+        "🛡️ Feature rewards can no longer be bypassed via console; the shop enforces prerequisites"
+      ]
+    },
+    {
+      "version": "v1.7.6",
       "title": "Achievements & Premium Themes Fixes 🎨",
       "date": "November 14, 2025",
       "changes": [

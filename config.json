@@ -5,7 +5,7 @@
     "currencyIcon": "💎",
     "clickableIcon": "💎",
     "clickPower": 1,
-    "saveInterval": 5000
+    "saveInterval": 3000
   },
   "clickUpgrades": [
     {
@@ -470,6 +470,56 @@
         "cost": 1500000,
         "purchased": false,
         "value": "winter"
+      },
+      {
+        "id": "theme_neon_dream",
+        "name": "Neon Dream Theme",
+        "description": "Vibrant cyberpunk glow exclusive to Pro Themes",
+        "icon": "🌌",
+        "cost": 0,
+        "purchased": false,
+        "value": "neon-dream",
+        "requiresFeature": "dark_mode_pro"
+      },
+      {
+        "id": "theme_sakura_blossom",
+        "name": "Sakura Blossom Theme",
+        "description": "Soft pink petals inspired by spring nights",
+        "icon": "🌸",
+        "cost": 0,
+        "purchased": false,
+        "value": "sakura-blossom",
+        "requiresFeature": "dark_mode_pro"
+      },
+      {
+        "id": "theme_cosmic_void",
+        "name": "Cosmic Void Theme",
+        "description": "Deep space purples with stardust details",
+        "icon": "🌀",
+        "cost": 0,
+        "purchased": false,
+        "value": "cosmic-void",
+        "requiresFeature": "dark_mode_pro"
+      },
+      {
+        "id": "theme_arcade_glow",
+        "name": "Arcade Glow Theme",
+        "description": "Retro arcade cabinet blues and magentas",
+        "icon": "🕹️",
+        "cost": 0,
+        "purchased": false,
+        "value": "arcade-glow",
+        "requiresFeature": "dark_mode_pro"
+      },
+      {
+        "id": "theme_crystalline_ice",
+        "name": "Crystalline Ice Theme",
+        "description": "Shimmering icy shards with aurora trim",
+        "icon": "💠",
+        "cost": 0,
+        "purchased": false,
+        "value": "crystalline-ice",
+        "requiresFeature": "dark_mode_pro"
       }
     ],
     "skins": [
@@ -600,6 +650,56 @@
         "cost": 750000,
         "purchased": false,
         "value": "confetti"
+      },
+      {
+        "id": "aurora_particles",
+        "name": "Aurora Particles",
+        "description": "Exclusive aurora ribbons from Particle Effects",
+        "icon": "🌈",
+        "cost": 0,
+        "purchased": false,
+        "value": "aurora",
+        "requiresFeature": "particle_effects"
+      },
+      {
+        "id": "crystal_particles",
+        "name": "Crystal Shard Particles",
+        "description": "Shimmering crystal shards only from Particle Effects",
+        "icon": "💠",
+        "cost": 0,
+        "purchased": false,
+        "value": "crystal",
+        "requiresFeature": "particle_effects"
+      },
+      {
+        "id": "blossom_particles",
+        "name": "Blossom Particles",
+        "description": "Falling petals unlocked by Particle Effects",
+        "icon": "🌸",
+        "cost": 0,
+        "purchased": false,
+        "value": "blossom",
+        "requiresFeature": "particle_effects"
+      },
+      {
+        "id": "void_particles",
+        "name": "Void Spark Particles",
+        "description": "Dark energy sparks exclusive to Particle Effects",
+        "icon": "🌀",
+        "cost": 0,
+        "purchased": false,
+        "value": "void",
+        "requiresFeature": "particle_effects"
+      },
+      {
+        "id": "arcade_particles",
+        "name": "Arcade Beam Particles",
+        "description": "Retro neon beams unlocked with Particle Effects",
+        "icon": "🕹️",
+        "cost": 0,
+        "purchased": false,
+        "value": "arcade",
+        "requiresFeature": "particle_effects"
       }
     ],
     "sounds": [
@@ -886,7 +986,7 @@
       {
         "id": "particle_effects",
         "name": "Particle Effects",
-        "description": "Visual effects when clicking the gem",
+        "description": "Unlock particle selector + 5 exclusive particle styles",
         "icon": "✨",
         "cost": 200000,
         "purchased": false,
@@ -897,7 +997,7 @@
       {
         "id": "dark_mode_pro",
         "name": "Pro Themes",
-        "description": "Unlock 5 premium color themes (Ocean, Emerald, Sunset, Crimson, Midnight)",
+        "description": "Unlock premium themes plus 5 shop-exclusive Pro themes",
         "icon": "🎨",
         "cost": 500000,
         "purchased": false,

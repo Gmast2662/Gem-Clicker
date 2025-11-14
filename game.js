@@ -271,6 +271,9 @@ class IdleClickerGame {
             // Initialize UI
             this.initUI();
             
+            // Ensure feature purchases retroactively unlock their cosmetics
+            this.grantFeatureUnlocksFromExistingPurchases();
+            
             // Apply cosmetics from shop purchases
             this.applyCosmetics();
             
@@ -931,6 +934,21 @@ class IdleClickerGame {
             case 'confetti':
                 colors = ['#FF6B6B', '#4ECDC4', '#45B7AA', '#FFA07A', '#98D8C8', '#F7DC6F'];
                 break;
+            case 'aurora':
+                colors = ['#88F7FE', '#43D4FF', '#B76EFF', '#FF71CE', '#01CDFE', '#05FFA1'];
+                break;
+            case 'crystal':
+                colors = ['#E0FFFF', '#BFEFFF', '#A7F3FF', '#7DE8FF', '#D4FCFF', '#C2F9FF'];
+                break;
+            case 'blossom':
+                colors = ['#FFB7C5', '#FFC9DE', '#FF9ACD', '#FF7F9C', '#FFC1CC', '#FF9EC4'];
+                break;
+            case 'void':
+                colors = ['#0A0F1F', '#3A0CA3', '#7209B7', '#560BAD', '#B5179E', '#F72585'];
+                break;
+            case 'arcade':
+                colors = ['#08F7FE', '#09FBD3', '#FE53BB', '#F5D300', '#F0FF1C', '#00FF85'];
+                break;
         }
         
         for (let i = 0; i < count; i++) {
@@ -1397,8 +1415,18 @@ class IdleClickerGame {
         const item = this.config.shop.items.find(i => i.id === itemId);
         if (!item || this.gameState.shopPurchases[itemId]) return;
         
-        if (this.gameState.currency >= item.cost) {
-            this.gameState.currency -= item.cost;
+        const cost = typeof item.cost === 'number' ? item.cost : 0;
+        
+        if (item.requiresFeature && !this.gameState.shopPurchases[item.requiresFeature]) {
+            const requirementName = this.getShopItemName(item.requiresFeature) || 'that feature';
+            this.showNotification(`Unlock ${requirementName} first!`, 'info', true);
+            return;
+        }
+        
+        if (cost === 0 || this.gameState.currency >= cost) {
+            if (cost > 0) {
+                this.gameState.currency -= cost;
+            }
             this.gameState.shopPurchases[itemId] = true;
             
             this.playSound('achievement');
@@ -2062,8 +2090,19 @@ class IdleClickerGame {
         ];
         
         allCosmetics.forEach(item => {
+            // Hide exclusive cosmetics until feature is unlocked or item already owned
+            if (item.requiresFeature && 
+                !this.gameState.shopPurchases[item.requiresFeature] && 
+                !this.gameState.shopPurchases[item.id]) {
+                return;
+            }
+            
             const purchased = this.gameState.shopPurchases[item.id];
-            const canAfford = this.gameState.currency >= item.cost;
+            const cost = typeof item.cost === 'number' ? item.cost : 0;
+            const canAfford = cost === 0 ? true : this.gameState.currency >= cost;
+            const costDisplay = cost === 0 ? 'FREE' : `${this.formatNumber(cost)} ${this.config.game.currencyIcon}`;
+            const requirementName = item.requiresFeature ? (this.getShopItemName(item.requiresFeature) || 'Feature Unlock') : null;
+            const requirementLabel = requirementName ? `<div class="exclusive-badge">Exclusive: ${requirementName}</div>` : '';
             
             const cosmeticItem = document.createElement('div');
             cosmeticItem.className = `upgrade-item ${purchased ? 'purchased' : (!canAfford ? 'disabled' : '')}`;
@@ -2073,14 +2112,15 @@ class IdleClickerGame {
                 <div class="upgrade-info">
                     <div class="upgrade-name">${item.name}${purchased ? ' ✓' : ''}</div>
                     <div class="upgrade-description">${item.description}</div>
+                    ${requirementLabel}
                     <div style="font-size: 0.85em; color: #4ecdc4; margin-top: 5px;">
                         💡 Equip in Settings after purchase
                     </div>
                 </div>
-                <div class="upgrade-cost">${purchased ? 'OWNED' : this.formatNumber(item.cost) + ' ' + this.config.game.currencyIcon}</div>
+                <div class="upgrade-cost">${purchased ? 'OWNED' : costDisplay}</div>
             `;
             
-            if (!purchased) {
+            if (!purchased && cost > 0) {
                 cosmeticItem.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2235,19 +2275,23 @@ class IdleClickerGame {
                 this.renderShop();
                 break;
             case 'dark_mode_pro':
-                const themeIds = (this.config.cosmetics?.themes || []).map(theme => theme.id);
-                this.unlockCosmeticBundle(themeIds, 'Unlocked premium themes!');
+                const premiumThemeIds = this.getCosmeticsRequiringFeature('themes', 'dark_mode_pro');
+                this.unlockCosmeticBundle(premiumThemeIds, 'Unlocked exclusive premium themes!');
                 break;
             case 'particle_effects':
-                this.unlockCosmeticBundle(
-                    ['rainbow_particles', 'golden_particles', 'ice_particles', 'fire_particles'],
-                    'Unlocked particle pack!'
-                );
+                const premiumParticleIds = this.getCosmeticsRequiringFeature('particles', 'particle_effects');
+                this.unlockCosmeticBundle(premiumParticleIds, 'Unlocked exclusive particle effects!');
                 break;
         }
     }
     
-    unlockCosmeticBundle(ids, message) {
+    getCosmeticsRequiringFeature(type, featureId) {
+        return (this.config.cosmetics?.[type] || [])
+            .filter(item => item.requiresFeature === featureId)
+            .map(item => item.id);
+    }
+    
+    unlockCosmeticBundle(ids, message, silent = false) {
         let unlockedAny = false;
         ids.forEach(id => {
             if (!this.gameState.shopPurchases[id]) {
@@ -2259,7 +2303,30 @@ class IdleClickerGame {
         if (unlockedAny) {
             this.renderCosmetics();
             this.updateSettingsDropdowns();
-            this.showNotification(message, 'success', true);
+            this.applyCosmetics();
+            if (!silent) {
+                this.showNotification(message, 'success', true);
+            }
+        }
+    }
+
+    getShopItemName(itemId) {
+        return this.config.shop.items.find(item => item.id === itemId)?.name || null;
+    }
+    
+    grantFeatureUnlocksFromExistingPurchases() {
+        if (this.gameState.shopPurchases['dark_mode_pro']) {
+            const premiumThemeIds = this.getCosmeticsRequiringFeature('themes', 'dark_mode_pro');
+            if (premiumThemeIds.length) {
+                this.unlockCosmeticBundle(premiumThemeIds, 'Unlocked exclusive premium themes!', true);
+            }
+        }
+        
+        if (this.gameState.shopPurchases['particle_effects']) {
+            const premiumParticleIds = this.getCosmeticsRequiringFeature('particles', 'particle_effects');
+            if (premiumParticleIds.length) {
+                this.unlockCosmeticBundle(premiumParticleIds, 'Unlocked exclusive particle effects!', true);
+            }
         }
     }
     
@@ -2273,8 +2340,22 @@ class IdleClickerGame {
         // Apply selected cosmetic items from settings
         
         // Clear all premium themes first
-        document.body.classList.remove('theme-deep-purple', 'theme-ocean-blue', 'theme-emerald-green', 'theme-sunset-orange',
-            'theme-crimson-red', 'theme-midnight-blue', 'theme-gold-rush', 'theme-halloween', 'theme-winter');
+        document.body.classList.remove(
+            'theme-deep-purple',
+            'theme-ocean-blue',
+            'theme-emerald-green',
+            'theme-sunset-orange',
+            'theme-crimson-red',
+            'theme-midnight-blue',
+            'theme-gold-rush',
+            'theme-halloween',
+            'theme-winter',
+            'theme-neon-dream',
+            'theme-sakura-blossom',
+            'theme-cosmic-void',
+            'theme-arcade-glow',
+            'theme-crystalline-ice'
+        );
         
         // Apply selected premium theme
         if (this.settings.premiumTheme !== 'none') {
@@ -3187,8 +3268,9 @@ class IdleClickerGame {
         
         try {
             const saveData = {
-                version: '1.0',
+                version: this.version?.version || '1.0',
                 gameState: this.gameState,
+                settings: this.settings,
                 timestamp: Date.now()
             };
             
@@ -3229,6 +3311,15 @@ class IdleClickerGame {
                     ...this.gameState,
                     ...saveData.gameState
                 };
+                
+                if (saveData.settings) {
+                    this.settings = { ...this.settings, ...saveData.settings };
+                    try {
+                        localStorage.setItem('gemClickerSettings', JSON.stringify(this.settings));
+                    } catch (settingsError) {
+                        console.error('Error persisting imported settings:', settingsError);
+                    }
+                }
                 
                 // Calculate offline earnings (limited to prevent exploits)
                 // Only show if away for at least 30 seconds and less than 24 hours (or 48 with upgrade)
@@ -3535,6 +3626,9 @@ class IdleClickerGame {
 
     exportSave() {
         try {
+            // Ensure the latest state is persisted before exporting
+            this.saveGame();
+            
             const saveData = localStorage.getItem('idleClickerSave');
             if (!saveData) {
                 alert('No save data found!');
@@ -3543,13 +3637,8 @@ class IdleClickerGame {
             
             const encodedSave = btoa(saveData);
             
-            // Copy to clipboard
-            navigator.clipboard.writeText(encodedSave).then(() => {
-                alert('Save exported to clipboard!');
-            }).catch(() => {
-                // Fallback: show in prompt
-                prompt('Copy this save data:', encodedSave);
-            });
+            // Copy to clipboard with fallback prompt
+            this.copyToClipboard(encodedSave, '💾 Save exported to clipboard!', true);
         } catch (error) {
             console.error('Error exporting save:', error);
             alert('Error exporting save!');
@@ -3634,13 +3723,42 @@ class IdleClickerGame {
     }
     
     copyToClipboard(text, successMessage, force = false) {
-        navigator.clipboard.writeText(text).then(() => {
-            this.showNotification(successMessage, 'success', force);
-            console.log('✅', successMessage);
-        }).catch(err => {
-            console.error('Failed to copy:', err);
-            alert(successMessage);
-        });
+        const fallbackCopy = () => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            textarea.style.pointerEvents = 'none';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    this.showNotification(successMessage, 'success', force);
+                    console.log('✅', successMessage);
+                } else {
+                    throw new Error('execCommand failed');
+                }
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                prompt('Copy this text manually:', text);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        };
+        
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.showNotification(successMessage, 'success', force);
+                console.log('✅', successMessage);
+            }).catch(err => {
+                console.error('Failed to copy via Clipboard API:', err);
+                fallbackCopy();
+            });
+        } else {
+            fallbackCopy();
+        }
     }
 
     importSave() {
@@ -3660,6 +3778,9 @@ class IdleClickerGame {
             }
             
             localStorage.setItem('idleClickerSave', saveData);
+            if (parsed.settings) {
+                localStorage.setItem('gemClickerSettings', JSON.stringify(parsed.settings));
+            }
             alert('Save imported successfully! Reloading game...');
             location.reload();
         } catch (error) {
