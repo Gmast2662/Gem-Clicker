@@ -120,9 +120,20 @@ class IdleClickerGame {
         const soundPack = this.settings.soundPack || 'default';
         
         // Check if this sound pack uses audio files
-        if (soundPack === 'premium' && this.audioBuffers[type]) {
-            this.playAudioFile(this.audioBuffers[type]);
-            return;
+        if (soundPack === 'premium') {
+            // Load audio files if not already loaded
+            if (!this.audioBuffers[type] && this.gameState.shopPurchases['sound_pack_premium']) {
+                this.loadAudioFiles().then(() => {
+                    if (this.audioBuffers[type]) {
+                        this.playAudioFile(this.audioBuffers[type]);
+                    }
+                });
+                return;
+            }
+            if (this.audioBuffers[type]) {
+                this.playAudioFile(this.audioBuffers[type]);
+                return;
+            }
         }
         
         // Otherwise use oscillator
@@ -329,6 +340,18 @@ class IdleClickerGame {
             this.config.shop.items.forEach(item => {
                 if (this.gameState.shopPurchases[item.id] === undefined) {
                     this.gameState.shopPurchases[item.id] = false;
+                }
+            });
+        }
+        
+        // Initialize prestige shop purchases
+        if (this.config.prestigeShop?.enabled) {
+            if (!this.gameState.prestigeShopPurchases) {
+                this.gameState.prestigeShopPurchases = {};
+            }
+            this.config.prestigeShop.items.forEach(item => {
+                if (this.gameState.prestigeShopPurchases[item.id] === undefined) {
+                    this.gameState.prestigeShopPurchases[item.id] = 0; // Level, not boolean
                 }
             });
         }
@@ -1337,6 +1360,7 @@ class IdleClickerGame {
             generatorMultipliers: {},
             autoClickerLevel: 0,
             shopPurchases: this.gameState.shopPurchases, // Keep shop purchases
+            prestigeShopPurchases: this.gameState.prestigeShopPurchases || {}, // Keep prestige shop purchases
             milestones: this.gameState.milestones, // Keep milestones through prestige
             dailyReward: this.gameState.dailyReward, // Keep daily reward data
             luckyEvent: {
@@ -2141,6 +2165,38 @@ class IdleClickerGame {
         }
     }
     
+    updateShopAffordability() {
+        // Update affordability of all shop items without re-rendering
+        const allShopItems = document.querySelectorAll('#shop-gameplay .upgrade-item, #shop-features .upgrade-item, #shop-automation .upgrade-item');
+        
+        allShopItems.forEach(itemElement => {
+            const costText = itemElement.querySelector('.upgrade-cost')?.textContent;
+            if (!costText || costText === 'OWNED') return;
+            
+            // Extract cost from text (remove currency icon)
+            const costStr = costText.replace(/[^0-9.KMBTQaSxpOcNoDe]/g, '');
+            // This is a simple check - if it says "OWNED" it stays owned, otherwise we check affordability class
+            const isDisabled = itemElement.classList.contains('disabled');
+            const isPurchased = itemElement.classList.contains('purchased');
+            
+            if (isPurchased) return; // Don't update purchased items
+            
+            // Get item ID from the click handler or re-check affordability
+            // For now, just re-render shop categories periodically
+        });
+        
+        // Better approach: Just re-render the active shop category
+        const activeCategory = document.querySelector('.category-btn.active');
+        if (activeCategory) {
+            const category = activeCategory.getAttribute('data-category');
+            if (category === 'prestige') {
+                this.renderPrestigeShop();
+            } else {
+                this.renderShopCategory(category === 'gameplay' ? 'gameplay' : category === 'features' ? 'features' : 'automation', `shop-${category}`);
+            }
+        }
+    }
+    
     renderAchievements() {
         if (!this.config.achievements.enabled) return;
         
@@ -2727,6 +2783,11 @@ class IdleClickerGame {
                 this.runAutomation();
             }
             
+            // Update shop affordability (every 1 second)
+            if (Math.random() < 0.01) { // ~1% chance per 100ms = once per second
+                this.updateShopAffordability();
+            }
+            
             // Update admin panel if open
             const adminPanel = document.getElementById('admin-panel');
             if (adminPanel && !adminPanel.classList.contains('hidden')) {
@@ -2952,19 +3013,27 @@ class IdleClickerGame {
                 break;
         }
         
-        // Show instant event notification
+        // Show instant event notification with specific message
         eventIcon.textContent = event.icon;
+        
+        let message = '';
+        if (event.effect === 'goblin_visit') {
+            message = `Stole ${this.formatNumber(amount / 2)} but left ${this.formatNumber(amount * 1.5)}! Net: +${this.formatNumber(amount)}`;
+        } else {
+            message = `Bonus: +${this.formatNumber(amount)} gems!`;
+        }
+        
         eventTextContainer.innerHTML = `
             <div class="event-name">${event.icon} ${event.name}!</div>
-            <div class="event-timer">+${this.formatNumber(amount)} gems!</div>
+            <div class="event-timer">${message}</div>
         `;
         banner.style.display = 'flex';
         this.playSound('achievement');
         
-        // Hide after 3 seconds
+        // Hide after 5 seconds (longer for instant events)
         setTimeout(() => {
             banner.style.display = 'none';
-        }, 3000);
+        }, 5000);
         
         console.log(`🎰 ${event.name}: +${this.formatNumber(amount)} gems!`);
         this.updateUI();
