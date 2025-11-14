@@ -2653,12 +2653,18 @@ class IdleClickerGame {
                 this.config.autoClicker.costMultiplier,
                 this.gameState.autoClickerLevel
             );
-            const clicksPerSec = this.gameState.autoClickerLevel > 0 ?
+            let clicksPerSec = this.gameState.autoClickerLevel > 0 ?
                 this.config.autoClicker.clicksPerSecond + 
                 (this.gameState.autoClickerLevel - 1) * this.config.autoClicker.clicksIncreasePerLevel : 0;
             
+            // Add prestige shop free auto-clicks
+            const prestigeAutoClick = this.gameState.prestigeShopPurchases['prestige_auto_click'] || 0;
+            if (prestigeAutoClick > 0) {
+                clicksPerSec += prestigeAutoClick;
+            }
+            
             document.getElementById('auto-clicker-level').textContent = this.gameState.autoClickerLevel;
-            document.getElementById('auto-clicker-speed').textContent = clicksPerSec;
+            document.getElementById('auto-clicker-speed').textContent = clicksPerSec + (prestigeAutoClick > 0 ? ` (+${prestigeAutoClick} free)` : '');
             document.getElementById('auto-clicker-cost').textContent = this.formatNumber(cost);
             
             const buyButton = document.getElementById('buy-auto-clicker');
@@ -2853,8 +2859,8 @@ class IdleClickerGame {
                 this.runAutomation();
             }
             
-            // Update shop affordability (every 1 second)
-            if (Math.random() < 0.01) { // ~1% chance per 100ms = once per second
+            // Update shop affordability (every 300ms for faster response)
+            if (Math.random() < 0.03) { // ~3% chance per 100ms = once every ~300ms
                 this.updateShopAffordability();
             }
             
