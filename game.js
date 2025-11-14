@@ -2188,64 +2188,66 @@ class IdleClickerGame {
     }
     
     updateShopAffordability() {
-        // Only update if shop tab is active to prevent unnecessary work
+        // Check if shop tab exists (don't check display - might be hidden with classes)
         const shopTab = document.getElementById('shop-tab');
-        if (!shopTab || shopTab.style.display === 'none') return;
+        if (!shopTab) return;
         
-        // Update regular shop items (gems)
-        const allShopItems = document.querySelectorAll('#shop-gameplay .upgrade-item, #shop-features .upgrade-item, #shop-automation .upgrade-item');
+        // Update regular shop items (gems) - check actual costs from config
+        if (this.config.shop?.enabled) {
+            this.config.shop.items.forEach(item => {
+                const purchased = this.gameState.shopPurchases[item.id];
+                if (purchased) return; // Skip purchased items
+                
+                const canAfford = this.gameState.currency >= item.cost;
+                
+                // Find the item element by looking for it in the shop containers
+                const containers = ['shop-gameplay', 'shop-features', 'shop-automation'];
+                for (const containerId of containers) {
+                    const container = document.getElementById(containerId);
+                    if (!container) continue;
+                    
+                    const items = container.querySelectorAll('.upgrade-item');
+                    items.forEach(itemElement => {
+                        const nameElement = itemElement.querySelector('.upgrade-name');
+                        if (nameElement && nameElement.textContent === item.name) {
+                            if (canAfford) {
+                                itemElement.classList.remove('disabled');
+                            } else {
+                                itemElement.classList.add('disabled');
+                            }
+                        }
+                    });
+                }
+            });
+        }
         
-        allShopItems.forEach(itemElement => {
-            if (itemElement.classList.contains('purchased')) return; // Skip purchased items
-            
-            const costText = itemElement.querySelector('.upgrade-cost')?.textContent;
-            if (!costText || costText === 'OWNED') return;
-            
-            // Parse cost from text (rough estimate - won't be perfect but good enough)
-            const costMatch = costText.match(/[\d.]+([KMBTQ])?/);
-            if (!costMatch) return;
-            
-            let cost = parseFloat(costMatch[0]);
-            const suffix = costMatch[1];
-            
-            // Convert suffix to actual number
-            if (suffix) {
-                const multipliers = { 'K': 1e3, 'M': 1e6, 'B': 1e9, 'T': 1e12, 'Q': 1e15 };
-                cost *= multipliers[suffix] || 1;
-            }
-            
-            // Update affordability
-            const canAfford = this.gameState.currency >= cost;
-            if (canAfford) {
-                itemElement.classList.remove('disabled');
-            } else {
-                itemElement.classList.add('disabled');
-            }
-        });
-        
-        // Update prestige shop items (prestige points)
-        const prestigeShopItems = document.querySelectorAll('#shop-prestige .upgrade-item');
-        
-        prestigeShopItems.forEach(itemElement => {
-            if (itemElement.classList.contains('purchased')) return; // Skip maxed items
-            
-            const costText = itemElement.querySelector('.upgrade-cost')?.textContent;
-            if (!costText || costText.includes('MAXED')) return;
-            
-            // Parse cost from text
-            const costMatch = costText.match(/(\d+)/);
-            if (!costMatch) return;
-            
-            const cost = parseInt(costMatch[1]);
-            
-            // Update affordability
-            const canAfford = this.gameState.prestigePoints >= cost;
-            if (canAfford) {
-                itemElement.classList.remove('disabled');
-            } else {
-                itemElement.classList.add('disabled');
-            }
-        });
+        // Update prestige shop items (prestige points) - check actual costs
+        if (this.config.prestigeShop?.enabled) {
+            this.config.prestigeShop.items.forEach(item => {
+                const currentLevel = this.gameState.prestigeShopPurchases[item.id] || 0;
+                const maxed = item.maxLevel && currentLevel >= item.maxLevel;
+                if (maxed) return; // Skip maxed items
+                
+                const cost = Math.floor(item.baseCost * Math.pow(item.costMultiplier, currentLevel));
+                const canAfford = this.gameState.prestigePoints >= cost;
+                
+                // Find the prestige shop item element
+                const prestigeContainer = document.getElementById('shop-prestige');
+                if (!prestigeContainer) return;
+                
+                const items = prestigeContainer.querySelectorAll('.upgrade-item');
+                items.forEach(itemElement => {
+                    const nameElement = itemElement.querySelector('.upgrade-name');
+                    if (nameElement && nameElement.textContent.includes(item.name)) {
+                        if (canAfford) {
+                            itemElement.classList.remove('disabled');
+                        } else {
+                            itemElement.classList.add('disabled');
+                        }
+                    }
+                });
+            });
+        }
     }
     
     renderAchievements() {
