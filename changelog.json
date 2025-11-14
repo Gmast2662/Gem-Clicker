@@ -1,7 +1,15 @@
 {
-  "currentVersion": "v1.6.1",
+  "currentVersion": "v1.6.3",
   "currentDescription": "PWA support, configurable events, achievement progress, and new cosmetics!",
   "versions": [
+    {
+      "version": "v1.6.3",
+      "title": "New Sound Packs 🎵",
+      "date": "November 13, 2024",
+      "changes": [
+        "🎵 Sound packs - Industrial, Crystal, Chime, Zen, Premium"
+      ]
+    },
     {
       "version": "v1.6.1",
       "title": "Bug Fixes & New Items 🐛",
